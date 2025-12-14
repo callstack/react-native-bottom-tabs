@@ -23,6 +23,8 @@ export type BaseRoute = {
   freezeOnBlur?: boolean;
   style?: StyleProp<ViewStyle>;
   preventsDefault?: boolean;
+  searchable?: boolean;
+  navigationBarToolbarStyle?: 'automatic' | 'hidden' | 'visible';
 };
 
 export type NavigationState<Route extends BaseRoute> = {

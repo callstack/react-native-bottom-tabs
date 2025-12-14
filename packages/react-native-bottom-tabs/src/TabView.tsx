@@ -1,7 +1,9 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import type {
+  OnChangeTextEventDataData,
   OnNativeLayout,
   OnPageSelectedEventData,
+  OnSearchBarFocusChangeData,
   OnTabBarMeasured,
   TabViewItems,
 } from './TabViewNativeComponent';
@@ -92,9 +94,24 @@ interface Props<Route extends BaseRoute> {
    */
   onIndexChange: (index: number) => void;
   /**
+   * Callback which is called on search text change, receives the text as argument. Only works if `searchable` is `true`.
+   */
+  onSearchTextChange?: (text: string) => void;
+  /**
+   * Callback which is called on search focus change, receives the isFocused as argument. Only works if `searchable` is `true`.
+   */
+  onSearchFocusChange?: (isFocused: boolean) => void;
+  /**
    * Callback which is called on long press on tab, receives the index of the tab as argument.
    */
   onTabLongPress?: (index: number) => void;
+
+  /**
+   * Get navigation bar toolbar style for the tab, uses `route.navigationBarToolbarStyle` by default.
+   */
+  getNavigationBarToolbarStyle?: (props: {
+    route: Route;
+  }) => 'automatic' | 'hidden' | 'visible' | undefined;
   /**
    * Get lazy for the current screen. Uses true by default.
    */
@@ -115,6 +132,14 @@ interface Props<Route extends BaseRoute> {
    * Get badge text color for the tab, uses `route.badgeTextColor` by default. (Android only)
    */
   getBadgeTextColor?: (props: { route: Route }) => ColorValue | undefined;
+  /**
+   * Get searchable for the tab, uses `route.searchable` by default.
+   */
+  getSearchable?: (props: { route: Route }) => boolean | undefined;
+  /**
+   * Get navigation bar toolbar style for the tab, uses `route.navigationBarToolbarStyle` by default.
+   */
+
   /**
    * Get active tint color for the tab, uses `route.activeTintColor` by default.
    */
@@ -229,6 +254,9 @@ const TabView = <Route extends BaseRoute>({
   getActiveTintColor = ({ route }: { route: Route }) => route.activeTintColor,
   getTestID = ({ route }: { route: Route }) => route.testID,
   getRole = ({ route }: { route: Route }) => route.role,
+  getNavigationBarToolbarStyle = ({ route }: { route: Route }) =>
+    route.navigationBarToolbarStyle,
+  getSearchable = ({ route }: { route: Route }) => route.searchable,
   getSceneStyle = ({ route }: { route: Route }) => route.style,
   getPreventsDefault = ({ route }: { route: Route }) => route.preventsDefault,
   hapticFeedbackEnabled = false,
@@ -239,6 +267,8 @@ const TabView = <Route extends BaseRoute>({
   tabBarStyle,
   tabLabelStyle,
   renderBottomAccessoryView,
+  onSearchTextChange,
+  onSearchFocusChange,
   ...props
 }: Props<Route>) => {
   // @ts-ignore
@@ -308,10 +338,14 @@ const TabView = <Route extends BaseRoute>({
           hidden: getHidden?.({ route }),
           testID: getTestID?.({ route }),
           role: getRole?.({ route }),
+          searchable: getSearchable?.({ route }),
           preventsDefault: getPreventsDefault?.({ route }),
+          navigationBarToolbarStyle: getNavigationBarToolbarStyle?.({ route }),
         };
       }),
     [
+      getSearchable,
+      getNavigationBarToolbarStyle,
       trimmedRoutes,
       icons,
       getLabelText,
@@ -352,6 +386,23 @@ const TabView = <Route extends BaseRoute>({
     [trimmedRoutes, onTabLongPress]
   );
 
+  const handleSearchTextChange = React.useCallback(
+    ({ nativeEvent: { text } }: { nativeEvent: OnChangeTextEventDataData }) => {
+      onSearchTextChange?.(text);
+    },
+    [onSearchTextChange]
+  );
+
+  const handleSearchFocusChange = React.useCallback(
+    ({
+      nativeEvent: { isFocused },
+    }: {
+      nativeEvent: OnSearchBarFocusChangeData;
+    }) => {
+      onSearchFocusChange?.(isFocused);
+    },
+    [onSearchFocusChange]
+  );
   const handlePageSelected = React.useCallback(
     ({ nativeEvent: { key } }: { nativeEvent: OnPageSelectedEventData }) => {
       jumpTo(key);
@@ -397,6 +448,8 @@ const TabView = <Route extends BaseRoute>({
         onPageSelected={handlePageSelected}
         onTabBarMeasured={handleTabBarMeasured}
         onNativeLayout={handleNativeLayout}
+        onSearchFocusChange={handleSearchFocusChange}
+        onSearchTextChange={handleSearchTextChange}
         hapticFeedbackEnabled={hapticFeedbackEnabled}
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}

@@ -4,7 +4,7 @@ import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
-import type { ColorValue } from 'react-native';
+import { Platform, type ColorValue } from 'react-native';
 
 interface Props {
   disablePageAnimations?: boolean;
@@ -48,22 +48,31 @@ export default function FourTabs({
       badge: '5',
       hidden: hideOneTab,
     },
-    {
-      key: 'contacts',
-      focusedIcon: require('../../assets/icons/person_dark.png'),
-      title: 'Contacts',
-      badge: ' ',
-    },
+
     {
       key: 'chat',
       focusedIcon: require('../../assets/icons/chat_dark.png'),
       title: 'Chat',
     },
+    {
+      key: 'contacts',
+      focusedIcon: require('../../assets/icons/person_dark.png'),
+      title: 'Contacts',
+      badge: ' ',
+      role: 'search',
+      searchable: true,
+      navigationBarToolbarStyle:
+        Platform.Version === 26 || Platform.Version === '26.0'
+          ? 'hidden'
+          : 'visible',
+    },
   ]);
 
   return (
     <TabView
+      onSearchFocusChange={(isFocused) => console.log('isFocused', isFocused)}
       sidebarAdaptable
+      onSearchTextChange={(text) => console.log(text)}
       disablePageAnimations={disablePageAnimations}
       scrollEdgeAppearance={scrollEdgeAppearance}
       navigationState={{ index, routes }}

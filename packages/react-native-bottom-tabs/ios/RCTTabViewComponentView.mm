@@ -192,7 +192,9 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
                                          hidden:item.hidden
                                          testID:RCTNSStringFromStringNilIfEmpty(item.testID)
                                          role:RCTNSStringFromStringNilIfEmpty(item.role)
-                              preventsDefault:item.preventsDefault
+                                preventsDefault:item.preventsDefault
+                                         searchable:item.searchable
+                    navigationBarToolbarStyle:RCTNSStringFromStringNilIfEmpty(item.navigationBarToolbarStyle)
     ];
 
     [result addObject:tabInfo];
@@ -210,7 +212,8 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
   }
 }
 
-//  MARK: TabViewProviderDelegate
+
+  //  MARK: TabViewProviderDelegate
 
 - (void)onPageSelectedWithKey:(NSString *)key reactTag:(NSNumber *)reactTag {
   auto eventEmitter = std::static_pointer_cast<const RNCTabViewEventEmitter>(_eventEmitter);
@@ -220,6 +223,24 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
     });
   }
 }
+
+- (void)onSearchFocusChangeWithIsFocused:(BOOL)isFocused reactTag:(NSNumber *)reactTag{
+  auto eventEmitter = std::static_pointer_cast<const RNCTabViewEventEmitter>(_eventEmitter);
+  if (eventEmitter) {
+    eventEmitter->onSearchFocusChange(RNCTabViewEventEmitter::OnSearchFocusChange{
+      .isFocused = isFocused
+    });
+  }
+}
+- (void)onSearchTextChangeWithText:(NSString * _Nonnull)text reactTag:(NSNumber * _Nullable)reactTag {
+  auto eventEmitter = std::static_pointer_cast<const RNCTabViewEventEmitter>(_eventEmitter);
+  if (eventEmitter) {
+    eventEmitter->onSearchTextChange(RNCTabViewEventEmitter::OnSearchTextChange{
+      .text = [text cStringUsingEncoding:NSUTF8StringEncoding]
+    });
+  }
+}
+
 
 - (void)onLongPressWithKey:(NSString *)key reactTag:(NSNumber *)reactTag {
   auto eventEmitter = std::static_pointer_cast<const RNCTabViewEventEmitter>(_eventEmitter);

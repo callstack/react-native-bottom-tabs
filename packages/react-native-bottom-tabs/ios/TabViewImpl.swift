@@ -18,7 +18,9 @@ struct TabViewImpl: View {
       NewTabView(
         props: props,
         onLayout: onLayout,
-        onSelect: onSelect
+        onSelect: onSelect,
+        onSearchTextChange: onSearchTextChange,
+        onSearchFocusChange: onSearchFocusChange,
       ) {
         #if !os(macOS)
         updateTabBarAppearance(props: props, tabBar: tabBar)
@@ -36,11 +38,13 @@ struct TabViewImpl: View {
       }
     }
   }
-
+  
   var onSelect: (_ key: String) -> Void
   var onLongPress: (_ key: String) -> Void
   var onLayout: (_ size: CGSize) -> Void
   var onTabBarMeasured: (_ height: Int) -> Void
+  var onSearchTextChange: (_ text: String) -> Void
+  var onSearchFocusChange: (_ focused: Bool) -> Void
 
   var body: some View {
     tabContent

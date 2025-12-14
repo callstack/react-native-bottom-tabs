@@ -2,12 +2,15 @@ import React
 import SwiftUI
 
 @available(iOS 18, macOS 15, visionOS 2, tvOS 18, *)
-struct NewTabView: AnyTabView {
+struct NewTabView: AnyTabView { 
   @ObservedObject var props: TabViewProps
-
   var onLayout: (CGSize) -> Void
   var onSelect: (String) -> Void
+  var onSearchTextChange: ((String) -> Void)
+  var onSearchFocusChange: ((Bool) -> Void)
   var updateTabBarAppearance: () -> Void
+  @FocusState var focused: Bool
+  @State var query = ""
 
   @ViewBuilder
   var body: some View {
@@ -29,10 +32,31 @@ struct NewTabView: AnyTabView {
             )
 
             Tab(value: tabData.key, role: tabData.role?.convert()) {
-              RepresentableView(view: child.view)
-                .ignoresSafeArea(.container, edges: .all)
-                .tabAppear(using: context)
-                .hideTabBar(props.tabBarHidden)
+              //Have to wrap in NavigationView to use searchable
+              if(tabData.searchable){
+                NavigationView{
+                  //If it is not wrapped in UIViewController, it will crash.
+                  RepresentableViewController(view: child.view)
+                    .ignoresSafeArea(.container, edges: .all)
+                    .tabAppear(using: context)
+                    .hideTabBar(props.tabBarHidden)
+                    .toolbar(tabData.navigationBarToolbarStyle.convert(), for: .navigationBar)
+                    .searchable(text: $query)
+                    .searchFocused($focused)
+                    .onChange(of: focused){ newValue in
+                      onSearchFocusChange(newValue)
+                    }
+                    .onChange(of: query) { newValue in
+                      onSearchTextChange(newValue)
+                    }
+                }
+              }else{
+                RepresentableView(view: child.view)
+                  .ignoresSafeArea(.container, edges: .all)
+                  .tabAppear(using: context)
+                  .hideTabBar(props.tabBarHidden)
+              }
+
             } label: {
               TabItem(
                 title: tabData.title,
