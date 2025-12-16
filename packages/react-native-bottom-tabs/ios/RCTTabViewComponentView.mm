@@ -160,6 +160,10 @@ using namespace facebook::react;
     _tabViewProvider.hapticFeedbackEnabled = newViewProps.hapticFeedbackEnabled;
   }
 
+  if (oldViewProps.layoutDirection != newViewProps.layoutDirection) {
+    _tabViewProvider.layoutDirection = RCTNSStringFromStringNilIfEmpty(newViewProps.layoutDirection);
+  }
+
   if (oldViewProps.fontSize != newViewProps.fontSize) {
     _tabViewProvider.fontSize = [NSNumber numberWithInt:newViewProps.fontSize];
   }

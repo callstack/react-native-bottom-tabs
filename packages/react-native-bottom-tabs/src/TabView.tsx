@@ -201,6 +201,12 @@ interface Props<Route extends BaseRoute> {
    * @platform ios
    */
   renderBottomAccessoryView?: BottomAccessoryViewProps['renderBottomAccessoryView'];
+  /**
+   * The direction of the layout. (iOS only)
+   * @platform ios
+   * @default 'leftToRight'
+   */
+  layoutDirection?: 'leftToRight' | 'rightToLeft';
 }
 
 const ANDROID_MAX_TABS = 100;
@@ -239,6 +245,7 @@ const TabView = <Route extends BaseRoute>({
   tabBarStyle,
   tabLabelStyle,
   renderBottomAccessoryView,
+  layoutDirection = 'leftToRight',
   ...props
 }: Props<Route>) => {
   // @ts-ignore
@@ -398,6 +405,7 @@ const TabView = <Route extends BaseRoute>({
         onTabBarMeasured={handleTabBarMeasured}
         onNativeLayout={handleNativeLayout}
         hapticFeedbackEnabled={hapticFeedbackEnabled}
+        layoutDirection={layoutDirection}
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
         barTintColor={tabBarStyle?.backgroundColor}

@@ -11,6 +11,12 @@ struct NewTabView: AnyTabView {
 
   @ViewBuilder
   var body: some View {
+    var effectiveLayoutDirection: LayoutDirection {
+      if let layoutDirectionString = props.layoutDirection {
+        return layoutDirectionString == "rightToLeft" ? .rightToLeft : .leftToRight
+      }
+      return .leftToRight
+    }
     TabView(selection: $props.selectedPage) {
       ForEach(props.children) { child in
         if let index = props.children.firstIndex(of: child),
@@ -49,6 +55,7 @@ struct NewTabView: AnyTabView {
         }
       }
     }
+    .environment(\.layoutDirection, effectiveLayoutDirection)
     .measureView { size in
       onLayout(size)
     }

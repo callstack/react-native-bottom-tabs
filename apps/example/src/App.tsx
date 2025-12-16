@@ -23,6 +23,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import JSBottomTabs from './Examples/JSBottomTabs';
 import ThreeTabs from './Examples/ThreeTabs';
 import FourTabs from './Examples/FourTabs';
+import FourTabsRTL from './Examples/FourTabsRTL';
 import MaterialBottomTabs from './Examples/MaterialBottomTabs';
 import SFSymbols from './Examples/SFSymbols';
 import LabeledTabs from './Examples/Labeled';
@@ -71,6 +72,9 @@ const FourTabsActiveIndicatorColor = () => {
 
 const UnlabeledTabs = () => {
   return <LabeledTabs showLabels={false} />;
+};
+const FourTabsRightToLeft = () => {
+  return <FourTabsRTL layoutDirection={'rightToLeft'} />;
 };
 
 const examples = [
@@ -161,6 +165,7 @@ const examples = [
     name: 'Bottom Accessory View',
     screenOptions: { headerShown: false },
   },
+  { component: FourTabsRightToLeft, name: 'Four Tabs - RTL', platform: 'ios' },
 ];
 
 function App() {

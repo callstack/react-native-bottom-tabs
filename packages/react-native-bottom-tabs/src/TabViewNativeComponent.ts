@@ -56,6 +56,7 @@ export interface TabViewProps extends ViewProps {
   disablePageAnimations?: boolean;
   activeIndicatorColor?: ColorValue;
   hapticFeedbackEnabled?: boolean;
+  layoutDirection?: string;
   minimizeBehavior?: string;
   fontFamily?: string;
   fontWeight?: string;
