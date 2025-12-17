@@ -41,7 +41,7 @@ struct NewTabView: AnyTabView {
                     .tabAppear(using: context)
                     .hideTabBar(props.tabBarHidden)
                     .toolbar(tabData.navigationBarToolbarStyle.convert(), for: .navigationBar)
-                    .searchable(text: $query)
+                   
                     .searchFocused($focused)
                     .onChange(of: focused){ newValue in
                       onSearchFocusChange(newValue)
@@ -49,7 +49,9 @@ struct NewTabView: AnyTabView {
                     .onChange(of: query) { newValue in
                       onSearchTextChange(newValue)
                     }
-                }
+                    
+                }.navigationViewStyle(StackNavigationViewStyle())
+                  .searchable(text: $query)
               }else{
                 RepresentableView(view: child.view)
                   .ignoresSafeArea(.container, edges: .all)
