@@ -161,8 +161,6 @@ public final class TabInfo: NSObject {
     }
   }
 
-
-
   @objc public var itemsData: [TabInfo] = [] {
     didSet {
       props.items = itemsData
