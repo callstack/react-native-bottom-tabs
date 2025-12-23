@@ -74,7 +74,7 @@ const UnlabeledTabs = () => {
   return <LabeledTabs showLabels={false} />;
 };
 const FourTabsRightToLeft = () => {
-  return <FourTabsRTL layoutDirection={'locale'} />;
+  return <FourTabsRTL layoutDirection={'rtl'} />;
 };
 
 const examples = [
