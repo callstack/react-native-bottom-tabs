@@ -74,7 +74,7 @@ const UnlabeledTabs = () => {
   return <LabeledTabs showLabels={false} />;
 };
 const FourTabsRightToLeft = () => {
-  return <FourTabsRTL layoutDirection={'rightToLeft'} />;
+  return <FourTabsRTL layoutDirection={'locale'} />;
 };
 
 const examples = [
@@ -165,7 +165,7 @@ const examples = [
     name: 'Bottom Accessory View',
     screenOptions: { headerShown: false },
   },
-  { component: FourTabsRightToLeft, name: 'Four Tabs - RTL', platform: 'ios' },
+  { component: FourTabsRightToLeft, name: 'Four Tabs - RTL' },
 ];
 
 function App() {

@@ -1,10 +1,11 @@
 import TabView, { SceneMap } from 'react-native-bottom-tabs';
-import React, { useState } from 'react';
+import React from 'react';
 import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
 import { I18nManager, type ColorValue } from 'react-native';
+import type { LayoutDirection } from 'react-native-bottom-tabs/src/types';
 
 interface Props {
   disablePageAnimations?: boolean;
@@ -14,7 +15,7 @@ interface Props {
   hideOneTab?: boolean;
   rippleColor?: ColorValue;
   activeIndicatorColor?: ColorValue;
-  layoutDirection?: 'leftToRight' | 'rightToLeft';
+  layoutDirection?: LayoutDirection;
 }
 
 const renderScene = SceneMap({
@@ -32,22 +33,22 @@ export default function FourTabsRTL({
   hideOneTab = false,
   rippleColor,
   activeIndicatorColor,
-  layoutDirection = 'leftToRight',
+  layoutDirection = 'locale',
 }: Props) {
   React.useLayoutEffect(() => {
-    if (layoutDirection === 'rightToLeft') {
+    if (layoutDirection === 'rtl') {
       I18nManager.allowRTL(true);
       I18nManager.forceRTL(true);
     }
     return () => {
-      if (layoutDirection === 'rightToLeft') {
+      if (layoutDirection === 'rtl') {
         I18nManager.allowRTL(false);
         I18nManager.forceRTL(false);
       }
     };
   }, [layoutDirection]);
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
     {
       key: 'article',
       title: 'المقالات',

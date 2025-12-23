@@ -43,6 +43,7 @@ function NativeBottomTabNavigator({
   screenOptions,
   tabBarActiveTintColor: customActiveTintColor,
   tabBarInactiveTintColor: customInactiveTintColor,
+  layoutDirection = 'locale',
   ...rest
 }: NativeBottomTabNavigatorProps) {
   const { colors } = useTheme();
@@ -77,6 +78,7 @@ function NativeBottomTabNavigator({
     <NavigationContent>
       <NativeBottomTabView
         {...rest}
+        layoutDirection={layoutDirection}
         tabBarActiveTintColor={activeTintColor}
         tabBarInactiveTintColor={inactiveTintColor}
         state={state}

@@ -7,6 +7,8 @@ export type AppleIcon = { sfSymbol: SFSymbol };
 
 export type TabRole = 'search';
 
+export type LayoutDirection = 'ltr' | 'rtl' | 'locale';
+
 export type BaseRoute = {
   key: string;
   title?: string;

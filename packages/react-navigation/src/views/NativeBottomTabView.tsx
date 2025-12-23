@@ -19,6 +19,7 @@ type Props = NativeBottomTabNavigationConfig & {
 
 export default function NativeBottomTabView({
   state,
+  layoutDirection,
   navigation,
   descriptors,
   tabBar,
@@ -114,6 +115,7 @@ export default function NativeBottomTabView({
           });
         }
       }}
+      layoutDirection={layoutDirection}
     />
   );
 }
