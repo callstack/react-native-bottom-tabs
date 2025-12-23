@@ -127,6 +127,10 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     layout(left, top, right, bottom)
   }
 
+  fun applyDirection(dir: Int) {
+      bottomNavigation.layoutDirection = dir   
+  }
+
   override fun requestLayout() {
     super.requestLayout()
     @Suppress("SENSELESS_COMPARISON") // layoutCallback can be null here since this method can be called in init

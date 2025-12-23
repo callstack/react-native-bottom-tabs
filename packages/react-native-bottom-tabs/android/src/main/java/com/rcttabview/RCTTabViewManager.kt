@@ -167,6 +167,15 @@ class RCTTabViewManager(context: ReactApplicationContext) :
       view.isHapticFeedbackEnabled = value
   }
 
+  override fun setLayoutDirection(view: ReactBottomNavigationView, value: String?) {
+      val direction = when (value) {
+          "rtl" -> View.LAYOUT_DIRECTION_RTL
+          "ltr" -> View.LAYOUT_DIRECTION_LTR
+          else -> View.LAYOUT_DIRECTION_LOCALE
+      }
+      view.applyDirection(direction)
+  }
+
   override fun setFontFamily(view: ReactBottomNavigationView?, value: String?) {
     view?.setFontFamily(value)
   }
