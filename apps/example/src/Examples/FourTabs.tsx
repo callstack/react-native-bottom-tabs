@@ -62,9 +62,7 @@ export default function FourTabs({
       role: 'search',
       searchable: true,
       navigationBarToolbarStyle:
-        Platform.Version === 26 || Platform.Version === '26.0'
-          ? 'hidden'
-          : 'visible',
+        Platform.Version === '26.0' ? 'hidden' : 'visible',
     },
   ]);
 

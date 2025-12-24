@@ -4,7 +4,7 @@ import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
 import { createNativeBottomTabNavigator } from '@bottom-tabs/react-navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Platform } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 
 const headerOptions = {
   headerShown: true,
@@ -67,6 +67,7 @@ function ChatStackScreen() {
 }
 
 function NativeBottomTabsEmbeddedStacks() {
+  console.log(Platform.Version, 'Platform.Version');
   return (
     <Tab.Navigator
       onSearchTextChange={(text) => console.log(text)}
@@ -104,7 +105,9 @@ function NativeBottomTabsEmbeddedStacks() {
           tabBarIcon: () => require('../../assets/icons/person_dark.png'),
           searchable: true,
           navigationBarToolbarStyle:
-            Platform.Version === 26 || Platform.Version === '26.0'
+            Platform.Version === '26.0' &&
+            Platform.OS === 'ios' &&
+            Dimensions.get('window').width < 400
               ? 'hidden'
               : 'visible',
         }}
