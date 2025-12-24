@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import type {
-  OnChangeTextEventDataData,
+  OnSearchTextChangeEventData,
   OnNativeLayout,
   OnPageSelectedEventData,
   OnSearchBarFocusChangeData,
@@ -383,7 +383,11 @@ const TabView = <Route extends BaseRoute>({
   );
 
   const handleSearchTextChange = React.useCallback(
-    ({ nativeEvent: { text } }: { nativeEvent: OnChangeTextEventDataData }) => {
+    ({
+      nativeEvent: { text },
+    }: {
+      nativeEvent: OnSearchTextChangeEventData;
+    }) => {
       onSearchTextChange?.(text);
     },
     [onSearchTextChange]

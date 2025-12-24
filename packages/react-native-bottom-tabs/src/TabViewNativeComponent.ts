@@ -38,7 +38,7 @@ export type TabViewItems = ReadonlyArray<{
   navigationBarToolbarStyle?: string;
 }>;
 
-export type OnChangeTextEventDataData = Readonly<{
+export type OnSearchTextChangeEventData = Readonly<{
   text: string;
 }>;
 
@@ -50,7 +50,7 @@ export interface TabViewProps extends ViewProps {
   items: TabViewItems;
   selectedPage: string;
   onPageSelected?: DirectEventHandler<OnPageSelectedEventData>;
-  onSearchTextChange?: DirectEventHandler<OnChangeTextEventDataData>;
+  onSearchTextChange?: DirectEventHandler<OnSearchTextChangeEventData>;
   onSearchFocusChange?: DirectEventHandler<OnSearchBarFocusChangeData>;
   onTabLongPress?: DirectEventHandler<OnPageSelectedEventData>;
   onTabBarMeasured?: DirectEventHandler<OnTabBarMeasured>;
