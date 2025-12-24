@@ -25,11 +25,6 @@ struct RepresentableViewController: UIViewControllerRepresentable {
   
 #else
   
-  func makeUIView(context: Context) -> PlatformView {
-    let wrapper = UIView()
-    wrapper.addSubview(view)
-    return wrapper
-  }
   func makeUIViewController(context: Context) -> UIViewController {
     let contentVC = UIViewController()
     contentVC.view.backgroundColor = .clear
@@ -37,7 +32,6 @@ struct RepresentableViewController: UIViewControllerRepresentable {
     
     return contentVC
   }
-  func updateUIView(_ uiView: PlatformView, context: Context) {}
   
 #endif
 }
