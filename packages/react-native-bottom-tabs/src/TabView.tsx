@@ -137,10 +137,6 @@ interface Props<Route extends BaseRoute> {
    */
   getSearchable?: (props: { route: Route }) => boolean | undefined;
   /**
-   * Get navigation bar toolbar style for the tab, uses `route.navigationBarToolbarStyle` by default.
-   */
-
-  /**
    * Get active tint color for the tab, uses `route.activeTintColor` by default.
    */
   getActiveTintColor?: (props: { route: Route }) => ColorValue | undefined;
