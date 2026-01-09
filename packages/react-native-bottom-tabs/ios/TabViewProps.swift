@@ -39,6 +39,24 @@ public enum TabBarRole: String {
   }
 }
 
+public enum ToolbarStyle: String {
+  case automatic
+  case hidden
+  case visible
+  
+  @available(iOS 18, macOS 15, visionOS 2, tvOS 18, *)
+  func convert() -> Visibility {
+    switch self {
+      case .automatic:
+        return .automatic
+      case .hidden:
+        return .hidden
+      case .visible:
+        return .visible
+    }
+  }
+}
+
 struct IdentifiablePlatformView: Identifiable, Equatable {
   let id = UUID()
   let view: PlatformView

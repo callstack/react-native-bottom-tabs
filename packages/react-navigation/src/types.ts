@@ -120,6 +120,14 @@ export type NativeBottomTabNavigationOptions = {
    * Whether to prevent default action of the tab. Defaults to `false`.
    */
   preventsDefault?: boolean;
+  /**
+   * Whether to enable searchBar. Defaults to `false`.
+   */
+  searchable?: boolean;
+  /**
+   * Style of the navigation bar toolbar. Defaults to `automatic`. Only works if `searchable` is `true`.
+   */
+  navigationBarToolbarStyle?: 'automatic' | 'hidden' | 'visible';
 };
 
 export type NativeBottomTabDescriptor = Descriptor<

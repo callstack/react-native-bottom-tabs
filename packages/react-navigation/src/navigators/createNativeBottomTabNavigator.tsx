@@ -43,6 +43,8 @@ function NativeBottomTabNavigator({
   screenOptions,
   tabBarActiveTintColor: customActiveTintColor,
   tabBarInactiveTintColor: customInactiveTintColor,
+  onSearchFocusChange,
+  onSearchTextChange,
   ...rest
 }: NativeBottomTabNavigatorProps) {
   const { colors } = useTheme();
@@ -77,6 +79,8 @@ function NativeBottomTabNavigator({
     <NavigationContent>
       <NativeBottomTabView
         {...rest}
+        onSearchFocusChange={onSearchFocusChange}
+        onSearchTextChange={onSearchTextChange}
         tabBarActiveTintColor={activeTintColor}
         tabBarInactiveTintColor={inactiveTintColor}
         state={state}

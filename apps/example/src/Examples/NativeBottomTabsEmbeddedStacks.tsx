@@ -4,6 +4,7 @@ import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
 import { createNativeBottomTabNavigator } from '@bottom-tabs/react-navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Dimensions, Platform } from 'react-native';
 
 const headerOptions = {
   headerShown: true,
@@ -66,8 +67,12 @@ function ChatStackScreen() {
 }
 
 function NativeBottomTabsEmbeddedStacks() {
+  console.log(Platform.Version, 'Platform.Version');
   return (
-    <Tab.Navigator sidebarAdaptable>
+    <Tab.Navigator
+      onSearchTextChange={(text) => console.log(text)}
+      onSearchFocusChange={(isFocused) => console.log('isFocused', isFocused)}
+    >
       <Tab.Screen
         name="Article"
         component={ArticleStackScreen}
@@ -83,19 +88,28 @@ function NativeBottomTabsEmbeddedStacks() {
           tabBarIcon: () => require('../../assets/icons/grid_dark.png'),
         }}
       />
-      <Tab.Screen
-        name="Contacts"
-        component={ContactsStackScreen}
-        options={{
-          tabBarIcon: () => require('../../assets/icons/person_dark.png'),
-        }}
-      />
+
       <Tab.Screen
         name="Chat"
         component={ChatStackScreen}
         options={{
           tabBarIcon: () =>
             require('../../assets/icons/message-circle-code.svg'),
+        }}
+      />
+      <Tab.Screen
+        name="Contacts"
+        component={ContactsStackScreen}
+        options={{
+          role: 'search',
+          tabBarIcon: () => require('../../assets/icons/person_dark.png'),
+          searchable: true,
+          navigationBarToolbarStyle:
+            Platform.Version === '26.0' &&
+            Platform.OS === 'ios' &&
+            Dimensions.get('window').width < 400
+              ? 'hidden'
+              : 'visible',
         }}
       />
     </Tab.Navigator>

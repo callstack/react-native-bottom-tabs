@@ -13,7 +13,8 @@ public final class TabInfo: NSObject {
   public let testID: String?
   public let role: TabBarRole?
   public let preventsDefault: Bool
-
+  public let searchable: Bool
+  public let navigationBarToolbarStyle: ToolbarStyle
   public init(
     key: String,
     title: String,
@@ -23,7 +24,9 @@ public final class TabInfo: NSObject {
     hidden: Bool,
     testID: String?,
     role: String?,
-    preventsDefault: Bool = false
+    preventsDefault: Bool = false,
+    searchable:Bool = false,
+    navigationBarToolbarStyle: String? = "automatic"
   ) {
     self.key = key
     self.title = title
@@ -34,6 +37,8 @@ public final class TabInfo: NSObject {
     self.testID = testID
     self.role = TabBarRole(rawValue: role ?? "")
     self.preventsDefault = preventsDefault
+    self.searchable = searchable
+    self.navigationBarToolbarStyle = ToolbarStyle(rawValue: navigationBarToolbarStyle ?? "automatic") ?? .automatic
     super.init()
   }
 }
@@ -43,6 +48,8 @@ public final class TabInfo: NSObject {
   func onLongPress(key: String, reactTag: NSNumber?)
   func onTabBarMeasured(height: Int, reactTag: NSNumber?)
   func onLayout(size: CGSize, reactTag: NSNumber?)
+  func onSearchTextChange(text: String, reactTag: NSNumber?)
+  func onSearchFocusChange(isFocused: Bool, reactTag: NSNumber?)
 }
 
 @objc public class TabViewProvider: PlatformView {
@@ -58,6 +65,8 @@ public final class TabInfo: NSObject {
   @objc var onTabLongPress: RCTDirectEventBlock?
   @objc var onTabBarMeasured: RCTDirectEventBlock?
   @objc var onNativeLayout: RCTDirectEventBlock?
+  @objc var onSearchTextChange : RCTDirectEventBlock?
+  @objc var onSearchFocusChange : RCTDirectEventBlock?
 
   @objc public var icons: NSArray? {
     didSet {
@@ -191,7 +200,6 @@ public final class TabInfo: NSObject {
     if self.hostingController != nil {
       return
     }
-
     self.hostingController = PlatformHostingController(rootView: TabViewImpl(props: props) { key in
       self.delegate?.onPageSelected(key: key, reactTag: self.reactTag)
     } onLongPress: { key in
@@ -200,6 +208,10 @@ public final class TabInfo: NSObject {
       self.delegate?.onLayout(size: size, reactTag: self.reactTag)
     } onTabBarMeasured: { height in
       self.delegate?.onTabBarMeasured(height: height, reactTag: self.reactTag)
+    } onSearchTextChange : { text in
+      self.delegate?.onSearchTextChange(text: text, reactTag: self.reactTag)
+    } onSearchFocusChange: { isFocused in
+      self.delegate?.onSearchFocusChange(isFocused: isFocused, reactTag: self.rootTag)
     })
 
     if let hostingController = self.hostingController, let parentViewController = reactViewController() {

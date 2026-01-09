@@ -41,6 +41,10 @@ export default function NativeBottomTabView({
             ? options.title
             : (route as Route<string>).name;
       }}
+      getSearchable={({ route }) => descriptors[route.key]?.options.searchable}
+      getNavigationBarToolbarStyle={({ route }) =>
+        descriptors[route.key]?.options.navigationBarToolbarStyle
+      }
       getBadge={({ route }) => descriptors[route.key]?.options.tabBarBadge}
       getBadgeBackgroundColor={({ route }) =>
         descriptors[route.key]?.options.tabBarBadgeBackgroundColor
