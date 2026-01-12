@@ -7,6 +7,16 @@ struct LegacyTabView: AnyTabView {
   var onSelect: (String) -> Void
   var updateTabBarAppearance: () -> Void
 
+  private var effectiveLayoutDirection: LayoutDirection {
+    let dir = props.layoutDirection ?? "locale"
+    if let mapped = ["rtl": LayoutDirection.rightToLeft,
+                     "ltr": LayoutDirection.leftToRight][dir] {
+      return mapped
+    }
+    let system = UIView.userInterfaceLayoutDirection(for: .unspecified)
+    return system == .rightToLeft ? .rightToLeft : .leftToRight
+  }
+
   @ViewBuilder
   var body: some View {
     TabView(selection: $props.selectedPage) {
@@ -19,6 +29,7 @@ struct LegacyTabView: AnyTabView {
         onLayout(size)
       }
     }
+    .environment(\.layoutDirection, effectiveLayoutDirection)
     .hideTabBar(props.tabBarHidden)
   }
 

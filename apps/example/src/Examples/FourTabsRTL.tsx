@@ -5,7 +5,7 @@ import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
 import { I18nManager, type ColorValue } from 'react-native';
-import type { LayoutDirection } from 'react-native-bottom-tabs/src/types';
+import type { LayoutDirection } from 'react-native-bottom-tabs';
 
 interface Props {
   disablePageAnimations?: boolean;

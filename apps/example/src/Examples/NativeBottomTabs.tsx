@@ -15,7 +15,7 @@ function NativeBottomTabs() {
       initialRouteName="Chat"
       labeled={true}
       hapticFeedbackEnabled={false}
-      layoutDirection="leftToRight"
+      layoutDirection="ltr"
       tabBarInactiveTintColor="#C57B57"
       tabBarActiveTintColor="#F7DBA7"
       tabBarStyle={{

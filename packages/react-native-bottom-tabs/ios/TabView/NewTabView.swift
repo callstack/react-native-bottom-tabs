@@ -9,18 +9,18 @@ struct NewTabView: AnyTabView {
   var onSelect: (String) -> Void
   var updateTabBarAppearance: () -> Void
 
-  @ViewBuilder
-  var body: some View {
-    var effectiveLayoutDirection: LayoutDirection {
+  private var effectiveLayoutDirection: LayoutDirection {
     let dir = props.layoutDirection ?? "locale"
     if let mapped = ["rtl": LayoutDirection.rightToLeft,
                      "ltr": LayoutDirection.leftToRight][dir] {
-        return mapped
+      return mapped
     }
     let system = UIView.userInterfaceLayoutDirection(for: .unspecified)
     return system == .rightToLeft ? .rightToLeft : .leftToRight
-}
+  }
 
+  @ViewBuilder
+  var body: some View {
     TabView(selection: $props.selectedPage) {
       ForEach(props.children) { child in
         if let index = props.children.firstIndex(of: child),

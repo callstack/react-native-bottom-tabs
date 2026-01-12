@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
