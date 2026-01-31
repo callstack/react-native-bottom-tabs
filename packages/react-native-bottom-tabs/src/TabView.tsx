@@ -212,6 +212,18 @@ interface Props<Route extends BaseRoute> {
    * @default 'locale'
    */
   layoutDirection?: LayoutDirection;
+  /**
+   * When true, disables iOS 26 liquid glass content sampling and uses a solid
+   * background color (from tabBarStyle.backgroundColor) instead of dynamically
+   * sampling colors from the content behind the tab bar. (iOS 26+ only)
+   *
+   * Use this when you have dynamic content (like maps) where the liquid glass
+   * effect causes the tab bar to have inconsistent or unreadable colors.
+   *
+   * @platform ios
+   * @default false
+   */
+  ignoresContentBackground?: boolean;
 }
 
 const ANDROID_MAX_TABS = 100;

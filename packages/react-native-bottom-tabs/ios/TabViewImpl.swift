@@ -45,6 +45,7 @@ struct TabViewImpl: View {
   var body: some View {
     tabContent
       .tabBarMinimizeBehavior(props.minimizeBehavior)
+      .ignoresContentBackground(props.ignoresContentBackground, barTintColor: props.barTintColor)
       #if !os(tvOS) && !os(macOS) && !os(visionOS)
         .onTabItemEvent { index, isLongPress in
           let item = props.filteredItems[safe: index]
@@ -324,5 +325,27 @@ extension View {
     } else {
       self
     }
+  }
+
+  /// Disables iOS 26 liquid glass content sampling and uses a solid background instead.
+  /// When enabled, the tab bar will use the specified barTintColor (or system default if nil)
+  /// instead of dynamically sampling colors from the content behind it.
+  @ViewBuilder
+  func ignoresContentBackground(_ ignores: Bool, barTintColor: PlatformColor?) -> some View {
+    #if compiler(>=6.2)
+    if #available(iOS 26.0, *) {
+      if ignores {
+        self
+          .toolbarBackgroundVisibility(.visible, for: .tabBar)
+          .toolbarBackground(barTintColor.map { Color($0) } ?? Color(.systemBackground), for: .tabBar)
+      } else {
+        self
+      }
+    } else {
+      self
+    }
+    #else
+      self
+    #endif
   }
 }
