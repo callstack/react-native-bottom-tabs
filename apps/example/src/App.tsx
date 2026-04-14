@@ -35,6 +35,7 @@ import NativeBottomTabsRemoteIcons from './Examples/NativeBottomTabsRemoteIcons'
 import NativeBottomTabsUnmounting from './Examples/NativeBottomTabsUnmounting';
 import NativeBottomTabsCustomTabBar from './Examples/NativeBottomTabsCustomTabBar';
 import NativeBottomTabsFreezeOnBlur from './Examples/NativeBottomTabsFreezeOnBlur';
+import NativeBottomTabsScreenLayout from './Examples/NativeBottomTabsScreenLayout';
 import BottomAccessoryView from './Examples/BottomAccessoryView';
 import { useLogger } from '@react-navigation/devtools';
 
@@ -150,6 +151,10 @@ const examples = [
   {
     component: NativeBottomTabsCustomTabBar,
     name: 'Native Bottom Tabs with Custom Tab Bar',
+  },
+  {
+    component: NativeBottomTabsScreenLayout,
+    name: 'Native Bottom Tabs with screenLayout',
   },
   { component: NativeBottomTabs, name: 'Native Bottom Tabs' },
   { component: JSBottomTabs, name: 'JS Bottom Tabs' },

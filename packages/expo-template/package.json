@@ -20,7 +20,7 @@
   "dependencies": {
     "@bottom-tabs/react-navigation": "1.1.0",
     "@expo/vector-icons": "^14.0.2",
-    "@react-navigation/native": "^7.1.17",
+    "@react-navigation/native": "^7.2.2",
     "expo": "^54.0.1",
     "expo-blur": "^15.0.6",
     "expo-build-properties": "^1.0.7",
