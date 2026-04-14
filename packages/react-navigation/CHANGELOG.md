@@ -1,5 +1,11 @@
 # @bottom-tabs/react-navigation
 
+## 1.2.0
+
+### Minor Changes
+
+- [#511](https://github.com/callstack/react-native-bottom-tabs/pull/511) [`652fd76`](https://github.com/callstack/react-native-bottom-tabs/commit/652fd7610bb039fe2837037e5403ac4c24e6e061) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add missing props from react-navigation to NativeBottomTabNavigator
+
 ## 1.1.0
 
 ### Minor Changes
