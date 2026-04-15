@@ -2721,7 +2721,7 @@ __metadata:
   resolution: "@bottom-tabs/expo-template@workspace:packages/expo-template"
   dependencies:
     "@babel/core": "npm:^7.28.4"
-    "@bottom-tabs/react-navigation": "npm:1.1.0"
+    "@bottom-tabs/react-navigation": "npm:1.2.0"
     "@expo/vector-icons": "npm:^14.0.2"
     "@react-navigation/native": "npm:^7.2.2"
     "@types/jest": "npm:^29.5.12"
@@ -2745,7 +2745,7 @@ __metadata:
     react: "npm:^19.1.0"
     react-dom: "npm:18.3.1"
     react-native: "npm:0.81.4"
-    react-native-bottom-tabs: "npm:1.1.0"
+    react-native-bottom-tabs: "npm:1.2.0"
     react-native-gesture-handler: "npm:^2.28.0"
     react-native-reanimated: "npm:^4.1.0"
     react-native-safe-area-context: "npm:^5.6.1"
@@ -2778,7 +2778,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@bottom-tabs/react-navigation@npm:*, @bottom-tabs/react-navigation@npm:1.1.0, @bottom-tabs/react-navigation@workspace:packages/react-navigation":
+"@bottom-tabs/react-navigation@npm:*, @bottom-tabs/react-navigation@npm:1.2.0, @bottom-tabs/react-navigation@workspace:packages/react-navigation":
   version: 0.0.0-use.local
   resolution: "@bottom-tabs/react-navigation@workspace:packages/react-navigation"
   dependencies:
@@ -16084,7 +16084,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-bottom-tabs@npm:*, react-native-bottom-tabs@npm:1.1.0, react-native-bottom-tabs@workspace:packages/react-native-bottom-tabs":
+"react-native-bottom-tabs@npm:*, react-native-bottom-tabs@npm:1.2.0, react-native-bottom-tabs@workspace:packages/react-native-bottom-tabs":
   version: 0.0.0-use.local
   resolution: "react-native-bottom-tabs@workspace:packages/react-native-bottom-tabs"
   dependencies:
