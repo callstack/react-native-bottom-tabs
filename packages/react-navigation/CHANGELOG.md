@@ -1,5 +1,13 @@
 # @bottom-tabs/react-navigation
 
+## 1.2.0
+
+### Minor Changes
+
+- [#511](https://github.com/callstack/react-native-bottom-tabs/pull/511) [`652fd76`](https://github.com/callstack/react-native-bottom-tabs/commit/652fd7610bb039fe2837037e5403ac4c24e6e061) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add missing props from react-navigation to NativeBottomTabNavigator
+
+- [#494](https://github.com/callstackincubator/react-native-bottom-tabs/pull/494) [`3572fc2`](https://github.com/callstackincubator/react-native-bottom-tabs/commit/3572fc24dc5777aac8f4f819c247fb51b5fdbb87) Thanks [@ahmedawaad1804](https://github.com/ahmedawaad1804)! - Add `layoutDirection` prop to `TabView` for RTL support.
+
 ## 1.1.0
 
 ### Minor Changes

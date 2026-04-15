@@ -1,5 +1,11 @@
 # react-native-bottom-tabs
 
+## 1.2.0
+
+### Minor Changes
+
+- [#494](https://github.com/callstackincubator/react-native-bottom-tabs/pull/494) [`3572fc2`](https://github.com/callstackincubator/react-native-bottom-tabs/commit/3572fc24dc5777aac8f4f819c247fb51b5fdbb87) Thanks [@ahmedawaad1804](https://github.com/ahmedawaad1804)! - Add `layoutDirection` prop to `TabView` for RTL support.
+
 ## 1.1.0
 
 ### Minor Changes
