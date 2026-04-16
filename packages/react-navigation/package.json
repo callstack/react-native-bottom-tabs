@@ -43,14 +43,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/callstackincubator/react-native-bottom-tabs.git"
+    "url": "git+https://github.com/callstack/react-native-bottom-tabs.git"
   },
   "author": "Oskar Kwasniewski <oskarkwasniewski@icloud.com> (https://github.com/okwasniewski)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/callstackincubator/react-native-bottom-tabs/issues"
+    "url": "https://github.com/callstack/react-native-bottom-tabs/issues"
   },
-  "homepage": "https://github.com/callstackincubator/react-native-bottom-tabs#readme",
+  "homepage": "https://github.com/callstack/react-native-bottom-tabs#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
