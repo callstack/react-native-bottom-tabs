@@ -37,10 +37,13 @@ function NativeBottomTabNavigator({
   id,
   initialRouteName,
   backBehavior,
+  UNSTABLE_routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
   screenOptions,
+  screenLayout,
+  UNSTABLE_router,
   tabBarActiveTintColor: customActiveTintColor,
   tabBarInactiveTintColor: customInactiveTintColor,
   layoutDirection = 'locale',
@@ -68,10 +71,13 @@ function NativeBottomTabNavigator({
       id,
       initialRouteName,
       backBehavior,
+      UNSTABLE_routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
+      UNSTABLE_router,
     });
 
   return (
