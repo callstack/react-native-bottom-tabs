@@ -1,5 +1,17 @@
 # @bottom-tabs/expo-template
 
+## 1.1.0
+
+### Minor Changes
+
+- [#511](https://github.com/callstack/react-native-bottom-tabs/pull/511) [`652fd76`](https://github.com/callstack/react-native-bottom-tabs/commit/652fd7610bb039fe2837037e5403ac4c24e6e061) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add missing props from react-navigation to NativeBottomTabNavigator
+
+### Patch Changes
+
+- Updated dependencies [[`652fd76`](https://github.com/callstack/react-native-bottom-tabs/commit/652fd7610bb039fe2837037e5403ac4c24e6e061)]:
+  - @bottom-tabs/react-navigation@1.2.0
+  - react-native-bottom-tabs@1.2.0
+
 ## 1.0.6
 
 ### Patch Changes

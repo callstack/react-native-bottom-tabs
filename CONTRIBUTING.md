@@ -48,16 +48,6 @@ cd -
 yarn ios
 ```
 
-The example is configured to build with the new architecture (Fabric) by default. 
-
-To confirm that the app is running with the new architecture, you can check the Metro logs for a message like this:
-
-```sh
-Running "ReactNativeBottomTabsExample" with {"fabric":true,"initialProps":{"concurrentRoot":true},"rootTag":1}
-```
-
-Note the `"fabric":true` and `"concurrentRoot":true` properties.
-
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
@@ -98,15 +88,21 @@ We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint]
 
 Our pre-commit hooks verify that the linter and tests pass when committing.
 
-### Publishing to npm
+### Changesets
 
 We use [changesets](https://github.com/changesets/changesets) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
 
-To publish new versions, run the following:
+If your changes impact packages that need to be published, you need to create a changeset for those changes. You can do that by running the following command:
 
 ```sh
-yarn publish-packages
+yarn changeset
 ```
+
+Changes to example apps or docs don't require a changeset.
+
+### Publishing to npm
+
+After merging a PR to `main`, if it included a changeset, the CI workflow will automatically create another `chore: version packages` PR bumping the version of the impacted packages. Merging this PR will trigger the release workflow, which will automatically publish the new versions to npm.
 
 ### Sending a pull request
 

@@ -36,6 +36,7 @@ https://github.com/user-attachments/assets/09e96ac3-827d-4ac0-add0-e7b88ee9197c
 | Name                                                                         |                                                                      Latest Version                                                                       |
 | ---------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [react-native-bottom-tabs](/packages/react-native-bottom-tabs)               | [![badge](https://img.shields.io/npm/v/react-native-bottom-tabs?style=for-the-badge)](https://www.npmjs.com/package/react-native-bottom-tabs)                             |
+| [@bottom-tabs/expo-template](/packages/expo-template)                        | [![badge](https://img.shields.io/npm/v/@bottom-tabs/expo-template.svg?style=for-the-badge)](https://www.npmjs.com/package/@bottom-tabs/expo-template)                     |
 | [@bottom-tabs/react-navigation](/packages/react-navigation)                  | [![badge](https://img.shields.io/npm/v/@bottom-tabs/react-navigation.svg?style=for-the-badge)](https://www.npmjs.com/package/@bottom-tabs/react-navigation)                   |
 
 ## Documentation
