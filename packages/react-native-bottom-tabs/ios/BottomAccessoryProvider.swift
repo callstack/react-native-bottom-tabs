@@ -8,7 +8,7 @@ import SwiftUI
     self.delegate = delegate
   }
 
-  #if !os(macOS)
+  #if compiler(>=6.1) && !os(macOS)
   @available(iOS 26.0, *)
   public func emitPlacementChanged(_ placement: TabViewBottomAccessoryPlacement?) {
     var placementValue = "none"
