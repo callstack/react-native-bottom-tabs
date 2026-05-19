@@ -180,6 +180,9 @@ using namespace facebook::react;
     _tabViewProvider.tabBarHidden = newViewProps.tabBarHidden;
   }
 
+  if (oldViewProps.ignoresContentBackground != newViewProps.ignoresContentBackground) {
+    _tabViewProvider.ignoresContentBackground = newViewProps.ignoresContentBackground;
+  }
 
   [super updateProps:props oldProps:oldProps];
 }

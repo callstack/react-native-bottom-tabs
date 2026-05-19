@@ -61,6 +61,7 @@ export interface TabViewProps extends ViewProps {
   fontFamily?: string;
   fontWeight?: string;
   fontSize?: Int32;
+  ignoresContentBackground?: boolean;
 }
 
 export default codegenNativeComponent<TabViewProps>('RNCTabView', {
