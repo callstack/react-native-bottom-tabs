@@ -261,7 +261,13 @@ public final class TabInfo: NSObject {
             guard let image else { return }
             DispatchQueue.main.async { [weak self] in
               guard let self else { return }
-              props.icons[index] = image.resizeImageTo(size: iconSize)
+              let icon = image.resizeImageTo(size: iconSize)
+              #if os(macOS)
+              props.icons[index] = icon
+              #else
+              props.icons[index] = icon?.withRenderingMode(.alwaysTemplate)
+              #endif
+              props.iconsRevision += 1
             }
           })
       }

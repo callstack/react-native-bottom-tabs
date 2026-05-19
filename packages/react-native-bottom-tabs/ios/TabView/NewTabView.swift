@@ -29,6 +29,7 @@ struct NewTabView: AnyTabView {
 
           if !tabData.hidden || isFocused {
             let icon = props.icons[index]
+            let tintColor = isFocused ? tabData.activeTintColor ?? props.activeTintColor : props.inactiveTintColor
 
             let context = TabAppearContext(
               index: index,
@@ -48,7 +49,8 @@ struct NewTabView: AnyTabView {
                 title: tabData.title,
                 icon: icon,
                 sfSymbol: tabData.sfSymbol,
-                labeled: props.labeled
+                labeled: props.labeled,
+                tintColor: tintColor
               )
             }
             #if !os(tvOS)

@@ -69,6 +69,7 @@ struct TabViewImpl: View {
           tabBar = tabController
         #else
           tabBar = tabController.tabBar
+          updateTabBarAppearance(props: props, tabBar: tabController.tabBar)
           if !props.tabBarHidden {
             onTabBarMeasured(
               Int(tabController.tabBar.frame.size.height)
@@ -82,6 +83,9 @@ struct TabViewImpl: View {
       .tintColor(props.selectedActiveTintColor)
       .getSidebarAdaptable(enabled: props.sidebarAdaptable ?? false)
       .onChange(of: props.selectedPage ?? "") { newValue in
+        #if !os(macOS)
+          updateTabBarAppearance(props: props, tabBar: tabBar)
+        #endif
         #if !os(macOS)
           if props.disablePageAnimations {
             UIView.setAnimationsEnabled(false)
@@ -120,36 +124,41 @@ struct TabViewImpl: View {
     if props.scrollEdgeAppearance == "transparent" {
       configureTransparentAppearance(tabBar: tabBar, props: props)
       return
+    } else {
+      configureStandardAppearance(tabBar: tabBar, props: props)
     }
-
-    configureStandardAppearance(tabBar: tabBar, props: props)
   }
 #endif
 
 #if !os(macOS)
   private func configureTransparentAppearance(tabBar: UITabBar, props: TabViewProps) {
     tabBar.barTintColor = props.barTintColor
+    tabBar.tintColor = props.selectedActiveTintColor
     #if !os(visionOS)
       tabBar.isTranslucent = props.translucent
     #endif
     tabBar.unselectedItemTintColor = props.inactiveTintColor
 
     guard let items = tabBar.items else { return }
+    configureTabBarItemImages(items: items, props: props)
 
     let attributes = TabBarFontSize.createNormalStateAttributes(
       fontSize: props.fontSize,
       fontFamily: props.fontFamily,
       fontWeight: props.fontWeight,
-      inactiveColor: nil
+      inactiveColor: props.inactiveTintColor
     )
 
     items.forEach { item in
       item.setTitleTextAttributes(attributes, for: .normal)
+      item.setTitleTextAttributes(selectedAttributes(props: props), for: .selected)
     }
   }
 
   private func configureStandardAppearance(tabBar: UITabBar, props: TabViewProps) {
     let appearance = UITabBarAppearance()
+    tabBar.tintColor = props.selectedActiveTintColor
+    tabBar.unselectedItemTintColor = props.inactiveTintColor
 
     // Configure background
     switch props.scrollEdgeAppearance {
@@ -180,8 +189,12 @@ struct TabViewImpl: View {
     if let inactiveTintColor = props.inactiveTintColor {
       itemAppearance.normal.iconColor = inactiveTintColor
     }
+    if let activeTintColor = props.selectedActiveTintColor {
+      itemAppearance.selected.iconColor = activeTintColor
+    }
 
     itemAppearance.normal.titleTextAttributes = attributes
+    itemAppearance.selected.titleTextAttributes = selectedAttributes(props: props)
 
     // Apply item appearance to all layouts
     appearance.stackedLayoutAppearance = itemAppearance
@@ -193,6 +206,49 @@ struct TabViewImpl: View {
     if #available(iOS 15.0, *) {
       tabBar.scrollEdgeAppearance = appearance.copy()
     }
+    if let items = tabBar.items {
+      configureTabBarItemImages(items: items, props: props)
+      configureTabBarItemTitles(items: items, props: props)
+    }
+  }
+
+  private func configureTabBarItemTitles(items: [UITabBarItem], props: TabViewProps) {
+    let normalAttributes = TabBarFontSize.createNormalStateAttributes(
+      fontSize: props.fontSize,
+      fontFamily: props.fontFamily,
+      fontWeight: props.fontWeight,
+      inactiveColor: props.inactiveTintColor
+    )
+    let selectedAttributes = selectedAttributes(props: props)
+
+    items.forEach { item in
+      item.setTitleTextAttributes(normalAttributes, for: .normal)
+      item.setTitleTextAttributes(selectedAttributes, for: .selected)
+    }
+  }
+
+  private func configureTabBarItemImages(items: [UITabBarItem], props: TabViewProps) {
+    for (tabBarIndex, item) in items.enumerated() {
+      guard let tabData = props.filteredItems[safe: tabBarIndex],
+            let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key }),
+            let icon = props.icons[itemIndex] else { continue }
+
+      item.image = props.inactiveTintColor.map {
+        icon.withTintColor($0, renderingMode: .alwaysOriginal)
+      } ?? icon
+      item.selectedImage = props.selectedActiveTintColor.map {
+        icon.withTintColor($0, renderingMode: .alwaysOriginal)
+      } ?? icon
+    }
+  }
+
+  private func selectedAttributes(props: TabViewProps) -> [NSAttributedString.Key: Any] {
+    TabBarFontSize.createFontAttributes(
+      size: props.fontSize.map(CGFloat.init) ?? TabBarFontSize.defaultSize,
+      family: props.fontFamily,
+      weight: props.fontWeight,
+      color: props.selectedActiveTintColor
+    )
   }
 #endif
 
@@ -248,6 +304,9 @@ extension View {
           updateTabBarAppearance(props: props, tabBar: tabBar)
         }
         .onChange(of: props.selectedActiveTintColor) { _ in
+          updateTabBarAppearance(props: props, tabBar: tabBar)
+        }
+        .onChange(of: props.iconsRevision) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
         }
         .onChange(of: props.fontSize) { _ in

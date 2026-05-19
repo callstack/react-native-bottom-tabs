@@ -40,6 +40,7 @@ struct LegacyTabView: AnyTabView {
 
       if !tabData.hidden || isFocused {
         let icon = props.icons[index]
+        let tintColor = isFocused ? tabData.activeTintColor ?? props.activeTintColor : props.inactiveTintColor
         let child = props.children[safe: index]?.view ?? PlatformView()
         let context = TabAppearContext(
           index: index,
@@ -56,7 +57,8 @@ struct LegacyTabView: AnyTabView {
               title: tabData.title,
               icon: icon,
               sfSymbol: tabData.sfSymbol,
-              labeled: props.labeled
+              labeled: props.labeled,
+              tintColor: tintColor
             )
             .accessibilityIdentifier(tabData.testID ?? "")
           }
