@@ -153,6 +153,7 @@ struct TabViewImpl: View {
       item.setTitleTextAttributes(attributes, for: .normal)
       item.setTitleTextAttributes(selectedAttributes(props: props), for: .selected)
     }
+    configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
   }
 
   private func configureStandardAppearance(tabBar: UITabBar, props: TabViewProps) {
@@ -209,6 +210,7 @@ struct TabViewImpl: View {
     if let items = tabBar.items {
       configureTabBarItemImages(items: items, props: props)
       configureTabBarItemTitles(items: items, props: props)
+      configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
     }
   }
 
@@ -233,12 +235,40 @@ struct TabViewImpl: View {
             let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key }),
             let icon = props.icons[itemIndex] else { continue }
 
+      if shouldRenderTabBarLabelsIntoImages(), props.labeled {
+        item.title = ""
+        item.accessibilityLabel = tabData.title
+        item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 100)
+        item.image = makeTabBarItemImage(
+          icon: icon,
+          title: tabData.title,
+          color: props.inactiveTintColor,
+          props: props
+        )
+        item.selectedImage = makeTabBarItemImage(
+          icon: icon,
+          title: tabData.title,
+          color: props.selectedActiveTintColor,
+          props: props
+        )
+        continue
+      }
+
       item.image = props.inactiveTintColor.map {
         icon.withTintColor($0, renderingMode: .alwaysOriginal)
       } ?? icon
       item.selectedImage = props.selectedActiveTintColor.map {
         icon.withTintColor($0, renderingMode: .alwaysOriginal)
       } ?? icon
+    }
+  }
+
+  private func configureTabBarItemImagesAfterLayout(tabBar: UITabBar, props: TabViewProps) {
+    guard shouldRenderTabBarLabelsIntoImages() else { return }
+
+    DispatchQueue.main.async { [weak tabBar] in
+      guard let tabBar, let items = tabBar.items else { return }
+      configureTabBarItemImages(items: items, props: props)
     }
   }
 
@@ -249,6 +279,62 @@ struct TabViewImpl: View {
       weight: props.fontWeight,
       color: props.selectedActiveTintColor
     )
+  }
+
+  private func shouldRenderTabBarLabelsIntoImages() -> Bool {
+    let version = ProcessInfo.processInfo.operatingSystemVersion
+    return version.majorVersion > 26 || (version.majorVersion == 26 && version.minorVersion >= 4)
+  }
+
+  private func makeTabBarItemImage(
+    icon: UIImage,
+    title: String,
+    color: UIColor?,
+    props: TabViewProps
+  ) -> UIImage {
+    let color = color ?? .label
+    let iconSize = CGSize(width: 27, height: 27)
+    let font = TabBarFontSize.createFontAttributes(
+      size: props.fontSize.map(CGFloat.init) ?? TabBarFontSize.defaultSize,
+      family: props.fontFamily,
+      weight: props.fontWeight
+    )[.font] as? UIFont ?? UIFont.boldSystemFont(ofSize: TabBarFontSize.defaultSize)
+    let paragraphStyle = NSMutableParagraphStyle()
+    paragraphStyle.alignment = .center
+    let attributes: [NSAttributedString.Key: Any] = [
+      .font: font,
+      .foregroundColor: color,
+      .paragraphStyle: paragraphStyle,
+    ]
+    let titleSize = (title as NSString).size(withAttributes: attributes)
+    let imageSize = CGSize(
+      width: max(iconSize.width, ceil(titleSize.width)) + 8,
+      height: iconSize.height + 3 + ceil(titleSize.height)
+    )
+    let format = UIGraphicsImageRendererFormat()
+    format.scale = UIScreen.main.scale
+
+    let image = UIGraphicsImageRenderer(size: imageSize, format: format).image { _ in
+      let tintedIcon = icon.withTintColor(color, renderingMode: .alwaysOriginal)
+      tintedIcon.draw(in: CGRect(
+        x: (imageSize.width - iconSize.width) / 2,
+        y: 0,
+        width: iconSize.width,
+        height: iconSize.height
+      ))
+
+      (title as NSString).draw(
+        in: CGRect(
+          x: 0,
+          y: iconSize.height + 3,
+          width: imageSize.width,
+          height: ceil(titleSize.height)
+        ),
+        withAttributes: attributes
+      )
+    }
+
+    return image.withRenderingMode(.alwaysOriginal)
   }
 #endif
 
