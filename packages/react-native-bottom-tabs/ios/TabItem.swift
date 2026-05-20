@@ -5,21 +5,20 @@ struct TabItem: View {
   var icon: PlatformImage?
   var sfSymbol: String?
   var labeled: Bool?
-  var tintColor: PlatformColor?
+  var inactiveTintColor: PlatformColor?
 
   private var tint: Color? {
-    tintColor.map(Color.init)
+    inactiveTintColor.map(Color.init)
   }
 
   #if !os(macOS)
   private var tintedIcon: PlatformImage? {
     guard let icon else { return nil }
-    guard let tintColor else { return icon }
-    return icon.withTintColor(tintColor, renderingMode: .alwaysOriginal)
+    guard let inactiveTintColor else { return icon }
+    return icon.withTintColor(inactiveTintColor, renderingMode: .alwaysOriginal)
   }
   #endif
 
-  @ViewBuilder
   var body: some View {
     if let icon {
 #if os(macOS)

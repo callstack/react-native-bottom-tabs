@@ -84,7 +84,7 @@ struct TabViewImpl: View {
       .getSidebarAdaptable(enabled: props.sidebarAdaptable ?? false)
       .onChange(of: props.selectedPage ?? "") { newValue in
         #if !os(macOS)
-          updateTabBarAppearance(props: props, tabBar: tabBar)
+          tabBar?.tintColor = props.selectedActiveTintColor
         #endif
         #if !os(macOS)
           if props.disablePageAnimations {
@@ -140,7 +140,6 @@ struct TabViewImpl: View {
     tabBar.unselectedItemTintColor = props.inactiveTintColor
 
     guard let items = tabBar.items else { return }
-    configureTabBarItemImages(items: items, props: props)
 
     let attributes = TabBarFontSize.createNormalStateAttributes(
       fontSize: props.fontSize,
@@ -153,6 +152,7 @@ struct TabViewImpl: View {
       item.setTitleTextAttributes(attributes, for: .normal)
       item.setTitleTextAttributes(selectedAttributes(props: props), for: .selected)
     }
+    configureTabBarItemImages(items: items, props: props)
     configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
   }
 
@@ -208,8 +208,8 @@ struct TabViewImpl: View {
       tabBar.scrollEdgeAppearance = appearance.copy()
     }
     if let items = tabBar.items {
-      configureTabBarItemImages(items: items, props: props)
       configureTabBarItemTitles(items: items, props: props)
+      configureTabBarItemImages(items: items, props: props)
       configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
     }
   }
@@ -235,6 +235,8 @@ struct TabViewImpl: View {
             let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key }),
             let icon = props.icons[itemIndex] else { continue }
 
+      let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
+
       if shouldRenderTabBarLabelsIntoImages(), props.labeled {
         item.title = ""
         item.accessibilityLabel = tabData.title
@@ -248,7 +250,7 @@ struct TabViewImpl: View {
         item.selectedImage = makeTabBarItemImage(
           icon: icon,
           title: tabData.title,
-          color: props.selectedActiveTintColor,
+          color: tabActiveColor,
           props: props
         )
         continue
@@ -257,9 +259,19 @@ struct TabViewImpl: View {
       item.image = props.inactiveTintColor.map {
         icon.withTintColor($0, renderingMode: .alwaysOriginal)
       } ?? icon
-      item.selectedImage = props.selectedActiveTintColor.map {
+      item.selectedImage = tabActiveColor.map {
         icon.withTintColor($0, renderingMode: .alwaysOriginal)
       } ?? icon
+
+      item.setTitleTextAttributes(
+        TabBarFontSize.createFontAttributes(
+          size: props.fontSize.map(CGFloat.init) ?? TabBarFontSize.defaultSize,
+          family: props.fontFamily,
+          weight: props.fontWeight,
+          color: tabActiveColor
+        ),
+        for: .selected
+      )
     }
   }
 
@@ -283,7 +295,7 @@ struct TabViewImpl: View {
 
   private func shouldRenderTabBarLabelsIntoImages() -> Bool {
     let version = ProcessInfo.processInfo.operatingSystemVersion
-    return version.majorVersion > 26 || (version.majorVersion == 26 && version.minorVersion >= 4)
+    return version.majorVersion >= 26
   }
 
   private func makeTabBarItemImage(
@@ -389,8 +401,11 @@ extension View {
         .onChange(of: props.inactiveTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
         }
-        .onChange(of: props.selectedActiveTintColor) { _ in
+        .onChange(of: props.activeTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
+        }
+        .onChange(of: props.selectedActiveTintColor) { newValue in
+          tabBar?.tintColor = newValue
         }
         .onChange(of: props.iconsRevision) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
