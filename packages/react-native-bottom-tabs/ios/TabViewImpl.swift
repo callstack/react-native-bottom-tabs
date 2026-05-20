@@ -84,9 +84,6 @@ struct TabViewImpl: View {
       .getSidebarAdaptable(enabled: props.sidebarAdaptable ?? false)
       .onChange(of: props.selectedPage ?? "") { newValue in
         #if !os(macOS)
-          tabBar?.tintColor = props.selectedActiveTintColor
-        #endif
-        #if !os(macOS)
           if props.disablePageAnimations {
             UIView.setAnimationsEnabled(false)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -124,9 +121,9 @@ struct TabViewImpl: View {
     if props.scrollEdgeAppearance == "transparent" {
       configureTransparentAppearance(tabBar: tabBar, props: props)
       return
-    } else {
-      configureStandardAppearance(tabBar: tabBar, props: props)
     }
+
+    configureStandardAppearance(tabBar: tabBar, props: props)
   }
 #endif
 
@@ -141,15 +138,15 @@ struct TabViewImpl: View {
 
     guard let items = tabBar.items else { return }
 
-    let attributes = TabBarFontSize.createNormalStateAttributes(
+    let fontAttributes = TabBarFontSize.createNormalStateAttributes(
       fontSize: props.fontSize,
       fontFamily: props.fontFamily,
       fontWeight: props.fontWeight,
-      inactiveColor: props.inactiveTintColor
+      inactiveColor: nil
     )
 
     items.forEach { item in
-      item.setTitleTextAttributes(attributes, for: .normal)
+      item.setTitleTextAttributes(fontAttributes, for: .normal)
       item.setTitleTextAttributes(selectedAttributes(props: props), for: .selected)
     }
     configureTabBarItemImages(items: items, props: props)
@@ -208,24 +205,8 @@ struct TabViewImpl: View {
       tabBar.scrollEdgeAppearance = appearance.copy()
     }
     if let items = tabBar.items {
-      configureTabBarItemTitles(items: items, props: props)
       configureTabBarItemImages(items: items, props: props)
       configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
-    }
-  }
-
-  private func configureTabBarItemTitles(items: [UITabBarItem], props: TabViewProps) {
-    let normalAttributes = TabBarFontSize.createNormalStateAttributes(
-      fontSize: props.fontSize,
-      fontFamily: props.fontFamily,
-      fontWeight: props.fontWeight,
-      inactiveColor: props.inactiveTintColor
-    )
-    let selectedAttributes = selectedAttributes(props: props)
-
-    items.forEach { item in
-      item.setTitleTextAttributes(normalAttributes, for: .normal)
-      item.setTitleTextAttributes(selectedAttributes, for: .selected)
     }
   }
 

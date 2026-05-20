@@ -48,8 +48,7 @@ struct NewTabView: AnyTabView {
                 title: tabData.title,
                 icon: icon,
                 sfSymbol: tabData.sfSymbol,
-                labeled: props.labeled,
-                inactiveTintColor: props.inactiveTintColor
+                labeled: props.labeled
               )
             }
             #if !os(tvOS)
