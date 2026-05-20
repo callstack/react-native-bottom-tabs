@@ -9,7 +9,7 @@ import SwiftUI
   }
 
   #if !os(macOS)
-  @available(iOS 26.0, *)
+  @available(iOS 26.0, tvOS 26.0, *)
   public func emitPlacementChanged(_ placement: TabViewBottomAccessoryPlacement?) {
     var placementValue = "none"
     if placement == .inline {

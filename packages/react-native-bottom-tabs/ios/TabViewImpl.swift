@@ -276,22 +276,19 @@ extension View {
 
   @ViewBuilder
   func tintColor(_ color: PlatformColor?) -> some View {
-    if let color {
-      let color = Color(color)
-      if #available(iOS 16.0, tvOS 16.0, macOS 13.0, *) {
-        self.tint(color)
-      } else {
-        self.accentColor(color)
-      }
+    let color = color.map(Color.init)
+
+    if #available(iOS 16.0, tvOS 16.0, macOS 13.0, *) {
+      self.tint(color)
     } else {
-      self
+      self.accentColor(color)
     }
   }
 
   @ViewBuilder
   func tabBarMinimizeBehavior(_ behavior: MinimizeBehavior?) -> some View {
     #if compiler(>=6.2)
-    if #available(iOS 26.0, macOS 26.0, *) {
+    if #available(iOS 26.0, macOS 26.0, tvOS 26.0, *) {
         if let behavior {
           self.tabBarMinimizeBehavior(behavior.convert())
         } else {
