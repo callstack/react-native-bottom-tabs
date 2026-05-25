@@ -70,6 +70,7 @@ struct TabViewImpl: View {
         #else
           tabBar = tabController.tabBar
           updateTabBarAppearance(props: props, tabBar: tabController.tabBar)
+          updateTabBarImages(props: props, tabBar: tabController.tabBar)
           if !props.tabBarHidden {
             onTabBarMeasured(
               Int(tabController.tabBar.frame.size.height)
@@ -113,6 +114,12 @@ struct TabViewImpl: View {
 }
 
 #if !os(macOS)
+  private func updateTabBarImages(props: TabViewProps, tabBar: UITabBar?) {
+    guard let tabBar, let items = tabBar.items else { return }
+    configureTabBarItemImages(items: items, props: props)
+    configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
+  }
+
   private func updateTabBarAppearance(props: TabViewProps, tabBar: UITabBar?) {
     guard let tabBar else { return }
 
@@ -149,8 +156,6 @@ struct TabViewImpl: View {
       item.setTitleTextAttributes(fontAttributes, for: .normal)
       item.setTitleTextAttributes(selectedAttributes(props: props), for: .selected)
     }
-    configureTabBarItemImages(items: items, props: props)
-    configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
   }
 
   private func configureStandardAppearance(tabBar: UITabBar, props: TabViewProps) {
@@ -203,10 +208,6 @@ struct TabViewImpl: View {
     tabBar.standardAppearance = appearance
     if #available(iOS 15.0, *) {
       tabBar.scrollEdgeAppearance = appearance.copy()
-    }
-    if let items = tabBar.items {
-      configureTabBarItemImages(items: items, props: props)
-      configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
     }
   }
 
@@ -381,24 +382,29 @@ extension View {
         }
         .onChange(of: props.inactiveTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.activeTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.selectedActiveTintColor) { newValue in
           tabBar?.tintColor = newValue
         }
         .onChange(of: props.iconsRevision) { _ in
-          updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.fontSize) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.fontFamily) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.fontWeight) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.tabBarHidden) { newValue in
           tabBar?.isHidden = newValue
