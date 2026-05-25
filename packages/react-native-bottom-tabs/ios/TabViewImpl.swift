@@ -214,12 +214,16 @@ struct TabViewImpl: View {
   private func configureTabBarItemImages(items: [UITabBarItem], props: TabViewProps) {
     for (tabBarIndex, item) in items.enumerated() {
       guard let tabData = props.filteredItems[safe: tabBarIndex],
-            let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key }),
-            let icon = props.icons[itemIndex] else { continue }
+            let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key }) else { continue }
 
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
+      let assetIcon = props.icons[itemIndex]
+      let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
 
-      if shouldRenderTabBarLabelsIntoImages(), props.labeled {
+      if shouldRenderTabBarLabelsIntoImages(),
+         props.labeled,
+         tabData.role != .search,
+         let icon {
         item.title = ""
         item.accessibilityLabel = tabData.title
         item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 100)
@@ -238,12 +242,14 @@ struct TabViewImpl: View {
         continue
       }
 
-      item.image = props.inactiveTintColor.map {
-        icon.withTintColor($0, renderingMode: .alwaysOriginal)
-      } ?? icon
-      item.selectedImage = tabActiveColor.map {
-        icon.withTintColor($0, renderingMode: .alwaysOriginal)
-      } ?? icon
+      if let icon {
+        item.image = props.inactiveTintColor.map {
+          icon.withTintColor($0, renderingMode: .alwaysOriginal)
+        } ?? icon
+        item.selectedImage = tabActiveColor.map {
+          icon.withTintColor($0, renderingMode: .alwaysOriginal)
+        } ?? icon
+      }
 
       item.setTitleTextAttributes(
         TabBarFontSize.createFontAttributes(
@@ -255,6 +261,12 @@ struct TabViewImpl: View {
         for: .selected
       )
     }
+  }
+
+  private func makeSFSymbolImage(named sfSymbol: String?) -> UIImage? {
+    guard let sfSymbol, !sfSymbol.isEmpty else { return nil }
+
+    return UIImage(systemName: sfSymbol)
   }
 
   private func configureTabBarItemImagesAfterLayout(tabBar: UITabBar, props: TabViewProps) {
@@ -310,12 +322,17 @@ struct TabViewImpl: View {
 
     let image = UIGraphicsImageRenderer(size: imageSize, format: format).image { _ in
       let tintedIcon = icon.withTintColor(color, renderingMode: .alwaysOriginal)
-      tintedIcon.draw(in: CGRect(
-        x: (imageSize.width - iconSize.width) / 2,
-        y: 0,
-        width: iconSize.width,
-        height: iconSize.height
-      ))
+      let iconFrame = aspectFitRect(
+        size: tintedIcon.size,
+        in: CGRect(
+          x: (imageSize.width - iconSize.width) / 2,
+          y: 0,
+          width: iconSize.width,
+          height: iconSize.height
+        )
+      )
+
+      tintedIcon.draw(in: iconFrame)
 
       (title as NSString).draw(
         in: CGRect(
@@ -329,6 +346,22 @@ struct TabViewImpl: View {
     }
 
     return image.withRenderingMode(.alwaysOriginal)
+  }
+
+  private func aspectFitRect(size: CGSize, in rect: CGRect) -> CGRect {
+    guard size.width > 0, size.height > 0 else {
+      return rect
+    }
+
+    let scale = min(rect.width / size.width, rect.height / size.height)
+    let fittedSize = CGSize(width: size.width * scale, height: size.height * scale)
+
+    return CGRect(
+      x: rect.minX + (rect.width - fittedSize.width) / 2,
+      y: rect.minY + (rect.height - fittedSize.height) / 2,
+      width: fittedSize.width,
+      height: fittedSize.height
+    )
   }
 #endif
 

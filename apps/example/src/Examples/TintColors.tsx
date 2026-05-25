@@ -33,7 +33,7 @@ export default function TintColorsExample() {
       key: 'contacts',
       focusedIcon: require('../../assets/icons/person_dark.png'),
       title: 'Contacts',
-      activeTintColor: 'yellow',
+      activeTintColor: 'blue',
     },
     {
       key: 'chat',
