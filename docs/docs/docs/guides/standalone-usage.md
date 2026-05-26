@@ -174,11 +174,19 @@ Color for the active tab.
 
 - Type: `ColorValue`
 
+:::warning
+On iOS 26 (Liquid Glass), using this prop applies a workaround that bakes tab labels into images for correct tinting. This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels.
+:::
+
 #### `tabBarInactiveTintColor`
 
 Color for inactive tabs.
 
 - Type: `ColorValue`
+
+:::warning
+On iOS 26 (Liquid Glass), using this prop applies a workaround that bakes tab labels into images for correct tinting. This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels.
+:::
 
 #### `tabBarStyle`
 

@@ -226,7 +226,7 @@ struct TabViewImpl: View {
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
       let assetIcon = props.icons[itemIndex]
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
-      let shouldRenderLabelIntoImage = props.labeled && tabData.role != .search && icon != nil
+      let shouldRenderLabelIntoImage = props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
 
       item.accessibilityLabel = tabData.title
 

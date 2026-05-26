@@ -83,6 +83,12 @@ class TabViewProps: ObservableObject {
     return activeTintColor
   }
 
+  var hasCustomTintColors: Bool {
+    activeTintColor != nil
+    || inactiveTintColor != nil
+    || items.contains(where: { $0.activeTintColor != nil })
+  }
+
   var filteredItems: [TabInfo] {
     items.filter {
       !$0.hidden || $0.key == selectedPage

@@ -124,9 +124,17 @@ It's recommended to use `transparent` or `opaque` without lazy loading as the ta
 
 Color for the active tab.
 
+:::warning
+On iOS 26 (Liquid Glass), using this prop applies a workaround that bakes tab labels into images for correct tinting. This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels.
+:::
+
 #### `tabBarInactiveTintColor`
 
 Color for the inactive tabs.
+
+:::warning
+On iOS 26 (Liquid Glass), using this prop applies a workaround that bakes tab labels into images for correct tinting. This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels.
+:::
 
 #### `tabBarStyle`
 
@@ -239,6 +247,10 @@ Label text of the tab displayed in the navigation bar. When undefined, scene tit
 #### `tabBarActiveTintColor`
 
 Color for the active tab.
+
+:::warning
+On iOS 26 (Liquid Glass), using this prop applies a workaround that bakes tab labels into images for correct tinting. This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels.
+:::
 
 :::note
 The `tabBarInactiveTintColor` is not supported on route level due to native limitations. Use `inactiveTintColor` in the `Tab.Navigator` instead.
