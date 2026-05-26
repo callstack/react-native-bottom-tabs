@@ -115,9 +115,16 @@ struct TabViewImpl: View {
 
 #if !os(macOS)
   private func updateTabBarImages(props: TabViewProps, tabBar: UITabBar?) {
-    guard let tabBar, let items = tabBar.items else { return }
+    guard shouldApplyLiquidGlassTintWorkaround(),
+          let tabBar,
+          let items = tabBar.items else { return }
+
     configureTabBarItemImages(items: items, props: props)
-    configureTabBarItemImagesAfterLayout(tabBar: tabBar, props: props)
+
+    DispatchQueue.main.async { [weak tabBar] in
+      guard let tabBar, let items = tabBar.items else { return }
+      configureTabBarItemImages(items: items, props: props)
+    }
   }
 
   private func updateTabBarAppearance(props: TabViewProps, tabBar: UITabBar?) {
@@ -219,13 +226,12 @@ struct TabViewImpl: View {
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
       let assetIcon = props.icons[itemIndex]
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
+      let shouldRenderLabelIntoImage = props.labeled && tabData.role != .search && icon != nil
 
-      if shouldRenderTabBarLabelsIntoImages(),
-         props.labeled,
-         tabData.role != .search,
-         let icon {
+      item.accessibilityLabel = tabData.title
+
+      if shouldRenderLabelIntoImage, let icon {
         item.title = ""
-        item.accessibilityLabel = tabData.title
         item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 100)
         item.image = makeTabBarItemImage(
           icon: icon,
@@ -241,6 +247,9 @@ struct TabViewImpl: View {
         )
         continue
       }
+
+      item.title = props.labeled ? tabData.title : nil
+      item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 0)
 
       if let icon {
         item.image = props.inactiveTintColor.map {
@@ -269,15 +278,6 @@ struct TabViewImpl: View {
     return UIImage(systemName: sfSymbol)
   }
 
-  private func configureTabBarItemImagesAfterLayout(tabBar: UITabBar, props: TabViewProps) {
-    guard shouldRenderTabBarLabelsIntoImages() else { return }
-
-    DispatchQueue.main.async { [weak tabBar] in
-      guard let tabBar, let items = tabBar.items else { return }
-      configureTabBarItemImages(items: items, props: props)
-    }
-  }
-
   private func selectedAttributes(props: TabViewProps) -> [NSAttributedString.Key: Any] {
     TabBarFontSize.createFontAttributes(
       size: props.fontSize.map(CGFloat.init) ?? TabBarFontSize.defaultSize,
@@ -287,9 +287,14 @@ struct TabViewImpl: View {
     )
   }
 
-  private func shouldRenderTabBarLabelsIntoImages() -> Bool {
-    let version = ProcessInfo.processInfo.operatingSystemVersion
-    return version.majorVersion >= 26
+  private func shouldApplyLiquidGlassTintWorkaround() -> Bool {
+    #if os(iOS)
+      if #available(iOS 26.0, *) {
+        return true
+      }
+    #endif
+
+    return false
   }
 
   private func makeTabBarItemImage(
@@ -425,6 +430,9 @@ extension View {
           tabBar?.tintColor = newValue
         }
         .onChange(of: props.iconsRevision) { _ in
+          updateTabBarImages(props: props, tabBar: tabBar)
+        }
+        .onChange(of: props.labeled) { _ in
           updateTabBarImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.fontSize) { _ in

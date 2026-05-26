@@ -4,6 +4,7 @@ import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
+import { Platform } from 'react-native';
 
 const renderScene = SceneMap({
   article: Article,
@@ -11,6 +12,8 @@ const renderScene = SceneMap({
   contacts: Contacts,
   chat: Chat,
 });
+
+const isAndroid = Platform.OS === 'android';
 
 export default function TintColorsExample() {
   const [index, setIndex] = useState(0);
@@ -31,7 +34,9 @@ export default function TintColorsExample() {
     },
     {
       key: 'contacts',
-      focusedIcon: require('../../assets/icons/person_dark.png'),
+      focusedIcon: isAndroid
+        ? require('../../assets/icons/person_dark.png')
+        : { sfSymbol: 'person.fill' },
       title: 'Contacts',
       activeTintColor: 'blue',
     },
