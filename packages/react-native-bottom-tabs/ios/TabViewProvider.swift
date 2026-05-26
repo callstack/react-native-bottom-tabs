@@ -85,7 +85,18 @@ public final class TabInfo: NSObject {
 
   @objc public var selectedPage: NSString? {
     didSet {
-      props.selectedPage = selectedPage as? String
+      let nextSelectedPage = selectedPage as? String
+
+      if disablePageAnimations {
+        var transaction = Transaction(animation: nil)
+        transaction.disablesAnimations = true
+
+        withTransaction(transaction) {
+          props.selectedPage = nextSelectedPage
+        }
+      } else {
+        props.selectedPage = nextSelectedPage
+      }
     }
   }
 
