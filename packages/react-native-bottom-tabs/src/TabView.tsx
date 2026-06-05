@@ -80,6 +80,13 @@ interface Props<Route extends BaseRoute> {
    */
   tabBarInactiveTintColor?: ColorValue;
   /**
+   * Enables the iOS 26 Liquid Glass tint color workaround that bakes tab labels
+   * into images. This can affect icon sizing when labels have different widths.
+   *
+   * @platform ios
+   */
+  experimental_bakedTintColors?: boolean;
+  /**
    * State for the tab view.
    *
    * The state should contain a `routes` prop which is an array of objects containing `key` and `title` props, such as `{ key: 'music', title: 'Music' }`.
@@ -251,6 +258,7 @@ const TabView = <Route extends BaseRoute>({
   tabLabelStyle,
   renderBottomAccessoryView,
   layoutDirection = 'locale',
+  experimental_bakedTintColors: experimentalBakedTintColors = false,
   ...props
 }: Props<Route>) => {
   // @ts-ignore
@@ -413,6 +421,7 @@ const TabView = <Route extends BaseRoute>({
         layoutDirection={layoutDirection}
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
+        experimentalBakedTintColors={experimentalBakedTintColors}
         barTintColor={tabBarStyle?.backgroundColor}
         rippleColor={rippleColor}
         labeled={labeled}

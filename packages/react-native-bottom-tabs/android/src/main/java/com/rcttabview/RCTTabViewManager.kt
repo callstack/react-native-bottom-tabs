@@ -151,6 +151,9 @@ class RCTTabViewManager(context: ReactApplicationContext) :
       view.setInactiveTintColor(value)
   }
 
+  override fun setExperimentalBakedTintColors(view: ReactBottomNavigationView?, value: Boolean) {
+  }
+
   override fun setActiveIndicatorColor(view: ReactBottomNavigationView?, value: Int?) {
     if (view != null && value != null) {
       val color = ColorStateList.valueOf(value)

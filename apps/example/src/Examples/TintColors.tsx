@@ -57,6 +57,7 @@ export default function TintColorsExample() {
       renderScene={renderScene}
       tabBarActiveTintColor="red"
       tabBarInactiveTintColor="orange"
+      experimental_bakedTintColors={false}
       scrollEdgeAppearance="default"
     />
   );

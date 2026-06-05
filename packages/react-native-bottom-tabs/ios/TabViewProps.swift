@@ -64,6 +64,7 @@ class TabViewProps: ObservableObject {
   @Published var barTintColor: PlatformColor?
   @Published var activeTintColor: PlatformColor?
   @Published var inactiveTintColor: PlatformColor?
+  @Published var experimentalBakedTintColors: Bool = false
   @Published var translucent: Bool = true
   @Published var disablePageAnimations: Bool = false
   @Published var hapticFeedbackEnabled: Bool = false
