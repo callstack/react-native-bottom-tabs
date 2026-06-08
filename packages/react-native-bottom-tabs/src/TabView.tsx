@@ -252,6 +252,7 @@ const TabView = <Route extends BaseRoute>({
   tabLabelStyle,
   renderBottomAccessoryView,
   layoutDirection = 'locale',
+  disablePageAnimations = false,
   ...props
 }: Props<Route>) => {
   // @ts-ignore
@@ -275,14 +276,29 @@ const TabView = <Route extends BaseRoute>({
     return navigationState.routes;
   }, [navigationState.routes]);
 
+  const routeKeys = React.useMemo(
+    () => trimmedRoutes.map((route) => route.key),
+    [trimmedRoutes]
+  );
+
   /**
    * List of loaded tabs, tabs will be loaded when navigated to.
    */
   const [loaded, setLoaded] = React.useState<string[]>([focusedKey]);
+  const loadedRoutes = disablePageAnimations
+    ? routeKeys
+    : loaded.includes(focusedKey)
+      ? loaded
+      : [...loaded, focusedKey];
 
-  if (!loaded.includes(focusedKey)) {
+  if (
+    disablePageAnimations &&
+    routeKeys.some((routeKey) => !loaded.includes(routeKey))
+  ) {
+    setLoaded(routeKeys);
+  } else if (!loaded.includes(focusedKey)) {
     // Set the current tab to be loaded if it was not loaded before
-    setLoaded((loaded) => [...loaded, focusedKey]);
+    setLoaded(loadedRoutes);
   }
 
   const icons = React.useMemo(
@@ -410,6 +426,7 @@ const TabView = <Route extends BaseRoute>({
         onPageSelected={handlePageSelected}
         onTabBarMeasured={handleTabBarMeasured}
         onNativeLayout={handleNativeLayout}
+        disablePageAnimations={disablePageAnimations}
         hapticFeedbackEnabled={hapticFeedbackEnabled}
         layoutDirection={layoutDirection}
         activeTintColor={activeTintColor}
@@ -419,7 +436,10 @@ const TabView = <Route extends BaseRoute>({
         labeled={labeled}
       >
         {trimmedRoutes.map((route) => {
-          if (getLazy({ route }) !== false && !loaded.includes(route.key)) {
+          if (
+            getLazy({ route }) !== false &&
+            !loadedRoutes.includes(route.key)
+          ) {
             // Don't render a screen if we've never navigated to it
             return (
               <View

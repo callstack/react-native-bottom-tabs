@@ -44,9 +44,10 @@ struct TabViewImpl: View {
 
   var body: some View {
     tabContent
+      .disableAnimations(props.disablePageAnimations)
       .tabBarMinimizeBehavior(props.minimizeBehavior)
       #if !os(tvOS) && !os(macOS) && !os(visionOS)
-        .onTabItemEvent { index, isLongPress in
+        .onTabItemEvent(disablePageAnimations: props.disablePageAnimations) { index, isLongPress in
           let item = props.filteredItems[safe: index]
           guard let key = item?.key else { return false }
 
@@ -82,14 +83,6 @@ struct TabViewImpl: View {
       .tintColor(props.selectedActiveTintColor)
       .getSidebarAdaptable(enabled: props.sidebarAdaptable ?? false)
       .onChange(of: props.selectedPage ?? "") { newValue in
-        #if !os(macOS)
-          if props.disablePageAnimations {
-            UIView.setAnimationsEnabled(false)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-              UIView.setAnimationsEnabled(true)
-            }
-          }
-        #endif
         #if os(tvOS) || os(macOS) || os(visionOS)
           onSelect(newValue)
         #endif
@@ -197,6 +190,18 @@ struct TabViewImpl: View {
 #endif
 
 extension View {
+  @ViewBuilder
+  func disableAnimations(_ disabled: Bool) -> some View {
+    if disabled {
+      self.transaction { transaction in
+        transaction.animation = nil
+        transaction.disablesAnimations = true
+      }
+    } else {
+      self
+    }
+  }
+
   @ViewBuilder
   func getSidebarAdaptable(enabled: Bool) -> some View {
     if #available(iOS 18.0, macOS 15.0, tvOS 18.0, visionOS 2.0, *) {
