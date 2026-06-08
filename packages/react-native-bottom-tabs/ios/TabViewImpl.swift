@@ -21,7 +21,7 @@ struct TabViewImpl: View {
         onSelect: onSelect
       ) {
         #if !os(macOS)
-        updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarAppearance(props: props, tabBar: tabBar)
         #endif
       }
     } else {
@@ -31,7 +31,7 @@ struct TabViewImpl: View {
         onSelect: onSelect
       ) {
         #if !os(macOS)
-        updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarAppearance(props: props, tabBar: tabBar)
         #endif
       }
     }
@@ -61,10 +61,10 @@ struct TabViewImpl: View {
         }
       #endif
       .introspectTabView { tabController in
-#if !os(macOS)
-        tabController.view.backgroundColor = .clear
-        tabController.viewControllers?.forEach { $0.view.backgroundColor = .clear }
-#endif
+        #if !os(macOS)
+          tabController.view.backgroundColor = .clear
+          tabController.viewControllers?.forEach { $0.view.backgroundColor = .clear }
+        #endif
         #if os(macOS)
           tabBar = tabController
         #else
@@ -116,8 +116,9 @@ struct TabViewImpl: View {
 #if !os(macOS)
   private func updateExperimentalBakedTintColors(props: TabViewProps, tabBar: UITabBar?) {
     guard shouldUseExperimentalBakedTintColors(props: props),
-          let tabBar,
-          let items = tabBar.items else { return }
+      let tabBar,
+      let items = tabBar.items
+    else { return }
 
     configureExperimentalBakedTintColors(items: items, props: props)
 
@@ -168,7 +169,7 @@ struct TabViewImpl: View {
   private func configureStandardAppearance(tabBar: UITabBar, props: TabViewProps) {
     let appearance = UITabBarAppearance()
     tabBar.tintColor = props.selectedActiveTintColor
-    tabBar.unselectedItemTintColor = props.inactiveTintColor
+    tabBar.unselectedItemTintColor = props.effectiveInactiveTintColor
 
     // Configure background
     switch props.scrollEdgeAppearance {
@@ -221,12 +222,14 @@ struct TabViewImpl: View {
   private func configureExperimentalBakedTintColors(items: [UITabBarItem], props: TabViewProps) {
     for (tabBarIndex, item) in items.enumerated() {
       guard let tabData = props.filteredItems[safe: tabBarIndex],
-            let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key }) else { continue }
+        let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key })
+      else { continue }
 
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
       let assetIcon = props.icons[itemIndex]
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
-      let shouldRenderLabelIntoImage = props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
+      let shouldRenderLabelIntoImage =
+        props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
 
       item.accessibilityLabel = tabData.title
 
@@ -252,12 +255,14 @@ struct TabViewImpl: View {
       item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 0)
 
       if let icon {
-        item.image = props.inactiveTintColor.map {
-          icon.withTintColor($0, renderingMode: .alwaysOriginal)
-        } ?? icon
-        item.selectedImage = tabActiveColor.map {
-          icon.withTintColor($0, renderingMode: .alwaysOriginal)
-        } ?? icon
+        item.image =
+          props.inactiveTintColor.map {
+            icon.withTintColor($0, renderingMode: .alwaysOriginal)
+          } ?? icon
+        item.selectedImage =
+          tabActiveColor.map {
+            icon.withTintColor($0, renderingMode: .alwaysOriginal)
+          } ?? icon
       }
 
       item.setTitleTextAttributes(
@@ -274,11 +279,13 @@ struct TabViewImpl: View {
 
   private func resetExperimentalBakedTintColors(props: TabViewProps, tabBar: UITabBar?) {
     guard let tabBar,
-          let items = tabBar.items else { return }
+      let items = tabBar.items
+    else { return }
 
     for (tabBarIndex, item) in items.enumerated() {
       guard let tabData = props.filteredItems[safe: tabBarIndex],
-            let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key }) else { continue }
+        let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key })
+      else { continue }
 
       let assetIcon = props.icons[itemIndex]
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
@@ -327,11 +334,12 @@ struct TabViewImpl: View {
   ) -> UIImage {
     let color = color ?? .label
     let iconSize = CGSize(width: 27, height: 27)
-    let font = TabBarFontSize.createFontAttributes(
-      size: props.fontSize.map(CGFloat.init) ?? TabBarFontSize.defaultSize,
-      family: props.fontFamily,
-      weight: props.fontWeight
-    )[.font] as? UIFont ?? UIFont.boldSystemFont(ofSize: TabBarFontSize.defaultSize)
+    let font =
+      TabBarFontSize.createFontAttributes(
+        size: props.fontSize.map(CGFloat.init) ?? TabBarFontSize.defaultSize,
+        family: props.fontFamily,
+        weight: props.fontWeight
+      )[.font] as? UIFont ?? UIFont.boldSystemFont(ofSize: TabBarFontSize.defaultSize)
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.alignment = .center
     let attributes: [NSAttributedString.Key: Any] = [
@@ -497,7 +505,7 @@ extension View {
   @ViewBuilder
   func tabBarMinimizeBehavior(_ behavior: MinimizeBehavior?) -> some View {
     #if compiler(>=6.2)
-    if #available(iOS 26.0, macOS 26.0, tvOS 26.0, *) {
+      if #available(iOS 26.0, macOS 26.0, tvOS 26.0, *) {
         if let behavior {
           self.tabBarMinimizeBehavior(behavior.convert())
         } else {
