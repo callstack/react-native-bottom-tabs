@@ -23,6 +23,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import JSBottomTabs from './Examples/JSBottomTabs';
 import ThreeTabs from './Examples/ThreeTabs';
 import FourTabs from './Examples/FourTabs';
+import FiveTabs from './Examples/FiveTabs';
+import SixTabs from './Examples/SixTabs';
 import FourTabsRTL from './Examples/FourTabsRTL';
 import MaterialBottomTabs from './Examples/MaterialBottomTabs';
 import SFSymbols from './Examples/SFSymbols';
@@ -84,6 +86,8 @@ const examples = [
     name: 'Three Tabs',
   },
   { component: FourTabs, name: 'Four Tabs' },
+  { component: FiveTabs, name: 'Five Tabs' },
+  { component: SixTabs, name: 'Six Tabs' },
   {
     component: SFSymbols,
     name: 'SF Symbols',
