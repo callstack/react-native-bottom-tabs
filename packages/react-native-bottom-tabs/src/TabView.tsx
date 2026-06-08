@@ -77,6 +77,7 @@ interface Props<Route extends BaseRoute> {
   tabBarActiveTintColor?: ColorValue;
   /**
    * Inactive tab color.
+   * Has no effect on iOS 26 and above (Liquid Glass).
    */
   tabBarInactiveTintColor?: ColorValue;
   /**

@@ -148,7 +148,7 @@ struct TabViewImpl: View {
     #if !os(visionOS)
       tabBar.isTranslucent = props.translucent
     #endif
-    tabBar.unselectedItemTintColor = props.inactiveTintColor
+    tabBar.unselectedItemTintColor = props.effectiveInactiveTintColor
 
     guard let items = tabBar.items else { return }
 
@@ -193,10 +193,10 @@ struct TabViewImpl: View {
       fontSize: props.fontSize,
       fontFamily: props.fontFamily,
       fontWeight: props.fontWeight,
-      inactiveColor: props.inactiveTintColor
+      inactiveColor: props.effectiveInactiveTintColor
     )
 
-    if let inactiveTintColor = props.inactiveTintColor {
+    if let inactiveTintColor = props.effectiveInactiveTintColor {
       itemAppearance.normal.iconColor = inactiveTintColor
     }
     if let activeTintColor = props.selectedActiveTintColor {

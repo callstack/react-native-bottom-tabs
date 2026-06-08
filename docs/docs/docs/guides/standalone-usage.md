@@ -184,16 +184,8 @@ Color for inactive tabs.
 
 - Type: `ColorValue`
 
-:::warning
-On iOS 26 (Liquid Glass), enable `experimental_bakedTintColors` to apply a workaround that bakes tab labels into images for correct tinting. This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels.
-:::
-
-#### `experimental_bakedTintColors` <Badge text="iOS" type="info" /> <Badge text="experimental" type="danger"/>
-
-Enables the iOS 26 Liquid Glass workaround for active and inactive tint colors. When enabled with custom active or inactive tint colors, tab labels are baked into images so the icon and label receive the same tint during normal selection and Liquid Glass tab scrubbing.
-
-:::warning
-This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels, and icon sizing can vary with label width.
+:::note
+On iOS >= 26 (Liquid Glass), this prop is ignored.
 :::
 
 #### `tabBarStyle`

@@ -132,16 +132,8 @@ On iOS 26 (Liquid Glass), enable `experimental_bakedTintColors` to apply a worka
 
 Color for the inactive tabs.
 
-:::warning
-On iOS 26 (Liquid Glass), enable `experimental_bakedTintColors` to apply a workaround that bakes tab labels into images for correct tinting. This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels.
-:::
-
-#### `experimental_bakedTintColors` <Badge text="iOS" type="info" /> <Badge text="experimental" type="danger"/>
-
-Enables the iOS 26 Liquid Glass workaround for active and inactive tint colors. When enabled with custom active or inactive tint colors, tab labels are baked into images so the icon and label receive the same tint during normal selection and Liquid Glass tab scrubbing.
-
-:::warning
-This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels, and icon sizing can vary with label width.
+:::note
+On iOS >= 26 (Liquid Glass), this prop is ignored.
 :::
 
 #### `tabBarStyle`
@@ -261,7 +253,7 @@ On iOS 26 (Liquid Glass), enable `experimental_bakedTintColors` to apply a worka
 :::
 
 :::note
-The `tabBarInactiveTintColor` is not supported on route level due to native limitations. Use `inactiveTintColor` in the `Tab.Navigator` instead.
+The `tabBarInactiveTintColor` is not supported on route level due to native limitations. Use `tabBarInactiveTintColor` in the `Tab.Navigator` instead.
 :::
 
 #### `tabBarIcon`
@@ -332,7 +324,7 @@ To display a badge without text (just a dot), you need to pass a string with a s
 #### `tabBarBadgeBackgroundColor`
 
  - Type: `string`
- 
+
 Set the background color for the badge on android.
 Uses the system color by default.
 
@@ -415,7 +407,7 @@ React.useEffect(() => {
   const unsubscribe = navigation.addListener('tabPress', (e) => {
     // Note: For iOS 26+, use the `preventsDefault` option instead of `e.preventDefault()`
     // to avoid animation delays
-    
+
     // Do something manually
     // ...
   });
