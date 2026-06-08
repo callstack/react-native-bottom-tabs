@@ -156,6 +156,10 @@ using namespace facebook::react;
     _tabViewProvider.inactiveTintColor = RCTUIColorFromSharedColor(newViewProps.inactiveTintColor);
   }
 
+  if (oldViewProps.experimentalBakedTintColors != newViewProps.experimentalBakedTintColors) {
+    _tabViewProvider.experimentalBakedTintColors = newViewProps.experimentalBakedTintColors;
+  }
+
   if (oldViewProps.hapticFeedbackEnabled != newViewProps.hapticFeedbackEnabled) {
     _tabViewProvider.hapticFeedbackEnabled = newViewProps.hapticFeedbackEnabled;
   }
@@ -261,5 +265,4 @@ Class<RCTComponentViewProtocol> RNCTabViewCls(void)
 }
 
 #endif // RCT_NEW_ARCH_ENABLED
-
 
