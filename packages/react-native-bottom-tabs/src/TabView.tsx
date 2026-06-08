@@ -81,8 +81,8 @@ interface Props<Route extends BaseRoute> {
    */
   tabBarInactiveTintColor?: ColorValue;
   /**
-   * Enables the iOS 26 Liquid Glass tint color workaround that bakes tab labels
-   * into images. This can affect icon sizing when labels have different widths.
+   * Enables the experimental iOS 26 Liquid Glass tint color workaround that bakes tab labels into images.
+   * This has many drawbacks, such as affecting icon sizing when labels have different widths, bad positioning of badges, and possibly breaking accessibility features.
    *
    * @platform ios
    */

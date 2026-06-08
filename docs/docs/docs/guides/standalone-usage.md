@@ -174,10 +174,6 @@ Color for the active tab.
 
 - Type: `ColorValue`
 
-:::warning
-On iOS 26 (Liquid Glass), enable `experimental_bakedTintColors` to apply a workaround that bakes tab labels into images for correct tinting. This disables Dynamic Type (accessibility font sizes) and the Bold Text accessibility setting for tab labels.
-:::
-
 #### `tabBarInactiveTintColor`
 
 Color for inactive tabs.
@@ -186,6 +182,20 @@ Color for inactive tabs.
 
 :::note
 On iOS >= 26 (Liquid Glass), this prop is ignored.
+:::
+
+#### `experimental_bakedTintColors` <Badge text="iOS" type="info" /> <Badge text="experimental" type="danger"/>
+
+Enable an experimental mode which bakes (rasterizes) the label into the icon image, allowing for better control of the tint colors on iOS 26+.
+
+- Type: `boolean`
+
+:::warning
+This feature is experimental, and might be removed in the future.
+
+It has many drawbacks, such as SFSymbol icon sizes being different on label width, badges being positioned far away from the icon depending on the label width, and possibly breaking accessibility since the label will be baked inside the icon image.
+
+Use with caution, only if you prioritize tint color consistency between platforms.
 :::
 
 #### `tabBarStyle`
