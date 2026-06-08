@@ -180,6 +180,10 @@ Color for inactive tabs.
 
 - Type: `ColorValue`
 
+:::note
+On iOS >= 26 (Liquid Glass), this prop is ignored.
+:::
+
 #### `tabBarStyle`
 
 Object containing styles for the tab bar.

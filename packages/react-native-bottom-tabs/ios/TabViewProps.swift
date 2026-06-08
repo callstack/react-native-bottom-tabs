@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 internal enum MinimizeBehavior: String {
@@ -80,6 +81,16 @@ class TabViewProps: ObservableObject {
     }
 
     return activeTintColor
+  }
+
+  var effectiveInactiveTintColor: PlatformColor? {
+    #if os(iOS)
+      if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 {
+        return nil
+      }
+    #endif
+
+    return inactiveTintColor
   }
 
   var filteredItems: [TabInfo] {
