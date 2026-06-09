@@ -23,14 +23,16 @@ struct TabAppearModifier: ViewModifier {
         // count guard the 5th tab (index 4) of a non-overflowing bar would
         // force-select itself whenever its scene re-appears (e.g. when the tab
         // bar is re-shown after `.hideTabBar`), hijacking the selection.
-        if context.props.filteredItems.count > 5, context.index >= 4, context.props.selectedPage != context.tabData.key {
+        if context.props.filteredItems.count > 5, context.index >= 4,
+          context.props.selectedPage != context.tabData.key
+        {
           context.onSelect(context.tabData.key)
           return
         }
 
-        if #available(iOS 27.0, *), context.props.selectedPage != context.tabData.key {
-          context.onSelect(context.tabData.key)
-        }
+//        if #available(iOS 27.0, *), context.props.selectedPage != context.tabData.key {
+//          context.onSelect(context.tabData.key)
+//        }
       #endif
     }
   }
