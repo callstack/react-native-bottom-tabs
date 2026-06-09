@@ -36,8 +36,13 @@ import NativeBottomTabsUnmounting from './Examples/NativeBottomTabsUnmounting';
 import NativeBottomTabsCustomTabBar from './Examples/NativeBottomTabsCustomTabBar';
 import NativeBottomTabsFreezeOnBlur from './Examples/NativeBottomTabsFreezeOnBlur';
 import NativeBottomTabsScreenLayout from './Examples/NativeBottomTabsScreenLayout';
+import NativeBottomTabsLazy from './Examples/NativeBottomTabsLazy';
 import BottomAccessoryView from './Examples/BottomAccessoryView';
 import { useLogger } from '@react-navigation/devtools';
+import LazyTabs from './Examples/LazyTabs';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs();
 
 const HiddenTab = () => {
   return <FourTabs hideOneTab />;
@@ -74,6 +79,7 @@ const FourTabsActiveIndicatorColor = () => {
 const UnlabeledTabs = () => {
   return <LabeledTabs showLabels={false} />;
 };
+
 const FourTabsRightToLeft = () => {
   return <FourTabsRTL layoutDirection={'rtl'} />;
 };
@@ -96,6 +102,7 @@ const examples = [
     name: 'Embedded stacks',
     screenOptions: { headerShown: false },
   },
+  { component: LazyTabs, name: 'Lazy Tabs' },
   {
     component: FourTabsRippleColor,
     name: 'Four Tabs with ripple Color',
@@ -155,6 +162,10 @@ const examples = [
   {
     component: NativeBottomTabsScreenLayout,
     name: 'Native Bottom Tabs with screenLayout',
+  },
+  {
+    component: NativeBottomTabsLazy,
+    name: 'Native Bottom Tabs with Lazy',
   },
   { component: NativeBottomTabs, name: 'Native Bottom Tabs' },
   { component: JSBottomTabs, name: 'JS Bottom Tabs' },

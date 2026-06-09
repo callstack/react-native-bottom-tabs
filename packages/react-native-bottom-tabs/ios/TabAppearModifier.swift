@@ -18,6 +18,10 @@ struct TabAppearModifier: ViewModifier {
       #endif
 
       #if os(iOS)
+        if #available(iOS 27.0, *), context.props.selectedPage != context.tabData.key {
+          context.onSelect(context.tabData.key)
+        }
+
         // Sync selection for tabs nested under the system "More" tab, which
         // only exists when there are more than 5 visible tabs. Without the
         // count guard the 5th tab (index 4) of a non-overflowing bar would
