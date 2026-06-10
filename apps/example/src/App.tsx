@@ -38,8 +38,16 @@ import NativeBottomTabsUnmounting from './Examples/NativeBottomTabsUnmounting';
 import NativeBottomTabsCustomTabBar from './Examples/NativeBottomTabsCustomTabBar';
 import NativeBottomTabsFreezeOnBlur from './Examples/NativeBottomTabsFreezeOnBlur';
 import NativeBottomTabsScreenLayout from './Examples/NativeBottomTabsScreenLayout';
+import NativeBottomTabsLazy from './Examples/NativeBottomTabsLazy';
 import BottomAccessoryView from './Examples/BottomAccessoryView';
+import TabBarHidden from './Examples/TabBarHidden';
+import CustomTabBar from './Examples/CustomTabBar';
+import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
 import { useLogger } from '@react-navigation/devtools';
+import LazyTabs from './Examples/LazyTabs';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs();
 
 const HiddenTab = () => {
   return <FourTabs hideOneTab />;
@@ -76,6 +84,7 @@ const FourTabsActiveIndicatorColor = () => {
 const UnlabeledTabs = () => {
   return <LabeledTabs showLabels={false} />;
 };
+
 const FourTabsRightToLeft = () => {
   return <FourTabsRTL layoutDirection={'rtl'} />;
 };
@@ -99,6 +108,15 @@ const examples = [
     component: NativeBottomTabsEmbeddedStacks,
     name: 'Embedded stacks',
     screenOptions: { headerShown: false },
+  },
+  { component: LazyTabs, name: 'Lazy Tabs' },
+  {
+    component: TabBarHidden,
+    name: 'Tab Bar Hidden',
+  },
+  {
+    component: CustomTabBar,
+    name: 'Custom tabBar',
   },
   {
     component: FourTabsRippleColor,
@@ -154,11 +172,19 @@ const examples = [
   },
   {
     component: NativeBottomTabsCustomTabBar,
-    name: 'Native Bottom Tabs with Custom Tab Bar',
+    name: 'Native Bottom Tabs with custom tabBar',
   },
   {
     component: NativeBottomTabsScreenLayout,
     name: 'Native Bottom Tabs with screenLayout',
+  },
+  {
+    component: NativeBottomTabsLazy,
+    name: 'Native Bottom Tabs with Lazy',
+  },
+  {
+    component: NativeBottomTabsTabBarHidden,
+    name: 'Native Bottom Tabs with tabBarHidden',
   },
   { component: NativeBottomTabs, name: 'Native Bottom Tabs' },
   { component: JSBottomTabs, name: 'JS Bottom Tabs' },

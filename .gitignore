@@ -82,3 +82,6 @@ android/generated
 
 # Codex
 .codex
+
+# Agent Device
+tmp/
