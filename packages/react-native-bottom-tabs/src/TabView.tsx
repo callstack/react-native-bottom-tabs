@@ -259,7 +259,7 @@ const TabView = <Route extends BaseRoute>({
   labeled = Platform.OS !== 'android' ? true : undefined,
   getFreezeOnBlur = ({ route }: { route: Route }) => route.freezeOnBlur,
   tabBar: renderCustomTabBar,
-  tabBarHidden = false,
+  tabBarHidden,
   tabBarStyle,
   tabLabelStyle,
   renderBottomAccessoryView,
@@ -418,7 +418,7 @@ const TabView = <Route extends BaseRoute>({
         // When rendering a custom tab bar, icons can be React elements, which will not be properly resolved.
         icons={renderCustomTabBar ? undefined : resolvedIconAssets}
         selectedPage={focusedKey}
-        tabBarHidden={tabBarHidden}
+        tabBarHidden={tabBarHidden ?? !!renderCustomTabBar}
         onTabLongPress={handleTabLongPress}
         onPageSelected={handlePageSelected}
         onTabBarMeasured={handleTabBarMeasured}

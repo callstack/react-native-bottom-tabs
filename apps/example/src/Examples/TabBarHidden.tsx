@@ -75,7 +75,4 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
   },
-  status: {
-    fontSize: 16,
-  },
 });

@@ -39,6 +39,7 @@ import NativeBottomTabsScreenLayout from './Examples/NativeBottomTabsScreenLayou
 import NativeBottomTabsLazy from './Examples/NativeBottomTabsLazy';
 import BottomAccessoryView from './Examples/BottomAccessoryView';
 import TabBarHidden from './Examples/TabBarHidden';
+import CustomTabBar from './Examples/CustomTabBar';
 import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
 import { useLogger } from '@react-navigation/devtools';
 import LazyTabs from './Examples/LazyTabs';
@@ -110,6 +111,10 @@ const examples = [
     name: 'Tab Bar Hidden',
   },
   {
+    component: CustomTabBar,
+    name: 'Custom tabBar',
+  },
+  {
     component: FourTabsRippleColor,
     name: 'Four Tabs with ripple Color',
     platform: 'android',
@@ -163,7 +168,7 @@ const examples = [
   },
   {
     component: NativeBottomTabsCustomTabBar,
-    name: 'Native Bottom Tabs with Custom Tab Bar',
+    name: 'Native Bottom Tabs with custom tabBar',
   },
   {
     component: NativeBottomTabsScreenLayout,
