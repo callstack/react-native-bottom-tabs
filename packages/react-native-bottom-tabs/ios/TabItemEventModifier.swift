@@ -32,7 +32,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
       return false
     }
 
-    // Unfortunately, due to modern tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
+    // Unfortunately, due to iOS 26 new tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
     // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
     // Due to this, whether the tab prevents default has to be defined statically.
     if let index = tabBarController.viewControllers?.firstIndex(of: viewController) {
@@ -54,7 +54,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
       tabBarController.selectedTab === tab ||
       tabBarController.selectedTab?.identifier == tab.identifier
 
-    // Unfortunately, due to modern tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
+    // Unfortunately, due to iOS 26 new tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
     // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
     // Due to this, whether the tab prevents default has to be defined statically.
     let defaultPrevented = onClick?(
