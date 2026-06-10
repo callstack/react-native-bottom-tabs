@@ -38,6 +38,8 @@ import NativeBottomTabsFreezeOnBlur from './Examples/NativeBottomTabsFreezeOnBlu
 import NativeBottomTabsScreenLayout from './Examples/NativeBottomTabsScreenLayout';
 import NativeBottomTabsLazy from './Examples/NativeBottomTabsLazy';
 import BottomAccessoryView from './Examples/BottomAccessoryView';
+import TabBarHidden from './Examples/TabBarHidden';
+import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
 import { useLogger } from '@react-navigation/devtools';
 import LazyTabs from './Examples/LazyTabs';
 import { LogBox } from 'react-native';
@@ -104,6 +106,10 @@ const examples = [
   },
   { component: LazyTabs, name: 'Lazy Tabs' },
   {
+    component: TabBarHidden,
+    name: 'Tab Bar Hidden',
+  },
+  {
     component: FourTabsRippleColor,
     name: 'Four Tabs with ripple Color',
     platform: 'android',
@@ -166,6 +172,10 @@ const examples = [
   {
     component: NativeBottomTabsLazy,
     name: 'Native Bottom Tabs with Lazy',
+  },
+  {
+    component: NativeBottomTabsTabBarHidden,
+    name: 'Native Bottom Tabs with tabBarHidden',
   },
   { component: NativeBottomTabs, name: 'Native Bottom Tabs' },
   { component: JSBottomTabs, name: 'JS Bottom Tabs' },
