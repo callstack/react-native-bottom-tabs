@@ -7,9 +7,14 @@ import UIKit
 #if !os(macOS) && !os(visionOS)
 
 private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
-  var onClick: ((_ index: Int) -> Bool)?
+  var onClick: ((_ index: Int?, _ identifier: String?) -> Bool)?
 
   func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+    if #available(iOS 27.0, *) {
+      // iOS 27 routes SwiftUI TabView selection through shouldSelectTab.
+      return true
+    }
+
 #if os(iOS)
     // Handle "More" Tab
     if tabBarController.moreNavigationController == viewController {
@@ -21,7 +26,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
 
     if isReselectingSameTab {
       if let index = tabBarController.viewControllers?.firstIndex(of: viewController) {
-        _ = onClick?(index)
+        _ = onClick?(index, nil)
       }
 
       return false
@@ -31,17 +36,45 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
     // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
     // Due to this, whether the tab prevents default has to be defined statically.
     if let index = tabBarController.viewControllers?.firstIndex(of: viewController) {
-      let defaultPrevented = onClick?(index) ?? false
+      let defaultPrevented = onClick?(index, nil) ?? false
 
       return !defaultPrevented
     }
 
     return false
   }
+
+  @available(iOS 18.0, tvOS 18.0, visionOS 2.0, *)
+  func tabBarController(_ tabBarController: UITabBarController, shouldSelectTab tab: UITab) -> Bool {
+    guard #available(iOS 27.0, *) else {
+      return true
+    }
+
+    let isReselectingSameTab =
+      tabBarController.selectedTab === tab ||
+      tabBarController.selectedTab?.identifier == tab.identifier
+
+    // Unfortunately, due to iOS 26 new tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
+    // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
+    // Due to this, whether the tab prevents default has to be defined statically.
+    let defaultPrevented = onClick?(
+      tabIndex(for: tab, in: tabBarController),
+      tab.identifier
+    ) ?? false
+
+    return isReselectingSameTab ? false : !defaultPrevented
+  }
+
+  @available(iOS 18.0, tvOS 18.0, visionOS 2.0, *)
+  private func tabIndex(for tab: UITab, in tabBarController: UITabBarController) -> Int? {
+    tabBarController.tabs.firstIndex {
+      $0 === tab || $0.identifier == tab.identifier
+    }
+  }
 }
 
 struct TabItemEventModifier: ViewModifier {
-  let onTabEvent: (_ key: Int, _ isLongPress: Bool) -> Bool
+  let onTabEvent: (_ index: Int?, _ identifier: String?, _ isLongPress: Bool) -> Bool
   private let delegate = TabBarDelegate()
 
   func body(content: Content) -> some View {
@@ -52,8 +85,8 @@ struct TabItemEventModifier: ViewModifier {
   }
 
   func handle(tabController: UITabBarController) {
-    delegate.onClick = { index in
-      onTabEvent(index, false)
+    delegate.onClick = { index, identifier in
+      onTabEvent(index, identifier, false)
     }
     tabController.delegate = delegate
 
@@ -70,7 +103,7 @@ struct TabItemEventModifier: ViewModifier {
     }
 
     // Create gesture handler
-    let handler = LongPressGestureHandler(tabBar: tabController.tabBar) { key, isLongPress in _ = onTabEvent(key, isLongPress) }
+    let handler = LongPressGestureHandler(tabBar: tabController.tabBar) { index, isLongPress in _ = onTabEvent(index, nil, isLongPress) }
     let gesture = UILongPressGestureRecognizer(target: handler, action: #selector(LongPressGestureHandler.handleLongPress(_:)))
     gesture.minimumPressDuration = 0.5
 
@@ -122,7 +155,7 @@ extension View {
   /**
    Event for tab items. Returns true if should prevent default (switching tabs).
    */
-  func onTabItemEvent(_ handler: @escaping (Int, Bool) -> Bool) -> some View {
+  func onTabItemEvent(_ handler: @escaping (Int?, String?, Bool) -> Bool) -> some View {
     modifier(TabItemEventModifier(onTabEvent: handler))
   }
 }

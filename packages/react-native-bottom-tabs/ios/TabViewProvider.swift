@@ -136,6 +136,12 @@ public final class TabInfo: NSObject {
     }
   }
 
+  @objc public var experimentalBakedTintColors: Bool = false {
+    didSet {
+      props.experimentalBakedTintColors = experimentalBakedTintColors
+    }
+  }
+
   @objc public var fontFamily: NSString? {
     didSet {
       props.fontFamily = fontFamily as? String
@@ -261,7 +267,17 @@ public final class TabInfo: NSObject {
             guard let image else { return }
             DispatchQueue.main.async { [weak self] in
               guard let self else { return }
-              props.icons[index] = image.resizeImageTo(size: iconSize)
+              let icon = image.resizeImageTo(size: iconSize)
+              #if os(iOS)
+                if props.experimentalBakedTintColors {
+                  props.icons[index] = icon?.withRenderingMode(.alwaysTemplate)
+                  props.iconsRevision += 1
+                } else {
+                  props.icons[index] = icon
+                }
+              #else
+                props.icons[index] = icon
+              #endif
             }
           })
       }

@@ -2,9 +2,6 @@
 #
 .DS_Store
 
-# XDE
-.expo/
-
 # VSCode
 .vscode/
 jsconfig.json
@@ -82,3 +79,9 @@ lib/
 # React Native Codegen
 ios/generated
 android/generated
+
+# Codex
+.codex
+
+# Agent Device
+tmp/

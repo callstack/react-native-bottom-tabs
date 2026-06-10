@@ -77,8 +77,16 @@ interface Props<Route extends BaseRoute> {
   tabBarActiveTintColor?: ColorValue;
   /**
    * Inactive tab color.
+   * Has no effect on iOS 26 and above (Liquid Glass).
    */
   tabBarInactiveTintColor?: ColorValue;
+  /**
+   * Enables the experimental iOS 26 Liquid Glass tint color workaround that bakes tab labels into images.
+   * This has many drawbacks, such as affecting icon sizing when labels have different widths, bad positioning of badges, and possibly breaking accessibility features.
+   *
+   * @platform ios
+   */
+  experimental_bakedTintColors?: boolean;
   /**
    * State for the tab view.
    *
@@ -256,6 +264,7 @@ const TabView = <Route extends BaseRoute>({
   tabLabelStyle,
   renderBottomAccessoryView,
   layoutDirection = 'locale',
+  experimental_bakedTintColors: experimentalBakedTintColors = false,
   ...props
 }: Props<Route>) => {
   // @ts-ignore
@@ -418,6 +427,7 @@ const TabView = <Route extends BaseRoute>({
         layoutDirection={layoutDirection}
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
+        experimentalBakedTintColors={experimentalBakedTintColors}
         barTintColor={tabBarStyle?.backgroundColor}
         rippleColor={rippleColor}
         labeled={labeled}
