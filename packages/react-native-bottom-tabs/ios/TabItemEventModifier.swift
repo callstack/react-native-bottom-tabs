@@ -8,9 +8,13 @@ import UIKit
 
 private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
   var onClick: ((_ index: Int?, _ identifier: String?) -> Bool)?
-  private var currentSelectionDecision: (identifier: String, defaultPrevented: Bool)?
 
   func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+    if #available(iOS 27.0, tvOS 27.0, *) {
+      // iOS 27 routes SwiftUI TabView selection through shouldSelectTab.
+      return true
+    }
+
 #if os(iOS)
     // Handle "More" Tab
     if tabBarController.moreNavigationController == viewController {
@@ -22,23 +26,14 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
 
     if isReselectingSameTab {
       if let index = tabBarController.viewControllers?.firstIndex(of: viewController) {
-        _ = handleSelection(
-          index: index,
-          identifier: tabIdentifier(for: viewController, in: tabBarController)
-        )
+        _ = onClick?(index, nil)
       }
 
       return false
     }
 
-    // Unfortunately, due to iOS 26 new tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
-    // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
-    // Due to this, whether the tab prevents default has to be defined statically.
     if let index = tabBarController.viewControllers?.firstIndex(of: viewController) {
-      let defaultPrevented = handleSelection(
-        index: index,
-        identifier: tabIdentifier(for: viewController, in: tabBarController)
-      )
+      let defaultPrevented = onClick?(index, nil) ?? false
 
       return !defaultPrevented
     }
@@ -48,45 +43,23 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
 
   @available(iOS 18.0, tvOS 18.0, visionOS 2.0, *)
   func tabBarController(_ tabBarController: UITabBarController, shouldSelectTab tab: UITab) -> Bool {
+    guard #available(iOS 27.0, tvOS 27.0, *) else {
+      return true
+    }
+
     let isReselectingSameTab =
       tabBarController.selectedTab === tab ||
       tabBarController.selectedTab?.identifier == tab.identifier
 
-    let defaultPrevented = handleSelection(
-      index: tabIndex(for: tab, in: tabBarController),
-      identifier: tab.identifier
-    )
+    // Unfortunately, due to modern tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
+    // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
+    // Due to this, whether the tab prevents default has to be defined statically.
+    let defaultPrevented = onClick?(
+      tabIndex(for: tab, in: tabBarController),
+      tab.identifier
+    ) ?? false
 
     return isReselectingSameTab ? false : !defaultPrevented
-  }
-
-  private func handleSelection(index: Int?, identifier: String?) -> Bool {
-    if let identifier,
-       let decision = currentSelectionDecision,
-       decision.identifier == identifier {
-      return decision.defaultPrevented
-    }
-
-    let defaultPrevented = onClick?(index, identifier) ?? false
-
-    if let identifier {
-      currentSelectionDecision = (identifier, defaultPrevented)
-      DispatchQueue.main.async { [weak self] in
-        if self?.currentSelectionDecision?.identifier == identifier {
-          self?.currentSelectionDecision = nil
-        }
-      }
-    }
-
-    return defaultPrevented
-  }
-
-  private func tabIdentifier(for viewController: UIViewController, in tabBarController: UITabBarController) -> String? {
-    if #available(iOS 18.0, tvOS 18.0, visionOS 2.0, *) {
-      return tabBarController.tabs.first { $0.viewController === viewController }?.identifier
-    }
-
-    return nil
   }
 
   @available(iOS 18.0, tvOS 18.0, visionOS 2.0, *)
