@@ -10,7 +10,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
   var onClick: ((_ index: Int?, _ identifier: String?) -> Bool)?
 
   func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-    if #available(iOS 27.0, tvOS 27.0, *) {
+    if #available(iOS 27.0, *) {
       // iOS 27 routes SwiftUI TabView selection through shouldSelectTab.
       return true
     }
@@ -32,6 +32,9 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
       return false
     }
 
+    // Unfortunately, due to modern tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
+    // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
+    // Due to this, whether the tab prevents default has to be defined statically.
     if let index = tabBarController.viewControllers?.firstIndex(of: viewController) {
       let defaultPrevented = onClick?(index, nil) ?? false
 
@@ -43,7 +46,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
 
   @available(iOS 18.0, tvOS 18.0, visionOS 2.0, *)
   func tabBarController(_ tabBarController: UITabBarController, shouldSelectTab tab: UITab) -> Bool {
-    guard #available(iOS 27.0, tvOS 27.0, *) else {
+    guard #available(iOS 27.0, *) else {
       return true
     }
 
