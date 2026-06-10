@@ -213,11 +213,7 @@ interface Props<Route extends BaseRoute> {
    */
   layoutDirection?: LayoutDirection;
   /**
-   * Whether to hide the native tab bar. Defaults to `true` when a custom
-   * `tabBar` is provided (so the native bar does not stack on top of the
-   * custom one), otherwise `false`. Set explicitly to override the default,
-   * which is required on iOS 26+ where `UITabBar.isHidden` workarounds from
-   * outside React Native no longer reach the SwiftUI-backed tab bar.
+   * Whether to hide the native tab bar.
    */
   tabBarHidden?: boolean;
 }
@@ -255,7 +251,7 @@ const TabView = <Route extends BaseRoute>({
   labeled = Platform.OS !== 'android' ? true : undefined,
   getFreezeOnBlur = ({ route }: { route: Route }) => route.freezeOnBlur,
   tabBar: renderCustomTabBar,
-  tabBarHidden,
+  tabBarHidden = false,
   tabBarStyle,
   tabLabelStyle,
   renderBottomAccessoryView,
