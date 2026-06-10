@@ -418,7 +418,7 @@ const TabView = <Route extends BaseRoute>({
         // When rendering a custom tab bar, icons can be React elements, which will not be properly resolved.
         icons={renderCustomTabBar ? undefined : resolvedIconAssets}
         selectedPage={focusedKey}
-        tabBarHidden={tabBarHidden ?? !!renderCustomTabBar}
+        tabBarHidden={tabBarHidden}
         onTabLongPress={handleTabLongPress}
         onPageSelected={handlePageSelected}
         onTabBarMeasured={handleTabBarMeasured}
