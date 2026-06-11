@@ -110,7 +110,7 @@ export default function NativeBottomTabView({
           return;
         } else {
           navigation.dispatch({
-            ...CommonActions.navigate(route),
+            ...CommonActions.navigate(route.name, route.params),
             target: state.key,
           });
         }
