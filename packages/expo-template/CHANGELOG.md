@@ -1,5 +1,15 @@
 # @bottom-tabs/expo-template
 
+## 1.1.2
+
+### Patch Changes
+
+- [#540](https://github.com/callstack/react-native-bottom-tabs/pull/540) [`d1b51c5`](https://github.com/callstack/react-native-bottom-tabs/commit/d1b51c5d0d2ca5d05fb9cc2af6fa79ca65c268d2) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Fix Expo template installs by aligning Expo SDK 54 dependency versions.
+
+- Updated dependencies [[`f7c2f7d`](https://github.com/callstack/react-native-bottom-tabs/commit/f7c2f7d9fadc3c5654675bad69d25733cc285782)]:
+  - @bottom-tabs/react-navigation@1.3.1
+  - react-native-bottom-tabs@1.3.1
+
 ## 1.1.1
 
 ### Patch Changes

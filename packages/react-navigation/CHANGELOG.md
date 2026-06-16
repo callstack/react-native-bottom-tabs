@@ -1,5 +1,11 @@
 # @bottom-tabs/react-navigation
 
+## 1.3.1
+
+### Patch Changes
+
+- [#538](https://github.com/callstack/react-native-bottom-tabs/pull/538) [`f7c2f7d`](https://github.com/callstack/react-native-bottom-tabs/commit/f7c2f7d9fadc3c5654675bad69d25733cc285782) Thanks [@rayabelcode](https://github.com/rayabelcode)! - Fix deprecated object argument on CommonActions.navigate
+
 ## 1.3.0
 
 ## 1.2.0
