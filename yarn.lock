@@ -2725,7 +2725,7 @@ __metadata:
     "@expo/vector-icons": "npm:^15.0.3"
     "@react-navigation/native": "npm:^7.2.2"
     "@types/jest": "npm:^29.5.12"
-    "@types/react": "npm:~19.1.0"
+    "@types/react": "npm:~19.1.10"
     "@types/react-test-renderer": "npm:^19.1.0"
     expo: "npm:~54.0.35"
     expo-blur: "npm:~15.0.8"
@@ -2751,7 +2751,7 @@ __metadata:
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-screens: "npm:~4.16.0"
     react-native-web: "npm:~0.21.0"
-    react-native-webview: "npm:^13.16.0"
+    react-native-webview: "npm:13.15.0"
     react-native-worklets: "npm:0.5.1"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
@@ -5704,24 +5704,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-navigation/core@npm:^7.17.2":
-  version: 7.17.2
-  resolution: "@react-navigation/core@npm:7.17.2"
-  dependencies:
-    "@react-navigation/routers": "npm:^7.5.3"
-    escape-string-regexp: "npm:^4.0.0"
-    fast-deep-equal: "npm:^3.1.3"
-    nanoid: "npm:^3.3.11"
-    query-string: "npm:^7.1.3"
-    react-is: "npm:^19.1.0"
-    use-latest-callback: "npm:^0.2.4"
-    use-sync-external-store: "npm:^1.5.0"
-  peerDependencies:
-    react: ">= 18.2.0"
-  checksum: 10/79d63f1e6f50a63bcaa21dd920a29fde2c88845e12dead83c9abf9ff3b837f993b9179685bcc6c7f21d4c2ccde60abfc57853e62b9dd397264455a867fd92ec3
-  languageName: node
-  linkType: hard
-
 "@react-navigation/core@npm:^7.20.0":
   version: 7.20.0
   resolution: "@react-navigation/core@npm:7.20.0"
@@ -5737,6 +5719,24 @@ __metadata:
   peerDependencies:
     react: ">= 18.2.0"
   checksum: 10/037f11520ed52aa5285c9b0dcba414c589643812a494aa819a81342d60adae2adb7e014fb4a76ce36b34630c5eecbc5e0c244e4c191091d03c9c576fa0fbfbbe
+  languageName: node
+  linkType: hard
+
+"@react-navigation/core@npm:^7.21.1":
+  version: 7.21.1
+  resolution: "@react-navigation/core@npm:7.21.1"
+  dependencies:
+    "@react-navigation/routers": "npm:^7.6.0"
+    escape-string-regexp: "npm:^4.0.0"
+    fast-deep-equal: "npm:^3.1.3"
+    nanoid: "npm:^3.3.11"
+    query-string: "npm:^7.1.3"
+    react-is: "npm:^19.1.0"
+    use-latest-callback: "npm:^0.2.4"
+    use-sync-external-store: "npm:^1.5.0"
+  peerDependencies:
+    react: ">= 18.2.0"
+  checksum: 10/ff17cecbe86d7fe9436e04a99fc33e41fb4a2c615de1a597cedf42844c33a7e31feb7d1561230b8e2317d3bd439dcbc4116b5c7ce3d34c039f1dee02e0099b88
   languageName: node
   linkType: hard
 
@@ -5844,18 +5844,19 @@ __metadata:
   linkType: hard
 
 "@react-navigation/native@npm:^7.2.2":
-  version: 7.2.2
-  resolution: "@react-navigation/native@npm:7.2.2"
+  version: 7.3.3
+  resolution: "@react-navigation/native@npm:7.3.3"
   dependencies:
-    "@react-navigation/core": "npm:^7.17.2"
+    "@react-navigation/core": "npm:^7.21.1"
     escape-string-regexp: "npm:^4.0.0"
     fast-deep-equal: "npm:^3.1.3"
     nanoid: "npm:^3.3.11"
+    standard-navigation: "npm:^0.0.7"
     use-latest-callback: "npm:^0.2.4"
   peerDependencies:
     react: ">= 18.2.0"
     react-native: "*"
-  checksum: 10/83e8c4f9979378a932c7cce8106e2fde1774b5ff902e9da9b96e0a188183706a9e24bcfbd0f3e63fb5a5211617e66d69c8c0ee89696f93c12c1c4ed4998e9d00
+  checksum: 10/47bd1edab63d3085ee4fbff509d43ce90552c7f83f2df5178d4311d1f91419d59d7b8f185c83bc12e8901cc957f8b85706bf72c9fe15085e867814c538cf29ba
   languageName: node
   linkType: hard
 
@@ -5882,15 +5883,6 @@ __metadata:
   dependencies:
     nanoid: "npm:^3.3.11"
   checksum: 10/b2f41b084d9ff69ac934e798fabca149a7d2cfc6ca1899d9ffbb68f8378c02277752e68783c264ea5068be9c8738d0d5112abb177c00c0365cfd2a133d560a8c
-  languageName: node
-  linkType: hard
-
-"@react-navigation/routers@npm:^7.5.3":
-  version: 7.5.3
-  resolution: "@react-navigation/routers@npm:7.5.3"
-  dependencies:
-    nanoid: "npm:^3.3.11"
-  checksum: 10/8b02cf4c9acd7d1ccb0771ebfbf18fa27aa8db4e5653403d9d78a08d1792b9f22654cb36ce3a1150181b141d8cf694d7665007ef005c041bce404d33f44acc73
   languageName: node
   linkType: hard
 
@@ -16657,16 +16649,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-webview@npm:^13.16.0":
-  version: 13.16.0
-  resolution: "react-native-webview@npm:13.16.0"
+"react-native-webview@npm:13.15.0":
+  version: 13.15.0
+  resolution: "react-native-webview@npm:13.15.0"
   dependencies:
     escape-string-regexp: "npm:^4.0.0"
     invariant: "npm:2.2.4"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10/dc3d84c4785676bac3f316ec2119d3239f64fd8b18400dcc1cf8fa4f05b9bf677cf167aa4e7da72c9f60760eb6303c99da22324e15ff5fb380a3b1b31f531132
+  checksum: 10/7d4b23cb0536199ab2339644d8b6ce720e794ac9a8200f23746032a768a61af8727d2401fc000be09b4fb478dce6f795d7d400945a17ab013a3bbc92a5077e4e
   languageName: node
   linkType: hard
 

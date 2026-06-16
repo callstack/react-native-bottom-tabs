@@ -43,13 +43,13 @@
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-web": "~0.21.0",
-    "react-native-webview": "^13.16.0",
+    "react-native-webview": "13.15.0",
     "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
     "@types/jest": "^29.5.12",
-    "@types/react": "~19.1.0",
+    "@types/react": "~19.1.10",
     "@types/react-test-renderer": "^19.1.0",
     "jest": "^29.2.1",
     "jest-expo": "~54.0.17",
