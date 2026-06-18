@@ -7,7 +7,7 @@ export type AppleIcon = { sfSymbol: SFSymbol };
 
 export type TabRole = 'search';
 
-export type IconRenderingMode = 'automatic' | 'alwaysOriginal';
+export type IconRenderingMode = 'automatic' | 'original';
 
 export type LayoutDirection = 'ltr' | 'rtl' | 'locale';
 

@@ -44,7 +44,7 @@ import TabBarHidden from './Examples/TabBarHidden';
 import CustomTabBar from './Examples/CustomTabBar';
 import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
 import OriginalIconColors from './Examples/OriginalIconColors';
-import NativeBottomTabsAlwaysOriginal from './Examples/NativeBottomTabsAlwaysOriginal';
+import NativeBottomTabsOriginalIcons from './Examples/NativeBottomTabsOriginalIcons';
 import { useLogger } from '@react-navigation/devtools';
 import LazyTabs from './Examples/LazyTabs';
 import { LogBox } from 'react-native';
@@ -193,8 +193,8 @@ const examples = [
     name: 'Native Bottom Tabs with tabBarHidden',
   },
   {
-    component: NativeBottomTabsAlwaysOriginal,
-    name: 'Native Bottom Tabs with alwaysOriginal',
+    component: NativeBottomTabsOriginalIcons,
+    name: 'Native Bottom Tabs with original icons',
   },
   { component: NativeBottomTabs, name: 'Native Bottom Tabs' },
   { component: JSBottomTabs, name: 'JS Bottom Tabs' },

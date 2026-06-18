@@ -236,7 +236,7 @@ Each route in the `routes` array can have the following properties:
 - `title`: Display title for the tab
 - `focusedIcon`: Icon to show when tab is active
 - `unfocusedIcon`: Icon to show when tab is inactive (optional)
-- `iconRenderingMode`: Rendering mode for icons. Use `'alwaysOriginal'` to preserve multicolor icons instead of applying the native tab tint.
+- `iconRenderingMode`: Rendering mode for icons. Use `'original'` to preserve multicolor icons instead of applying the native tab tint.
 - `badge`: Badge text to display on the tab
 - `activeTintColor`: Custom active tint color for this specific tab
 - `lazy`: Whether to lazy load this tab's content
@@ -286,9 +286,9 @@ Function to get the icon for a tab.
 Function to get the rendering mode for an image icon.
 
 - Default: Uses `route.iconRenderingMode`
-- Options: `'automatic' | 'alwaysOriginal'`
+- Options: `'automatic' | 'original'`
 
-Use `alwaysOriginal` to preserve the original colors of multicolor image icons, such as logos or branded assets, instead of applying the native tab tint.
+Use `original` to preserve the original colors of multicolor image icons, such as logos or branded assets, instead of applying the native tab tint.
 
 #### `getHidden`
 

@@ -26,7 +26,7 @@ struct TabItem: View {
 
 #if !os(macOS)
   private var preservesOriginalIconColors: Bool {
-    iconRenderingMode == "alwaysOriginal"
+    iconRenderingMode == "original"
   }
 
   private var uiImageRenderingMode: UIImage.RenderingMode {

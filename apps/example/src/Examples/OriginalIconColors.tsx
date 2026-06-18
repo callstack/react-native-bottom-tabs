@@ -24,20 +24,20 @@ export default function OriginalIconColors() {
       key: 'avatar',
       title: 'Avatar',
       focusedIcon: require('../../assets/avatar-1.png'),
-      iconRenderingMode: 'alwaysOriginal',
+      iconRenderingMode: 'original',
     },
     {
       key: 'album',
       title: 'Album',
       unfocusedIcon: require('../../assets/avatar-3.png'),
       focusedIcon: require('../../assets/avatar-4.png'),
-      iconRenderingMode: 'alwaysOriginal',
+      iconRenderingMode: 'original',
     },
     {
       key: 'chat',
       title: 'Chat',
       focusedIcon: require('../../assets/avatar-4.png'),
-      iconRenderingMode: 'alwaysOriginal',
+      iconRenderingMode: 'original',
     },
   ]);
 

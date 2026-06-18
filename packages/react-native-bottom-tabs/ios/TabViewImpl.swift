@@ -311,7 +311,7 @@ struct TabViewImpl: View {
   }
 
   private func preservesOriginalIconColors(tabData: TabInfo) -> Bool {
-    tabData.iconRenderingMode == "alwaysOriginal"
+    tabData.iconRenderingMode == "original"
   }
 
   private func makeSFSymbolImage(named sfSymbol: String?) -> UIImage? {

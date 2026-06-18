@@ -32,7 +32,7 @@ export default function TintColorsExample() {
       unfocusedIcon: require('../../assets/avatar-3.png'),
       focusedIcon: require('../../assets/avatar-4.png'),
       activeTintColor: 'purple',
-      iconRenderingMode: 'alwaysOriginal',
+      iconRenderingMode: 'original',
     },
     {
       key: 'contacts',

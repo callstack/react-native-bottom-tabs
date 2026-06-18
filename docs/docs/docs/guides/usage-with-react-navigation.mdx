@@ -290,10 +290,10 @@ SF Symbols are only supported on Apple platforms.
 
 Rendering mode for image icons.
 
-- Type: `'automatic' | 'alwaysOriginal'`
+- Type: `'automatic' | 'original'`
 - Default: `'automatic'`
 
-Use `alwaysOriginal` to preserve the original colors of multicolor image icons, such as logos or branded assets, instead of applying the native tab tint.
+Use `original` to preserve the original colors of multicolor image icons, such as logos or branded assets, instead of applying the native tab tint.
 
 ```tsx
 <Tab.Screen
@@ -301,7 +301,7 @@ Use `alwaysOriginal` to preserve the original colors of multicolor image icons, 
   component={Brand}
   options={{
     tabBarIcon: () => require('brand-logo.png'),
-    tabBarIconRenderingMode: 'alwaysOriginal',
+    tabBarIconRenderingMode: 'original',
   }}
 />
 ```

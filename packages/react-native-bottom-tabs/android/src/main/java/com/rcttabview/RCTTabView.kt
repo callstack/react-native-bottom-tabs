@@ -304,7 +304,7 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
   private fun updateIconTintMode(menuItem: MenuItem, item: TabInfo) {
     MenuItemCompat.setIconTintMode(
       menuItem,
-      if (item.iconRenderingMode == "alwaysOriginal") PorterDuff.Mode.DST else null
+      if (item.iconRenderingMode == "original") PorterDuff.Mode.DST else null
     )
   }
 

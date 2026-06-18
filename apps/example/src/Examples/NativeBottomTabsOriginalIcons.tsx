@@ -6,7 +6,7 @@ import { Chat } from '../Screens/Chat';
 
 const Tab = createNativeBottomTabNavigator();
 
-export default function NativeBottomTabsAlwaysOriginal() {
+export default function NativeBottomTabsOriginalIcons() {
   return (
     <Tab.Navigator initialRouteName="Tinted" labeled>
       <Tab.Screen
@@ -21,7 +21,7 @@ export default function NativeBottomTabsAlwaysOriginal() {
         component={Contacts}
         options={{
           tabBarIcon: () => require('../../assets/avatar-1.png'),
-          tabBarIconRenderingMode: 'alwaysOriginal',
+          tabBarIconRenderingMode: 'original',
         }}
       />
       <Tab.Screen
@@ -32,7 +32,7 @@ export default function NativeBottomTabsAlwaysOriginal() {
             focused
               ? require('../../assets/avatar-4.png')
               : require('../../assets/avatar-3.png'),
-          tabBarIconRenderingMode: 'alwaysOriginal',
+          tabBarIconRenderingMode: 'original',
         }}
       />
       <Tab.Screen
@@ -40,7 +40,7 @@ export default function NativeBottomTabsAlwaysOriginal() {
         component={Chat}
         options={{
           tabBarIcon: () => require('../../assets/avatar-4.png'),
-          tabBarIconRenderingMode: 'alwaysOriginal',
+          tabBarIconRenderingMode: 'original',
         }}
       />
     </Tab.Navigator>

@@ -149,7 +149,7 @@ interface Props<Route extends BaseRoute> {
   /**
    * Get the rendering mode for the tab icon, uses `route.iconRenderingMode` by default.
    *
-   * Use `alwaysOriginal` to preserve multicolor image icons instead of applying the native tab tint.
+   * Use `original` to preserve multicolor image icons instead of applying the native tab tint.
    */
   getIconRenderingMode?: (props: {
     route: Route;
