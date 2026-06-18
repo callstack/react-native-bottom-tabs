@@ -185,6 +185,7 @@ Controls how the tab bar behaves when content is scrolled.
 - Default: `undefined` (uses system default)
 
 Options:
+
 - `automatic`: Platform determines the behavior
 - `onScrollDown`: Tab bar minimizes when scrolling down
 - `onScrollUp`: Tab bar minimizes when scrolling up
@@ -225,15 +226,14 @@ function MyTabBar({ state, descriptors, navigation }) {
 
 function MyTabs() {
   return (
-    <Tab.Navigator
-      tabBar={(props) => <MyTabBar {...props} />}
-    >
+    <Tab.Navigator tabBar={(props) => <MyTabBar {...props} />}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
 ```
+
 #### `renderBottomAccessoryView` <Badge text="iOS" type="info" /> <Badge text="experimental" type="danger"/>
 
 Function that returns a React element to render as [bottom accessory](https://developer.apple.com/documentation/uikit/uitabbarcontroller/bottomaccessory).
@@ -286,6 +286,26 @@ Function that given `{ focused: boolean }` returns `ImageSource` or `AppleIcon` 
 SF Symbols are only supported on Apple platforms.
 :::
 
+#### `tabBarIconRenderingMode` <Badge text="iOS" type="info" />
+
+Rendering mode for image icons.
+
+- Type: `'automatic' | 'alwaysOriginal'`
+- Default: `'automatic'`
+
+Use `alwaysOriginal` to preserve the original colors of multicolor image icons, such as logos or branded assets, instead of applying the native iOS tab tint.
+
+```tsx
+<Tab.Screen
+  name="Brand"
+  component={Brand}
+  options={{
+    tabBarIcon: () => require('brand-logo.png'),
+    tabBarIconRenderingMode: 'alwaysOriginal',
+  }}
+/>
+```
+
 :::warning
 
 Metro transformers that modify the import resolutions of images to something that is *not* React Native's `ImageSource` will break this. A notable community example of such is [react-native-svg-transformer](https://github.com/kristerkari/react-native-svg-transformer).
@@ -312,12 +332,12 @@ config.resolver.sourceExts = [...config.resolver.sourceExts, "svg"];
 ```
 
 Then change your require calls like so:
+
 ```
 tabBarIcon: () => require('person.svgx')
 ```
 
 :::
-
 
 #### `tabBarBadge`
 
@@ -329,14 +349,14 @@ To display a badge without text (just a dot), you need to pass a string with a s
 
 #### `tabBarBadgeBackgroundColor`
 
- - Type: `string`
+- Type: `string`
 
 Set the background color for the badge on android.
 Uses the system color by default.
 
 #### `tabBarBadgeTextColor`
 
- - Type: `string`
+- Type: `string`
 
 Set the text color for the badge on android.
 Uses the system color by default.
@@ -356,6 +376,7 @@ Due to native limitations on iOS, this option doesn't hide the tab item **when h
 Whether this screens should render the first time it's accessed. Defaults to true. Set it to false if you want to render the screen on initial render.
 
 #### `freezeOnBlur`
+
 Boolean indicating whether to prevent inactive screens from re-rendering. Defaults to false.
 
 It's working separately from `enableFreeze()` in `react-native-screens`. So settings won't be shared between them.
@@ -370,7 +391,6 @@ Whether to prevent default tab switching behavior when this tab is pressed. This
 :::note
 Due to iOS 26's new tab switching animations, controlling tab switching from JavaScript can cause significant delays. The `preventsDefault` option allows you to define this behavior statically to avoid animation delays.
 :::
-
 
 #### `tabBarButtonTestID`
 
@@ -413,7 +433,6 @@ React.useEffect(() => {
   const unsubscribe = navigation.addListener('tabPress', (e) => {
     // Note: For iOS 26+, use the `preventsDefault` option instead of `e.preventDefault()`
     // to avoid animation delays
-
     // Do something manually
     // ...
   });

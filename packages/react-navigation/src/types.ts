@@ -9,7 +9,11 @@ import type {
 } from '@react-navigation/native';
 import type { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import type TabView from 'react-native-bottom-tabs';
-import type { AppleIcon, TabRole } from 'react-native-bottom-tabs';
+import type {
+  AppleIcon,
+  IconRenderingMode,
+  TabRole,
+} from 'react-native-bottom-tabs';
 
 export type NativeBottomTabNavigationEventMap = {
   /**
@@ -66,6 +70,11 @@ export type NativeBottomTabNavigationOptions = {
    * Function that given { focused: boolean } returns ImageSource or AppleIcon to display in the navigation bar.
    */
   tabBarIcon?: (props: { focused: boolean }) => ImageSourcePropType | AppleIcon;
+
+  /**
+   * Rendering mode for the tab icon. Use `alwaysOriginal` on iOS to preserve multicolor image icons.
+   */
+  tabBarIconRenderingMode?: IconRenderingMode;
 
   /**
    * Whether the tab bar item is visible. Defaults to true.
@@ -150,6 +159,7 @@ export type NativeBottomTabNavigationConfig = Partial<
     | 'renderScene'
     | 'getLazy'
     | 'getIcon'
+    | 'getIconRenderingMode'
     | 'getLabelText'
     | 'getBadge'
     | 'getBadgeBackgroundColor'

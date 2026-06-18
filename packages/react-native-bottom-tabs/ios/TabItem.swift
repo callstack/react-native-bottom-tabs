@@ -5,13 +5,15 @@ struct TabItem: View {
   var icon: PlatformImage?
   var sfSymbol: String?
   var labeled: Bool?
+  var iconRenderingMode: String?
 
   var body: some View {
     if let icon {
 #if os(macOS)
       Image(nsImage: icon)
 #else
-      Image(uiImage: icon)
+      Image(uiImage: icon.withRenderingMode(uiImageRenderingMode))
+        .renderingMode(swiftUIImageRenderingMode)
 #endif
     } else if let sfSymbol, !sfSymbol.isEmpty {
       Image(systemName: sfSymbol)
@@ -21,4 +23,18 @@ struct TabItem: View {
       Text(title ?? "")
     }
   }
+
+#if !os(macOS)
+  private var preservesOriginalIconColors: Bool {
+    iconRenderingMode == "alwaysOriginal"
+  }
+
+  private var uiImageRenderingMode: UIImage.RenderingMode {
+    preservesOriginalIconColors ? .alwaysOriginal : .automatic
+  }
+
+  private var swiftUIImageRenderingMode: Image.TemplateRenderingMode? {
+    preservesOriginalIconColors ? .original : nil
+  }
+#endif
 }

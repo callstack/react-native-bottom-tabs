@@ -56,7 +56,8 @@ struct LegacyTabView: AnyTabView {
               title: tabData.title,
               icon: icon,
               sfSymbol: tabData.sfSymbol,
-              labeled: props.labeled
+              labeled: props.labeled,
+              iconRenderingMode: tabData.iconRenderingMode
             )
             .accessibilityIdentifier(tabData.testID ?? "")
           }

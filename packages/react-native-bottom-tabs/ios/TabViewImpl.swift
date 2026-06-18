@@ -229,8 +229,10 @@ struct TabViewImpl: View {
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
       let assetIcon = props.icons[itemIndex]
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
+      let preservesOriginalIconColors = preservesOriginalIconColors(tabData: tabData)
       let shouldRenderLabelIntoImage =
-        props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
+        !preservesOriginalIconColors && props.hasCustomTintColors && props.labeled
+        && tabData.role != .search && icon != nil
 
       item.accessibilityLabel = tabData.title
 
@@ -256,14 +258,20 @@ struct TabViewImpl: View {
       item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 0)
 
       if let icon {
-        item.image =
-          props.inactiveTintColor.map {
-            icon.withTintColor($0, renderingMode: .alwaysOriginal)
-          } ?? icon
-        item.selectedImage =
-          tabActiveColor.map {
-            icon.withTintColor($0, renderingMode: .alwaysOriginal)
-          } ?? icon
+        if preservesOriginalIconColors {
+          let originalIcon = icon.withRenderingMode(.alwaysOriginal)
+          item.image = originalIcon
+          item.selectedImage = originalIcon
+        } else {
+          item.image =
+            props.inactiveTintColor.map {
+              icon.withTintColor($0, renderingMode: .alwaysOriginal)
+            } ?? icon
+          item.selectedImage =
+            tabActiveColor.map {
+              icon.withTintColor($0, renderingMode: .alwaysOriginal)
+            } ?? icon
+        }
       }
 
       item.setTitleTextAttributes(
@@ -290,12 +298,19 @@ struct TabViewImpl: View {
 
       let assetIcon = props.icons[itemIndex]
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
+      let originalIcon = icon.map {
+        preservesOriginalIconColors(tabData: tabData) ? $0.withRenderingMode(.alwaysOriginal) : $0
+      }
 
       item.title = props.labeled ? tabData.title : nil
       item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 0)
-      item.image = icon
-      item.selectedImage = icon
+      item.image = originalIcon
+      item.selectedImage = originalIcon
     }
+  }
+
+  private func preservesOriginalIconColors(tabData: TabInfo) -> Bool {
+    tabData.iconRenderingMode == "alwaysOriginal"
   }
 
   private func makeSFSymbolImage(named sfSymbol: String?) -> UIImage? {
