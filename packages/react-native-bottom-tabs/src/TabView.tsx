@@ -309,11 +309,24 @@ const TabView = <Route extends BaseRoute>({
     [focusedKey, getIcon, trimmedRoutes]
   );
 
+  const focusedIcons = React.useMemo(
+    () =>
+      trimmedRoutes.map((route) =>
+        getIcon({
+          route,
+          focused: true,
+        })
+      ),
+    [getIcon, trimmedRoutes]
+  );
+
   const items: TabViewItems = React.useMemo(
     () =>
       trimmedRoutes.map((route, index) => {
         const icon = icons[index];
         const isSfSymbol = isAppleSymbol(icon);
+        const focusedIcon = focusedIcons[index];
+        const isFocusedSfSymbol = isAppleSymbol(focusedIcon);
 
         if (Platform.OS === 'android' && isSfSymbol) {
           console.warn(
@@ -325,6 +338,7 @@ const TabView = <Route extends BaseRoute>({
           key: route.key,
           title: getLabelText({ route }) ?? route.key,
           sfSymbol: isSfSymbol ? icon.sfSymbol : undefined,
+          focusedSfSymbol: isFocusedSfSymbol ? focusedIcon.sfSymbol : undefined,
           badge: getBadge?.({ route }),
           badgeBackgroundColor: processColor(
             getBadgeBackgroundColor?.({ route })
@@ -340,6 +354,7 @@ const TabView = <Route extends BaseRoute>({
     [
       trimmedRoutes,
       icons,
+      focusedIcons,
       getLabelText,
       getBadge,
       getBadgeBackgroundColor,
@@ -362,6 +377,18 @@ const TabView = <Route extends BaseRoute>({
           : { uri: '' }
       ),
     [icons]
+  );
+
+  const resolvedFocusedIconAssets: ImageSource[] = React.useMemo(
+    () =>
+      // Pass empty object for icons that are not provided to avoid index mismatch on native side.
+      focusedIcons.map((icon) =>
+        icon && !isAppleSymbol(icon)
+          ? // @ts-expect-error: TODO: Migrate of deep imports
+            Image.resolveAssetSource(icon)
+          : { uri: '' }
+      ),
+    [focusedIcons]
   );
 
   const jumpTo = useLatestCallback((key: string) => {
@@ -417,6 +444,9 @@ const TabView = <Route extends BaseRoute>({
         items={items}
         // When rendering a custom tab bar, icons can be React elements, which will not be properly resolved.
         icons={renderCustomTabBar ? undefined : resolvedIconAssets}
+        focusedIcons={
+          renderCustomTabBar ? undefined : resolvedFocusedIconAssets
+        }
         selectedPage={focusedKey}
         tabBarHidden={tabBarHidden ?? !!renderCustomTabBar}
         onTabLongPress={handleTabLongPress}

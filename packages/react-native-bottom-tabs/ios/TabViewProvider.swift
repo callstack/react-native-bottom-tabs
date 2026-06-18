@@ -8,6 +8,7 @@ public final class TabInfo: NSObject {
   public let title: String
   public let badge: String?
   public let sfSymbol: String
+  public let focusedSfSymbol: String?
   public let activeTintColor: PlatformColor?
   public let hidden: Bool
   public let testID: String?
@@ -19,6 +20,7 @@ public final class TabInfo: NSObject {
     title: String,
     badge: String?,
     sfSymbol: String,
+    focusedSfSymbol: String?,
     activeTintColor: PlatformColor?,
     hidden: Bool,
     testID: String?,
@@ -29,6 +31,7 @@ public final class TabInfo: NSObject {
     self.title = title
     self.badge = badge
     self.sfSymbol = sfSymbol
+    self.focusedSfSymbol = focusedSfSymbol
     self.activeTintColor = activeTintColor
     self.hidden = hidden
     self.testID = testID
@@ -61,7 +64,13 @@ public final class TabInfo: NSObject {
 
   @objc public var icons: NSArray? {
     didSet {
-      loadIcons(icons)
+      loadIcons(icons, focused: false)
+    }
+  }
+
+  @objc public var focusedIcons: NSArray? {
+    didSet {
+      loadIcons(focusedIcons, focused: true)
     }
   }
 
@@ -179,7 +188,8 @@ public final class TabInfo: NSObject {
 
   @objc public func setImageLoader(_ imageLoader: RCTImageLoader) {
     self.imageLoader = imageLoader
-    loadIcons(icons)
+    loadIcons(icons, focused: false)
+    loadIcons(focusedIcons, focused: true)
   }
 
   override public func didUpdateReactSubviews() {
@@ -243,7 +253,7 @@ public final class TabInfo: NSObject {
     props.children.remove(at: index)
   }
 
-  private func loadIcons(_ icons: NSArray?) {
+  private func loadIcons(_ icons: NSArray?, focused: Bool) {
     guard let imageLoader else { return }
 
     // TODO: Diff the arrays and update only changed items.
@@ -270,13 +280,25 @@ public final class TabInfo: NSObject {
               let icon = image.resizeImageTo(size: iconSize)
               #if os(iOS)
                 if props.experimentalBakedTintColors {
-                  props.icons[index] = icon?.withRenderingMode(.alwaysTemplate)
+                  if focused {
+                    props.focusedIcons[index] = icon?.withRenderingMode(.alwaysTemplate)
+                  } else {
+                    props.icons[index] = icon?.withRenderingMode(.alwaysTemplate)
+                  }
                   props.iconsRevision += 1
+                } else {
+                  if focused {
+                    props.focusedIcons[index] = icon
+                  } else {
+                    props.icons[index] = icon
+                  }
+                }
+              #else
+                if focused {
+                  props.focusedIcons[index] = icon
                 } else {
                   props.icons[index] = icon
                 }
-              #else
-                props.icons[index] = icon
               #endif
             }
           })

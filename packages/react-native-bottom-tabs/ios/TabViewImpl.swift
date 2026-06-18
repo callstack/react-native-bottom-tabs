@@ -229,12 +229,15 @@ struct TabViewImpl: View {
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
       let assetIcon = props.icons[itemIndex]
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
+      let focusedIcon =
+        props.focusedIcons[itemIndex] ?? makeSFSymbolImage(named: tabData.focusedSfSymbol) ?? icon
       let shouldRenderLabelIntoImage =
         props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
 
       item.accessibilityLabel = tabData.title
 
       if shouldRenderLabelIntoImage, let icon {
+        let selectedIcon = focusedIcon ?? icon
         item.title = ""
         item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 100)
         item.image = makeTabBarItemImage(
@@ -244,7 +247,7 @@ struct TabViewImpl: View {
           props: props
         )
         item.selectedImage = makeTabBarItemImage(
-          icon: icon,
+          icon: selectedIcon,
           title: tabData.title,
           color: tabActiveColor,
           props: props
@@ -256,14 +259,15 @@ struct TabViewImpl: View {
       item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 0)
 
       if let icon {
+        let selectedIcon = focusedIcon ?? icon
         item.image =
           props.inactiveTintColor.map {
             icon.withTintColor($0, renderingMode: .alwaysOriginal)
           } ?? icon
         item.selectedImage =
           tabActiveColor.map {
-            icon.withTintColor($0, renderingMode: .alwaysOriginal)
-          } ?? icon
+            selectedIcon.withTintColor($0, renderingMode: .alwaysOriginal)
+          } ?? selectedIcon
       }
 
       item.setTitleTextAttributes(
