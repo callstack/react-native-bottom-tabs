@@ -8,4 +8,16 @@ require "#{ws_dir}/node_modules/react-native-test-app/test_app.rb"
 
 workspace 'ReactNativeBottomTabsExample.xcworkspace'
 
-use_test_app! :hermes_enabled => true, :fabric_enabled => true
+use_test_app!(
+  :hermes_enabled => true,
+  :fabric_enabled => true,
+  :post_install => lambda { |installer|
+    # Workaround to Xcode 26.4 build error: "call to consteval function 'fmt::basic_format_string' is not a constant expression"
+    installer.pods_project.targets.each do |target|
+      next unless target.name == 'fmt'
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+      end
+    end
+  }
+)
