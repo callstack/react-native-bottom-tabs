@@ -231,8 +231,7 @@ struct TabViewImpl: View {
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
       let preservesOriginalIconColors = preservesOriginalIconColors(tabData: tabData)
       let shouldRenderLabelIntoImage =
-        !preservesOriginalIconColors && props.hasCustomTintColors && props.labeled
-        && tabData.role != .search && icon != nil
+        props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
 
       item.accessibilityLabel = tabData.title
 
@@ -243,12 +242,14 @@ struct TabViewImpl: View {
           icon: icon,
           title: tabData.title,
           color: props.inactiveTintColor,
+          preservesOriginalIconColors: preservesOriginalIconColors,
           props: props
         )
         item.selectedImage = makeTabBarItemImage(
           icon: icon,
           title: tabData.title,
           color: tabActiveColor,
+          preservesOriginalIconColors: preservesOriginalIconColors,
           props: props
         )
         continue
@@ -346,6 +347,7 @@ struct TabViewImpl: View {
     icon: UIImage,
     title: String,
     color: UIColor?,
+    preservesOriginalIconColors: Bool = false,
     props: TabViewProps
   ) -> UIImage {
     let color = color ?? .label
@@ -372,7 +374,12 @@ struct TabViewImpl: View {
     format.scale = UIScreen.main.scale
 
     let image = UIGraphicsImageRenderer(size: imageSize, format: format).image { _ in
-      let tintedIcon = icon.withTintColor(color, renderingMode: .alwaysOriginal)
+      let tintedIcon: UIImage
+      if preservesOriginalIconColors {
+        tintedIcon = icon.withRenderingMode(.alwaysOriginal)
+      } else {
+        tintedIcon = icon.withTintColor(color, renderingMode: .alwaysOriginal)
+      }
       let iconFrame = aspectFitRect(
         size: tintedIcon.size,
         in: CGRect(
