@@ -147,11 +147,9 @@ interface Props<Route extends BaseRoute> {
   }) => ImageSource | AppleIcon | undefined | null;
 
   /**
-   * Get the iOS rendering mode for the tab icon, uses `route.iconRenderingMode` by default.
+   * Get the rendering mode for the tab icon, uses `route.iconRenderingMode` by default.
    *
    * Use `alwaysOriginal` to preserve multicolor image icons instead of applying the native tab tint.
-   *
-   * @platform ios
    */
   getIconRenderingMode?: (props: {
     route: Route;

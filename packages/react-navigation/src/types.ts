@@ -72,7 +72,7 @@ export type NativeBottomTabNavigationOptions = {
   tabBarIcon?: (props: { focused: boolean }) => ImageSourcePropType | AppleIcon;
 
   /**
-   * Rendering mode for the tab icon. Use `alwaysOriginal` on iOS to preserve multicolor image icons.
+   * Rendering mode for the tab icon. Use `alwaysOriginal` to preserve multicolor image icons.
    */
   tabBarIconRenderingMode?: IconRenderingMode;
 

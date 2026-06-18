@@ -46,9 +46,6 @@ export default function OriginalIconColors() {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
-      experimental_bakedTintColors
-      tabBarActiveTintColor="blue"
-      tabBarInactiveTintColor="purple"
     />
   );
 }
