@@ -288,7 +288,6 @@ public final class TabInfo: NSObject {
                   } else {
                     props.icons[index] = icon?.withRenderingMode(.alwaysTemplate)
                   }
-                  props.iconsRevision += 1
                 } else {
                   if focused {
                     props.focusedIcons[index] = icon
@@ -296,12 +295,14 @@ public final class TabInfo: NSObject {
                     props.icons[index] = icon
                   }
                 }
+                props.iconsRevision += 1
               #else
                 if focused {
                   props.focusedIcons[index] = icon
                 } else {
                   props.icons[index] = icon
                 }
+                props.iconsRevision += 1
               #endif
             }
           })

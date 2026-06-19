@@ -71,7 +71,7 @@ struct TabViewImpl: View {
         #else
           tabBar = tabController.tabBar
           updateTabBarAppearance(props: props, tabBar: tabController.tabBar)
-          updateExperimentalBakedTintColors(props: props, tabBar: tabController.tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabController.tabBar)
           if !props.tabBarHidden {
             onTabBarMeasured(
               Int(tabController.tabBar.frame.size.height)
@@ -115,17 +115,16 @@ struct TabViewImpl: View {
 }
 
 #if !os(macOS)
-  private func updateExperimentalBakedTintColors(props: TabViewProps, tabBar: UITabBar?) {
-    guard shouldUseExperimentalBakedTintColors(props: props),
-      let tabBar,
+  private func updateTabBarItemImages(props: TabViewProps, tabBar: UITabBar?) {
+    guard let tabBar,
       let items = tabBar.items
     else { return }
 
-    configureExperimentalBakedTintColors(items: items, props: props)
+    configureTabBarItemImages(items: items, props: props)
 
     DispatchQueue.main.async { [weak tabBar] in
       guard let tabBar, let items = tabBar.items else { return }
-      configureExperimentalBakedTintColors(items: items, props: props)
+      configureTabBarItemImages(items: items, props: props)
     }
   }
 
@@ -220,7 +219,7 @@ struct TabViewImpl: View {
     }
   }
 
-  private func configureExperimentalBakedTintColors(items: [UITabBarItem], props: TabViewProps) {
+  private func configureTabBarItemImages(items: [UITabBarItem], props: TabViewProps) {
     for (tabBarIndex, item) in items.enumerated() {
       guard let tabData = props.filteredItems[safe: tabBarIndex],
         let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key })
@@ -232,12 +231,13 @@ struct TabViewImpl: View {
       let focusedIcon =
         props.focusedIcons[itemIndex] ?? makeSFSymbolImage(named: tabData.focusedSfSymbol) ?? icon
       let preservesOriginalIconColors = preservesOriginalIconColors(tabData: tabData)
+      let useBakedTintColors = shouldUseExperimentalBakedTintColors(props: props)
       let shouldRenderLabelIntoImage =
         props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
 
       item.accessibilityLabel = tabData.title
 
-      if shouldRenderLabelIntoImage, let icon {
+      if useBakedTintColors, shouldRenderLabelIntoImage, let icon {
         let selectedIcon = focusedIcon ?? icon
         item.title = ""
         item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 100)
@@ -263,19 +263,18 @@ struct TabViewImpl: View {
 
       if let icon {
         let selectedIcon = focusedIcon ?? icon
-        if preservesOriginalIconColors {
-          item.image = icon.withRenderingMode(.alwaysOriginal)
-          item.selectedImage = selectedIcon.withRenderingMode(.alwaysOriginal)
-        } else {
-          item.image =
-            props.inactiveTintColor.map {
-              icon.withTintColor($0, renderingMode: .alwaysOriginal)
-            } ?? icon
-          item.selectedImage =
-            tabActiveColor.map {
-              selectedIcon.withTintColor($0, renderingMode: .alwaysOriginal)
-            } ?? selectedIcon
-        }
+        item.image = renderTabBarIcon(
+          icon,
+          color: props.inactiveTintColor,
+          preservesOriginalIconColors: preservesOriginalIconColors,
+          forceTintColor: useBakedTintColors
+        )
+        item.selectedImage = renderTabBarIcon(
+          selectedIcon,
+          color: tabActiveColor,
+          preservesOriginalIconColors: preservesOriginalIconColors,
+          forceTintColor: useBakedTintColors
+        )
       }
 
       item.setTitleTextAttributes(
@@ -290,31 +289,25 @@ struct TabViewImpl: View {
     }
   }
 
-  private func resetExperimentalBakedTintColors(props: TabViewProps, tabBar: UITabBar?) {
-    guard let tabBar,
-      let items = tabBar.items
-    else { return }
-
-    for (tabBarIndex, item) in items.enumerated() {
-      guard let tabData = props.filteredItems[safe: tabBarIndex],
-        let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key })
-      else { continue }
-
-      let assetIcon = props.icons[itemIndex]
-      let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
-      let originalIcon = icon.map {
-        preservesOriginalIconColors(tabData: tabData) ? $0.withRenderingMode(.alwaysOriginal) : $0
-      }
-
-      item.title = props.labeled ? tabData.title : nil
-      item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 0)
-      item.image = originalIcon
-      item.selectedImage = originalIcon
-    }
-  }
-
   private func preservesOriginalIconColors(tabData: TabInfo) -> Bool {
     tabData.iconRenderingMode == "original"
+  }
+
+  private func renderTabBarIcon(
+    _ icon: UIImage,
+    color: UIColor?,
+    preservesOriginalIconColors: Bool,
+    forceTintColor: Bool
+  ) -> UIImage {
+    if preservesOriginalIconColors {
+      return icon.withRenderingMode(.alwaysOriginal)
+    }
+
+    guard forceTintColor, let color else {
+      return icon
+    }
+
+    return icon.withTintColor(color, renderingMode: .alwaysOriginal)
   }
 
   private func makeSFSymbolImage(named sfSymbol: String?) -> UIImage? {
@@ -476,40 +469,36 @@ extension View {
         }
         .onChange(of: props.inactiveTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateExperimentalBakedTintColors(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.activeTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateExperimentalBakedTintColors(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.selectedActiveTintColor) { newValue in
           tabBar?.tintColor = newValue
         }
         .onChange(of: props.iconsRevision) { _ in
-          updateExperimentalBakedTintColors(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.labeled) { _ in
-          updateExperimentalBakedTintColors(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.fontSize) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateExperimentalBakedTintColors(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.fontFamily) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateExperimentalBakedTintColors(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.fontWeight) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateExperimentalBakedTintColors(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
-        .onChange(of: props.experimentalBakedTintColors) { newValue in
+        .onChange(of: props.experimentalBakedTintColors) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          if newValue {
-            updateExperimentalBakedTintColors(props: props, tabBar: tabBar)
-          } else {
-            resetExperimentalBakedTintColors(props: props, tabBar: tabBar)
-          }
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
         .onChange(of: props.tabBarHidden) { newValue in
           tabBar?.isHidden = newValue
