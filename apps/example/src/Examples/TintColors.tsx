@@ -29,9 +29,10 @@ export default function TintColorsExample() {
     {
       key: 'albums',
       title: 'Albums',
-      focusedIcon: require('../../assets/icons/grid_dark.png'),
-      badge: '5',
-      activeTintColor: 'green',
+      unfocusedIcon: require('../../assets/avatar-3.png'),
+      focusedIcon: require('../../assets/avatar-4.png'),
+      activeTintColor: 'purple',
+      iconRenderingMode: 'original',
     },
     {
       key: 'contacts',

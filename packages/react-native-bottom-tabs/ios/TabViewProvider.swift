@@ -10,6 +10,7 @@ public final class TabInfo: NSObject {
   public let sfSymbol: String
   public let focusedSfSymbol: String?
   public let activeTintColor: PlatformColor?
+  public let iconRenderingMode: String?
   public let hidden: Bool
   public let testID: String?
   public let role: TabBarRole?
@@ -22,6 +23,7 @@ public final class TabInfo: NSObject {
     sfSymbol: String,
     focusedSfSymbol: String?,
     activeTintColor: PlatformColor?,
+    iconRenderingMode: String?,
     hidden: Bool,
     testID: String?,
     role: String?,
@@ -33,6 +35,7 @@ public final class TabInfo: NSObject {
     self.sfSymbol = sfSymbol
     self.focusedSfSymbol = focusedSfSymbol
     self.activeTintColor = activeTintColor
+    self.iconRenderingMode = iconRenderingMode
     self.hidden = hidden
     self.testID = testID
     self.role = TabBarRole(rawValue: role ?? "")

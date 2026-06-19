@@ -31,6 +31,7 @@ export type TabViewItems = ReadonlyArray<{
   badgeBackgroundColor?: ProcessedColorValue | null;
   badgeTextColor?: ProcessedColorValue | null;
   activeTintColor?: ProcessedColorValue | null;
+  iconRenderingMode?: string;
   hidden?: boolean;
   testID?: string;
   role?: string;

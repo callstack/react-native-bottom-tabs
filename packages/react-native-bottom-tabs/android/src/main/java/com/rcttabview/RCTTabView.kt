@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -19,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.MenuItemCompat
 import androidx.core.view.forEachIndexed
 import coil3.ImageLoader
 import coil3.asDrawable
@@ -246,9 +248,11 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
       }
 
       menuItem.isVisible = !item.hidden
+      updateIconTintMode(menuItem, item)
       if (iconSources.containsKey(index)) {
         getDrawable(iconSources[index]!!) {
           menuItem.icon = it
+          updateIconTintMode(menuItem, item)
         }
       }
 
@@ -297,6 +301,13 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     return bottomNavigation.menu.findItem(index) ?: bottomNavigation.menu.add(0, index, 0, title)
   }
 
+  private fun updateIconTintMode(menuItem: MenuItem, item: TabInfo) {
+    MenuItemCompat.setIconTintMode(
+      menuItem,
+      if (item.iconRenderingMode == "original") PorterDuff.Mode.DST else null
+    )
+  }
+
   fun setIcons(icons: ReadableArray?) {
     if (icons == null || icons.size() == 0) {
       return
@@ -316,6 +327,9 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
       bottomNavigation.menu.findItem(idx)?.let { menuItem ->
         getDrawable(imageSource) {
           menuItem.icon = it
+          items.getOrNull(idx)?.let { item ->
+            updateIconTintMode(menuItem, item)
+          }
         }
       }
     }

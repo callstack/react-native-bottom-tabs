@@ -231,6 +231,7 @@ struct TabViewImpl: View {
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
       let focusedIcon =
         props.focusedIcons[itemIndex] ?? makeSFSymbolImage(named: tabData.focusedSfSymbol) ?? icon
+      let preservesOriginalIconColors = preservesOriginalIconColors(tabData: tabData)
       let shouldRenderLabelIntoImage =
         props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
 
@@ -244,12 +245,14 @@ struct TabViewImpl: View {
           icon: icon,
           title: tabData.title,
           color: props.inactiveTintColor,
+          preservesOriginalIconColors: preservesOriginalIconColors,
           props: props
         )
         item.selectedImage = makeTabBarItemImage(
           icon: selectedIcon,
           title: tabData.title,
           color: tabActiveColor,
+          preservesOriginalIconColors: preservesOriginalIconColors,
           props: props
         )
         continue
@@ -260,14 +263,19 @@ struct TabViewImpl: View {
 
       if let icon {
         let selectedIcon = focusedIcon ?? icon
-        item.image =
-          props.inactiveTintColor.map {
-            icon.withTintColor($0, renderingMode: .alwaysOriginal)
-          } ?? icon
-        item.selectedImage =
-          tabActiveColor.map {
-            selectedIcon.withTintColor($0, renderingMode: .alwaysOriginal)
-          } ?? selectedIcon
+        if preservesOriginalIconColors {
+          item.image = icon.withRenderingMode(.alwaysOriginal)
+          item.selectedImage = selectedIcon.withRenderingMode(.alwaysOriginal)
+        } else {
+          item.image =
+            props.inactiveTintColor.map {
+              icon.withTintColor($0, renderingMode: .alwaysOriginal)
+            } ?? icon
+          item.selectedImage =
+            tabActiveColor.map {
+              selectedIcon.withTintColor($0, renderingMode: .alwaysOriginal)
+            } ?? selectedIcon
+        }
       }
 
       item.setTitleTextAttributes(
@@ -294,12 +302,19 @@ struct TabViewImpl: View {
 
       let assetIcon = props.icons[itemIndex]
       let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
+      let originalIcon = icon.map {
+        preservesOriginalIconColors(tabData: tabData) ? $0.withRenderingMode(.alwaysOriginal) : $0
+      }
 
       item.title = props.labeled ? tabData.title : nil
       item.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: 0)
-      item.image = icon
-      item.selectedImage = icon
+      item.image = originalIcon
+      item.selectedImage = originalIcon
     }
+  }
+
+  private func preservesOriginalIconColors(tabData: TabInfo) -> Bool {
+    tabData.iconRenderingMode == "original"
   }
 
   private func makeSFSymbolImage(named sfSymbol: String?) -> UIImage? {
@@ -335,6 +350,7 @@ struct TabViewImpl: View {
     icon: UIImage,
     title: String,
     color: UIColor?,
+    preservesOriginalIconColors: Bool = false,
     props: TabViewProps
   ) -> UIImage {
     let color = color ?? .label
@@ -361,7 +377,12 @@ struct TabViewImpl: View {
     format.scale = UIScreen.main.scale
 
     let image = UIGraphicsImageRenderer(size: imageSize, format: format).image { _ in
-      let tintedIcon = icon.withTintColor(color, renderingMode: .alwaysOriginal)
+      let tintedIcon: UIImage
+      if preservesOriginalIconColors {
+        tintedIcon = icon.withRenderingMode(.alwaysOriginal)
+      } else {
+        tintedIcon = icon.withTintColor(color, renderingMode: .alwaysOriginal)
+      }
       let iconFrame = aspectFitRect(
         size: tintedIcon.size,
         in: CGRect(
