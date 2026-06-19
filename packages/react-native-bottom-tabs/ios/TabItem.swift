@@ -12,8 +12,7 @@ struct TabItem: View {
 #if os(macOS)
       Image(nsImage: icon)
 #else
-      Image(uiImage: icon.withRenderingMode(uiImageRenderingMode))
-        .renderingMode(swiftUIImageRenderingMode)
+      Image(uiImage: renderedIcon(icon))
 #endif
     } else if let sfSymbol, !sfSymbol.isEmpty {
       Image(systemName: sfSymbol)
@@ -29,12 +28,8 @@ struct TabItem: View {
     iconRenderingMode == "original"
   }
 
-  private var uiImageRenderingMode: UIImage.RenderingMode {
-    preservesOriginalIconColors ? .alwaysOriginal : .automatic
-  }
-
-  private var swiftUIImageRenderingMode: Image.TemplateRenderingMode? {
-    preservesOriginalIconColors ? .original : nil
+  private func renderedIcon(_ icon: UIImage) -> UIImage {
+    preservesOriginalIconColors ? icon.withRenderingMode(.alwaysOriginal) : icon
   }
 #endif
 }
