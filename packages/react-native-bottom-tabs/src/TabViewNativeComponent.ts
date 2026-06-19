@@ -26,6 +26,7 @@ export type TabViewItems = ReadonlyArray<{
   key: string;
   title: string;
   sfSymbol?: string;
+  focusedSfSymbol?: string;
   badge?: string;
   badgeBackgroundColor?: ProcessedColorValue | null;
   badgeTextColor?: ProcessedColorValue | null;
@@ -45,6 +46,7 @@ export interface TabViewProps extends ViewProps {
   onTabBarMeasured?: DirectEventHandler<OnTabBarMeasured>;
   onNativeLayout?: DirectEventHandler<OnNativeLayout>;
   icons?: ReadonlyArray<ImageSource>;
+  focusedIcons?: ReadonlyArray<ImageSource>;
   tabBarHidden?: boolean;
   labeled?: boolean;
   sidebarAdaptable?: boolean;

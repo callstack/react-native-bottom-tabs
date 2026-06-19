@@ -126,6 +126,9 @@ class RCTTabViewManager(context: ReactApplicationContext) :
       view.setIcons(value)
   }
 
+  override fun setFocusedIcons(view: ReactBottomNavigationView?, value: ReadableArray?) {
+  }
+
   override fun setLabeled(view: ReactBottomNavigationView?, value: Boolean) {
     if (view != null)
       view.setLabeled(value)
