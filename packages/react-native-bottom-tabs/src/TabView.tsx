@@ -315,7 +315,9 @@ const TabView = <Route extends BaseRoute>({
       trimmedRoutes.map((route) =>
         getIcon({
           route,
-          focused: route.key === focusedKey,
+          // iOS uses UITabBarItem.selectedImage for selected and Liquid Glass hover states.
+          // Keep the base image unfocused so a selected tab can render unfocused while another tab is hovered.
+          focused: Platform.OS === 'ios' ? false : route.key === focusedKey,
         })
       ),
     [focusedKey, getIcon, trimmedRoutes]
