@@ -37,6 +37,7 @@ bool operator==(const RNCTabViewItemsStruct& lhs, const RNCTabViewItemsStruct& r
   lhs.sfSymbol == rhs.sfSymbol &&
   lhs.badge == rhs.badge &&
   lhs.activeTintColor == rhs.activeTintColor &&
+  lhs.iconRenderingMode == rhs.iconRenderingMode &&
   lhs.hidden == rhs.hidden &&
   lhs.testID == rhs.testID &&
   lhs.role == rhs.role &&
@@ -197,6 +198,7 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
                                           badge:RCTNSStringFromStringNilIfEmpty(item.badge)
                                        sfSymbol:RCTNSStringFromStringNilIfEmpty(item.sfSymbol)
                                 activeTintColor:RCTUIColorFromSharedColor(item.activeTintColor)
+                             iconRenderingMode:RCTNSStringFromStringNilIfEmpty(item.iconRenderingMode)
                                          hidden:item.hidden
                                          testID:RCTNSStringFromStringNilIfEmpty(item.testID)
                                          role:RCTNSStringFromStringNilIfEmpty(item.role)
@@ -265,4 +267,3 @@ Class<RCTComponentViewProtocol> RNCTabViewCls(void)
 }
 
 #endif // RCT_NEW_ARCH_ENABLED
-

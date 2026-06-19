@@ -43,6 +43,8 @@ import BottomAccessoryView from './Examples/BottomAccessoryView';
 import TabBarHidden from './Examples/TabBarHidden';
 import CustomTabBar from './Examples/CustomTabBar';
 import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
+import OriginalIconColors from './Examples/OriginalIconColors';
+import NativeBottomTabsOriginalIcons from './Examples/NativeBottomTabsOriginalIcons';
 import { useLogger } from '@react-navigation/devtools';
 import LazyTabs from './Examples/LazyTabs';
 import { LogBox } from 'react-native';
@@ -119,6 +121,10 @@ const examples = [
     name: 'Custom tabBar',
   },
   {
+    component: OriginalIconColors,
+    name: 'Original icon colors',
+  },
+  {
     component: FourTabsRippleColor,
     name: 'Four Tabs with ripple Color',
     platform: 'android',
@@ -185,6 +191,10 @@ const examples = [
   {
     component: NativeBottomTabsTabBarHidden,
     name: 'Native Bottom Tabs with tabBarHidden',
+  },
+  {
+    component: NativeBottomTabsOriginalIcons,
+    name: 'Native Bottom Tabs with original icons',
   },
   { component: NativeBottomTabs, name: 'Native Bottom Tabs' },
   { component: JSBottomTabs, name: 'JS Bottom Tabs' },

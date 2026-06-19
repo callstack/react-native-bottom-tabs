@@ -25,6 +25,7 @@ import useLatestCallback from 'use-latest-callback';
 import type {
   AppleIcon,
   BaseRoute,
+  IconRenderingMode,
   LayoutDirection,
   NavigationState,
   TabRole,
@@ -146,6 +147,15 @@ interface Props<Route extends BaseRoute> {
   }) => ImageSource | AppleIcon | undefined | null;
 
   /**
+   * Get the rendering mode for the tab icon, uses `route.iconRenderingMode` by default.
+   *
+   * Use `original` to preserve multicolor image icons instead of applying the native tab tint.
+   */
+  getIconRenderingMode?: (props: {
+    route: Route;
+  }) => IconRenderingMode | undefined;
+
+  /**
    * Get hidden for the tab, uses `route.hidden` by default.
    * If `true`, the tab will be hidden.
    */
@@ -252,6 +262,8 @@ const TabView = <Route extends BaseRoute>({
   getActiveTintColor = ({ route }: { route: Route }) => route.activeTintColor,
   getTestID = ({ route }: { route: Route }) => route.testID,
   getRole = ({ route }: { route: Route }) => route.role,
+  getIconRenderingMode = ({ route }: { route: Route }) =>
+    route.iconRenderingMode,
   getSceneStyle = ({ route }: { route: Route }) => route.style,
   getPreventsDefault = ({ route }: { route: Route }) => route.preventsDefault,
   hapticFeedbackEnabled = false,
@@ -331,6 +343,7 @@ const TabView = <Route extends BaseRoute>({
           ),
           badgeTextColor: processColor(getBadgeTextColor?.({ route })),
           activeTintColor: processColor(getActiveTintColor({ route })),
+          iconRenderingMode: getIconRenderingMode({ route }),
           hidden: getHidden?.({ route }),
           testID: getTestID?.({ route }),
           role: getRole?.({ route }),
@@ -345,6 +358,7 @@ const TabView = <Route extends BaseRoute>({
       getBadgeBackgroundColor,
       getBadgeTextColor,
       getActiveTintColor,
+      getIconRenderingMode,
       getHidden,
       getTestID,
       getRole,
