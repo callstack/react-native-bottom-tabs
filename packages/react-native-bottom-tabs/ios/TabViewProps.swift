@@ -55,6 +55,7 @@ class TabViewProps: ObservableObject {
   @Published var items: [TabInfo] = []
   @Published var selectedPage: String?
   @Published var icons: [Int: PlatformImage] = [:]
+  @Published var focusedIcons: [Int: PlatformImage] = [:]
   @Published var iconsRevision: Int = 0
   @Published var sidebarAdaptable: Bool?
   @Published var labeled: Bool = false
