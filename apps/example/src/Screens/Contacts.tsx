@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useBottomTabBarHeight } from 'react-native-bottom-tabs';
+import { BottomTabBarHeightContext } from 'react-native-bottom-tabs';
 import { MusicControl } from '../Components/MusicControl';
 
 type Item = { name: string; number: number };
@@ -104,7 +104,7 @@ export function Contacts({ query, ...rest }: Props) {
   console.log(Platform.OS, ' Rendering Contacts');
   const renderItem = ({ item }: { item: Item }) => <ContactItem item={item} />;
 
-  const tabBarHeight = useBottomTabBarHeight();
+  const tabBarHeight = React.useContext(BottomTabBarHeightContext) ?? 0;
   const ref = React.useRef<FlatList>(null);
   useScrollToTop(ref);
 
