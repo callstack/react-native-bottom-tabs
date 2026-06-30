@@ -35,6 +35,7 @@ bool operator==(const RNCTabViewItemsStruct& lhs, const RNCTabViewItemsStruct& r
   return lhs.key == rhs.key &&
   lhs.title == rhs.title &&
   lhs.sfSymbol == rhs.sfSymbol &&
+  lhs.focusedSfSymbol == rhs.focusedSfSymbol &&
   lhs.badge == rhs.badge &&
   lhs.activeTintColor == rhs.activeTintColor &&
   lhs.iconRenderingMode == rhs.iconRenderingMode &&
@@ -117,6 +118,16 @@ using namespace facebook::react;
     _tabViewProvider.icons = iconsArray;
   }
 
+  if (oldViewProps.focusedIcons != newViewProps.focusedIcons) {
+    auto focusedIconsArray = [[NSMutableArray alloc] init];
+    for (auto &source: newViewProps.focusedIcons) {
+      auto imageSource = [[RCTImageSource alloc] initWithURLRequest:NSURLRequestFromImageSource(source) size:CGSizeMake(source.size.width, source.size.height) scale:source.scale];
+      [focusedIconsArray addObject:imageSource];
+    }
+
+    _tabViewProvider.focusedIcons = focusedIconsArray;
+  }
+
   if (oldViewProps.sidebarAdaptable != newViewProps.sidebarAdaptable) {
     _tabViewProvider.sidebarAdaptable = newViewProps.sidebarAdaptable;
   }
@@ -197,6 +208,7 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
                                           title:RCTNSStringFromString(item.title)
                                           badge:RCTNSStringFromStringNilIfEmpty(item.badge)
                                        sfSymbol:RCTNSStringFromStringNilIfEmpty(item.sfSymbol)
+                                 focusedSfSymbol:RCTNSStringFromStringNilIfEmpty(item.focusedSfSymbol)
                                 activeTintColor:RCTUIColorFromSharedColor(item.activeTintColor)
                              iconRenderingMode:RCTNSStringFromStringNilIfEmpty(item.iconRenderingMode)
                                          hidden:item.hidden
