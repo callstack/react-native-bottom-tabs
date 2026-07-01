@@ -1,5 +1,17 @@
 # react-native-bottom-tabs
 
+## 1.4.0
+
+### Minor Changes
+
+- [#542](https://github.com/callstack/react-native-bottom-tabs/pull/542) [`758746c`](https://github.com/callstack/react-native-bottom-tabs/commit/758746c8140c4fac3edf2b7cdd2adcf07f1099db) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add an icon rendering mode option for preserving original colors of tab icons.
+
+- [#543](https://github.com/callstack/react-native-bottom-tabs/pull/543) [`a8d871a`](https://github.com/callstack/react-native-bottom-tabs/commit/a8d871a8fd7e10fc54b02912e5f2dbca452a5d80) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Display focused icon when hovering on iOS Liquid Glass
+
+### Patch Changes
+
+- [#546](https://github.com/callstack/react-native-bottom-tabs/pull/546) [`671c97f`](https://github.com/callstack/react-native-bottom-tabs/commit/671c97f5715aa0ca453a39e19428ba0096d82dbf) Thanks [@gabecorso](https://github.com/gabecorso)! - Add `#if compiler(>=6.2)` guards to iOS-26 SwiftUI symbols in BottomAccessoryProvider.swift and NewTabView.swift to fix compilation on Xcode < 26
+
 ## 1.3.1
 
 ## 1.3.0
