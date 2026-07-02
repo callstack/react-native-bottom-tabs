@@ -20,7 +20,10 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.forEachIndexed
 import coil3.ImageLoader
 import coil3.asDrawable
@@ -281,12 +284,7 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
             onTabSelected(menuItem)
           }
 
-          item.testID?.let { testId ->
-            view.findViewById<View>(com.google.android.material.R.id.navigation_bar_item_content_container)
-              ?.apply {
-                tag = testId
-              }
-          }
+          applyTestID(view, item.testID)
         }
       }
     }
@@ -299,6 +297,28 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
   private fun getOrCreateItem(index: Int, title: String): MenuItem {
     return bottomNavigation.menu.findItem(index) ?: bottomNavigation.menu.add(0, index, 0, title)
+  }
+
+  private fun applyTestID(itemView: View, testID: String?) {
+    val contentContainer =
+      itemView.findViewById<View>(com.google.android.material.R.id.navigation_bar_item_content_container)
+        ?: return
+
+    contentContainer.tag = testID
+    if (testID == null) {
+      ViewCompat.setAccessibilityDelegate(contentContainer, null)
+      return
+    }
+
+    ViewCompat.setAccessibilityDelegate(contentContainer, object : AccessibilityDelegateCompat() {
+      override fun onInitializeAccessibilityNodeInfo(
+        host: View,
+        info: AccessibilityNodeInfoCompat
+      ) {
+        super.onInitializeAccessibilityNodeInfo(host, info)
+        info.viewIdResourceName = testID
+      }
+    })
   }
 
   private fun updateIconTintMode(menuItem: MenuItem, item: TabInfo) {
