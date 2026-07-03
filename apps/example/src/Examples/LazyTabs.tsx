@@ -3,11 +3,15 @@ import { useState } from 'react';
 import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
+import { Chat } from '../Screens/Chat';
+import { SolidColor } from '../Screens/SolidColor';
 
 const renderScene = SceneMap({
   article: Article,
   albums: Albums,
   contacts: Contacts,
+  chat: Chat,
+  solid: SolidColor,
 });
 
 export default function LazyTabs() {
@@ -34,6 +38,18 @@ export default function LazyTabs() {
       focusedIcon: require('../../assets/icons/person_dark.png'),
       title: 'Contacts',
       testID: 'contactsTestID',
+    },
+    {
+      key: 'chat',
+      focusedIcon: require('../../assets/icons/chat_dark.png'),
+      title: 'Chat',
+      testID: 'chatTestID',
+    },
+    {
+      key: 'solid',
+      focusedIcon: require('../../assets/icons/person_dark.png'),
+      title: 'Solid',
+      testID: 'solidTestID',
     },
   ]);
 
