@@ -3,7 +3,6 @@ import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
 import { createNativeBottomTabNavigator } from '@bottom-tabs/react-navigation';
-import { SolidColor } from '../Screens/SolidColor';
 
 const Tab = createNativeBottomTabNavigator();
 
@@ -37,13 +36,6 @@ export default function NativeBottomTabsLazy() {
         component={Chat}
         options={{
           tabBarIcon: () => require('../../assets/icons/chat_dark.png'),
-        }}
-      />
-      <Tab.Screen
-        name="Solid"
-        component={SolidColor}
-        options={{
-          tabBarIcon: () => require('../../assets/icons/newspaper.svg'),
         }}
       />
     </Tab.Navigator>

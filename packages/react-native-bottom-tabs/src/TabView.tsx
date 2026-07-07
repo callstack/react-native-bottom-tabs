@@ -299,13 +299,12 @@ const TabView = <Route extends BaseRoute>({
     }
     return navigationState.routes;
   }, [navigationState.routes]);
-  const shouldDeferUnloadedLazySelection =
-    Platform.OS === 'ios' && parseFloat(String(Platform.Version)) >= 26;
 
   /**
    * List of loaded tabs, tabs will be loaded when navigated to.
    */
   const [loaded, setLoaded] = React.useState<string[]>([focusedKey]);
+
   if (!loaded.includes(focusedKey)) {
     // Set the current tab to be loaded if it was not loaded before
     setLoaded((loaded) => [...loaded, focusedKey]);
@@ -348,11 +347,7 @@ const TabView = <Route extends BaseRoute>({
           hidden: getHidden?.({ route }),
           testID: getTestID?.({ route }),
           role: getRole?.({ route }),
-          preventsDefault:
-            getPreventsDefault?.({ route }) ||
-            (shouldDeferUnloadedLazySelection &&
-              getLazy({ route }) !== false &&
-              !loaded.includes(route.key)),
+          preventsDefault: getPreventsDefault?.({ route }),
         };
       }),
     [
@@ -368,9 +363,6 @@ const TabView = <Route extends BaseRoute>({
       getTestID,
       getRole,
       getPreventsDefault,
-      getLazy,
-      loaded,
-      shouldDeferUnloadedLazySelection,
     ]
   );
 
@@ -392,12 +384,6 @@ const TabView = <Route extends BaseRoute>({
     onIndexChange(index);
   });
 
-  const hasUnloadedLazyRoute =
-    shouldDeferUnloadedLazySelection &&
-    trimmedRoutes.some(
-      (route) => getLazy({ route }) !== false && !loaded.includes(route.key)
-    );
-
   const handleTabLongPress = React.useCallback(
     ({ nativeEvent: { key } }: { nativeEvent: OnPageSelectedEventData }) => {
       const index = trimmedRoutes.findIndex((route) => route.key === key);
@@ -408,22 +394,9 @@ const TabView = <Route extends BaseRoute>({
 
   const handlePageSelected = React.useCallback(
     ({ nativeEvent: { key } }: { nativeEvent: OnPageSelectedEventData }) => {
-      const route = trimmedRoutes.find((route) => route.key === key);
-      const preventsDefault = route ? getPreventsDefault({ route }) : false;
-
-      if (route && !preventsDefault) {
-        setLoaded((loaded) =>
-          loaded.includes(key) ? loaded : [...loaded, key]
-        );
-      }
-
       jumpTo(key);
     },
-    [
-      getPreventsDefault,
-      jumpTo,
-      trimmedRoutes,
-    ]
+    [jumpTo]
   );
 
   const handleTabBarMeasured = React.useCallback(
@@ -469,33 +442,26 @@ const TabView = <Route extends BaseRoute>({
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
         experimentalBakedTintColors={experimentalBakedTintColors}
-        disablePageAnimations={
-          props.disablePageAnimations || hasUnloadedLazyRoute
-        }
         barTintColor={tabBarStyle?.backgroundColor}
         rippleColor={rippleColor}
         labeled={labeled}
       >
         {trimmedRoutes.map((route) => {
-          const customStyle = getSceneStyle({ route });
-
           if (getLazy({ route }) !== false && !loaded.includes(route.key)) {
             // Don't render a screen if we've never navigated to it
             return (
               <View
                 key={route.key}
                 collapsable={false}
-                style={[
-                  styles.screen,
-                  renderCustomTabBar ? styles.fullWidth : measuredDimensions,
-                  customStyle,
-                ]}
+                style={styles.fullWidth}
               />
             );
           }
 
           const focused = route.key === focusedKey;
           const freeze = !focused ? getFreezeOnBlur({ route }) : false;
+
+          const customStyle = getSceneStyle({ route });
 
           return (
             <View
