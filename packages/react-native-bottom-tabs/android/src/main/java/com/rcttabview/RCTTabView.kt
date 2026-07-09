@@ -302,15 +302,18 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
   private fun View.setTabTestID(testId: String?) {
     tag = testId
+    if (testId == null) {
+      ViewCompat.setAccessibilityDelegate(this, null)
+      return
+    }
+
     ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
       override fun onInitializeAccessibilityNodeInfo(
         host: View,
         info: AccessibilityNodeInfoCompat
       ) {
         super.onInitializeAccessibilityNodeInfo(host, info)
-        testId?.let {
-          info.viewIdResourceName = it
-        }
+        info.viewIdResourceName = testId
       }
     })
   }
