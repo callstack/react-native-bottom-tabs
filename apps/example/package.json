@@ -7,6 +7,7 @@
     "build:android": "npm run mkdist && react-native bundle --entry-file index.js --platform android --dev true --bundle-output dist/main.android.jsbundle --assets-dest dist && react-native build-android --extra-params \"--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a -PnewArchEnabled=true\"",
     "build:ios": "npm run mkdist && react-native bundle --entry-file index.js --platform ios --dev true --bundle-output dist/main.ios.jsbundle --assets-dest dist",
     "ios": "react-native run-ios",
+    "e2e:android": "maestro test --platform=android e2e",
     "mkdist": "node -e \"require('node:fs').mkdirSync('dist', { recursive: true, mode: 0o755 })\"",
     "start": "react-native start"
   },

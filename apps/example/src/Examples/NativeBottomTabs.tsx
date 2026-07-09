@@ -60,6 +60,7 @@ function NativeBottomTabs() {
         name="Albums"
         component={Albums}
         options={{
+          tabBarButtonTestID: 'albumsTestID',
           tabBarIcon: () => require('../../assets/icons/grid_dark.png'),
         }}
       />
@@ -72,6 +73,7 @@ function NativeBottomTabs() {
           },
         }}
         options={{
+          tabBarButtonTestID: 'contactsTestID',
           tabBarIcon: () => require('../../assets/icons/person_dark.png'),
           tabBarActiveTintColor: 'yellow',
           preventsDefault: true,
@@ -86,6 +88,7 @@ function NativeBottomTabs() {
           },
         }}
         options={{
+          tabBarButtonTestID: 'chatTestID',
           tabBarIcon: () => require('../../assets/icons/chat_dark.png'),
           tabBarActiveTintColor: 'white',
         }}

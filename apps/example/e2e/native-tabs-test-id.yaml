@@ -1,0 +1,22 @@
+appId: bottomtabs.example
+name: Android native tabs testID smoke
+tags:
+  - smoke
+---
+- launchApp
+- scrollUntilVisible:
+    element:
+      text: ^Native Bottom Tabs$
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: ^Native Bottom Tabs$
+- assertVisible: Press me
+- tapOn:
+    id: articleTestID
+- assertVisible: What is Lorem Ipsum?
+- tapOn:
+    id: albumsTestID
+- tapOn:
+    id: chatTestID
+- assertVisible: Press me
