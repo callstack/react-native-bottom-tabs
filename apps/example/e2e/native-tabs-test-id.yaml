@@ -1,7 +1,5 @@
 appId: bottomtabs.example
-name: Android native tabs testID smoke
-tags:
-  - smoke
+name: Navigate tabs via testIDs
 ---
 - launchApp
 - scrollUntilVisible:
