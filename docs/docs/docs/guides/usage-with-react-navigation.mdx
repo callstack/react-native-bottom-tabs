@@ -286,6 +286,21 @@ Function that given `{ focused: boolean }` returns `ImageSource` or `AppleIcon` 
 SF Symbols are only supported on Apple platforms.
 :::
 
+#### `tabBarIconSize`
+
+Width and height of the tab image icon in logical pixels. This can be set per screen, and uses the native platform default when omitted.
+
+```tsx
+<Tab.Screen
+  name="Profile"
+  component={Profile}
+  options={{
+    tabBarIcon: () => ({ uri: avatarFileUri }),
+    tabBarIconSize: 34,
+  }}
+/>
+```
+
 #### `tabBarIconRenderingMode`
 
 Rendering mode for image icons.
