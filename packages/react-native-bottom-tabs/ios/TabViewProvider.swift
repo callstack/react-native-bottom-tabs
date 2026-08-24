@@ -10,6 +10,7 @@ public final class TabInfo: NSObject {
   public let sfSymbol: String
   public let focusedSfSymbol: String?
   public let activeTintColor: PlatformColor?
+  public var iconSize: NSNumber?
   public let iconRenderingMode: String?
   public let hidden: Bool
   public let testID: String?
@@ -23,6 +24,7 @@ public final class TabInfo: NSObject {
     sfSymbol: String,
     focusedSfSymbol: String?,
     activeTintColor: PlatformColor?,
+    iconSize: NSNumber?,
     iconRenderingMode: String?,
     hidden: Bool,
     testID: String?,
@@ -35,6 +37,7 @@ public final class TabInfo: NSObject {
     self.sfSymbol = sfSymbol
     self.focusedSfSymbol = focusedSfSymbol
     self.activeTintColor = activeTintColor
+    self.iconSize = iconSize
     self.iconRenderingMode = iconRenderingMode
     self.hidden = hidden
     self.testID = testID
@@ -57,7 +60,7 @@ public final class TabInfo: NSObject {
   private var props = TabViewProps()
   private var hostingController: PlatformHostingController<TabViewImpl>?
   private var coalescingKey: UInt16 = 0
-  private var iconSize = CGSize(width: 27, height: 27)
+  private let defaultIconSize = CGSize(width: 27, height: 27)
 
   @objc var onPageSelected: RCTDirectEventBlock?
 
@@ -180,7 +183,13 @@ public final class TabInfo: NSObject {
 
   @objc public var itemsData: [TabInfo] = [] {
     didSet {
-      props.items = itemsData
+      updateItems()
+    }
+  }
+
+  @objc public var iconSizes: [NSNumber] = [] {
+    didSet {
+      updateItems()
     }
   }
 
@@ -280,13 +289,20 @@ public final class TabInfo: NSObject {
             guard let image else { return }
             DispatchQueue.main.async { [weak self] in
               guard let self else { return }
-              let icon = image.resizeImageTo(size: iconSize)
+              guard let resizedIcon = image.resizeImageTo(size: iconSize(at: index)) else {
+                return
+              }
+              #if os(iOS)
+                let icon = alignedIcon(resizedIcon, at: index)
+              #else
+                let icon = resizedIcon
+              #endif
               #if os(iOS)
                 if props.experimentalBakedTintColors {
                   if focused {
-                    props.focusedIcons[index] = icon?.withRenderingMode(.alwaysTemplate)
+                    props.focusedIcons[index] = icon.withRenderingMode(.alwaysTemplate)
                   } else {
-                    props.icons[index] = icon?.withRenderingMode(.alwaysTemplate)
+                    props.icons[index] = icon.withRenderingMode(.alwaysTemplate)
                   }
                 } else {
                   if focused {
@@ -309,4 +325,44 @@ public final class TabInfo: NSObject {
       }
     }
   }
+
+  private func iconSize(at index: Int) -> CGSize {
+    guard let value = props.items[safe: index]?.iconSize?.doubleValue, value > 0 else {
+      return defaultIconSize
+    }
+
+    return CGSize(width: value, height: value)
+  }
+
+  private func updateItems() {
+    let previousIconSizes = props.items.map(\.iconSize)
+    for (index, item) in itemsData.enumerated() {
+      if let value = iconSizes[safe: index], value.doubleValue > 0 {
+        item.iconSize = value
+      } else {
+        item.iconSize = nil
+      }
+    }
+    props.items = itemsData
+    if previousIconSizes != itemsData.map(\.iconSize) {
+      loadIcons(icons, focused: false)
+      loadIcons(focusedIcons, focused: true)
+    }
+  }
+
+  #if os(iOS)
+    private func alignedIcon(_ image: UIImage, at index: Int) -> UIImage {
+      let size = iconSize(at: index)
+      let horizontalInset = (size.width - defaultIconSize.width) / 2
+      let verticalInset = (size.height - defaultIconSize.height) / 2
+      return image.withAlignmentRectInsets(
+        UIEdgeInsets(
+          top: verticalInset,
+          left: horizontalInset,
+          bottom: verticalInset,
+          right: horizontalInset
+        )
+      )
+    }
+  #endif
 }

@@ -245,6 +245,7 @@ struct TabViewImpl: View {
           icon: icon,
           title: tabData.title,
           color: props.inactiveTintColor,
+          iconSize: iconSize(for: tabData),
           preservesOriginalIconColors: preservesOriginalIconColors,
           props: props
         )
@@ -252,6 +253,7 @@ struct TabViewImpl: View {
           icon: selectedIcon,
           title: tabData.title,
           color: tabActiveColor,
+          iconSize: iconSize(for: tabData),
           preservesOriginalIconColors: preservesOriginalIconColors,
           props: props
         )
@@ -343,11 +345,11 @@ struct TabViewImpl: View {
     icon: UIImage,
     title: String,
     color: UIColor?,
+    iconSize: CGSize,
     preservesOriginalIconColors: Bool = false,
     props: TabViewProps
   ) -> UIImage {
     let color = color ?? .label
-    let iconSize = CGSize(width: 27, height: 27)
     let font =
       TabBarFontSize.createFontAttributes(
         size: props.fontSize.map(CGFloat.init) ?? TabBarFontSize.defaultSize,
@@ -400,6 +402,14 @@ struct TabViewImpl: View {
     }
 
     return image.withRenderingMode(.alwaysOriginal)
+  }
+
+  private func iconSize(for tabData: TabInfo) -> CGSize {
+    guard let value = tabData.iconSize?.doubleValue, value > 0 else {
+      return CGSize(width: 27, height: 27)
+    }
+
+    return CGSize(width: value, height: value)
   }
 
   private func aspectFitRect(size: CGSize, in rect: CGRect) -> CGRect {

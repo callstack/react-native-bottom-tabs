@@ -37,10 +37,14 @@ import com.facebook.react.common.assets.ReactFontManager
 import com.facebook.react.modules.core.ReactChoreographer
 import com.facebook.react.views.text.ReactTypefaceUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarItemView
 import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_AUTO
 import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_LABELED
 import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
 import com.google.android.material.transition.platform.MaterialFadeThrough
+import kotlin.math.roundToInt
+
+private data class DrawableCacheKey(val source: ImageSource, val size: Int)
 
 class ExtendedBottomNavigationView(context: Context) : BottomNavigationView(context) {
   override fun getMaxItemCount(): Int {
@@ -59,7 +63,8 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
   var disablePageAnimations = false
   var items: MutableList<TabInfo> = mutableListOf()
   private val iconSources: MutableMap<Int, ImageSource> = mutableMapOf()
-  private val drawableCache: MutableMap<ImageSource, Drawable> = mutableMapOf()
+  private var iconSizes: List<Double> = emptyList()
+  private val drawableCache: MutableMap<DrawableCacheKey, Drawable> = mutableMapOf()
 
   private var isLayoutEnqueued = false
   private var selectedItem: String? = null
@@ -239,6 +244,9 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
   }
 
   fun updateItems(items: MutableList<TabInfo>) {
+    val items = items.mapIndexed { index, item ->
+      item.copy(iconSize = iconSizes.getOrNull(index)?.takeIf { it > 0 })
+    }.toMutableList()
     // If an item got removed, let's re-add all items
     if (items.size < this.items.size) {
       bottomNavigation.menu.clear()
@@ -253,9 +261,10 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
       menuItem.isVisible = !item.hidden
       updateIconTintMode(menuItem, item)
       if (iconSources.containsKey(index)) {
-        getDrawable(iconSources[index]!!) {
+        getDrawable(iconSources[index]!!, getIconSize(item)) {
           menuItem.icon = it
           updateIconTintMode(menuItem, item)
+          updateIconSize(menuItem, item)
         }
       }
 
@@ -286,6 +295,8 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
           view.findViewById<View>(com.google.android.material.R.id.navigation_bar_item_content_container)
             ?.setTabTestID(item.testID)
+
+          updateIconSize(menuItem, item)
         }
       }
     }
@@ -294,6 +305,11 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
       updateTextAppearance()
       updateTintColors()
     }
+  }
+
+  fun setIconSizes(iconSizes: List<Double>) {
+    this.iconSizes = iconSizes
+    updateItems(items)
   }
 
   private fun getOrCreateItem(index: Int, title: String): MenuItem {
@@ -342,10 +358,12 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
       // Update existing item if exists.
       bottomNavigation.menu.findItem(idx)?.let { menuItem ->
-        getDrawable(imageSource) {
+        val item = items.getOrNull(idx)
+        getDrawable(imageSource, getIconSize(item)) {
           menuItem.icon = it
-          items.getOrNull(idx)?.let { item ->
+          item?.let {
             updateIconTintMode(menuItem, item)
+            updateIconSize(menuItem, item)
           }
         }
       }
@@ -372,12 +390,16 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
   }
 
   @SuppressLint("CheckResult")
-  private fun getDrawable(imageSource: ImageSource, onDrawableReady: (Drawable?) -> Unit) {
-    drawableCache[imageSource]?.let {
+  private fun getDrawable(
+    imageSource: ImageSource,
+    iconSizePx: Int,
+    onDrawableReady: (Drawable?) -> Unit
+  ) {
+    val cacheKey = DrawableCacheKey(imageSource, iconSizePx)
+    drawableCache[cacheKey]?.let {
       onDrawableReady(it)
       return
     }
-    val iconSizePx = bottomNavigation.itemIconSize
     val request = ImageRequest.Builder(context)
       .data(imageSource.getUri(context))
       .size(CoilSize(iconSizePx, iconSizePx))
@@ -386,7 +408,7 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
       .target { drawable ->
         post {
           val stateDrawable = drawable.asDrawable(context.resources)
-          drawableCache[imageSource] = stateDrawable
+          drawableCache[cacheKey] = stateDrawable
           onDrawableReady(stateDrawable)
         }
       }
@@ -398,6 +420,21 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
       .build()
 
     imageLoader.enqueue(request)
+  }
+
+  private fun getIconSize(item: TabInfo?): Int {
+    val iconSize = item?.iconSize ?: return bottomNavigation.itemIconSize
+    return TypedValue.applyDimension(
+      TypedValue.COMPLEX_UNIT_DIP,
+      iconSize.toFloat(),
+      resources.displayMetrics
+    ).roundToInt()
+  }
+
+  private fun updateIconSize(menuItem: MenuItem, item: TabInfo) {
+    val itemView = bottomNavigation.findViewById<NavigationBarItemView>(menuItem.itemId)
+      ?: return
+    itemView.setIconSize(getIconSize(item))
   }
 
   fun setBarTintColor(color: Int?) {

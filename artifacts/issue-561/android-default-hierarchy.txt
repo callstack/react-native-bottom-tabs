@@ -1,0 +1,10 @@
+Page: bottomtabs.example
+App: bottomtabs.example
+Snapshot: 7 nodes
+{"index":0,"type":"android.widget.FrameLayout","label":"Chat","bundleId":"bottomtabs.example","rect":{"x":960,"y":2613,"width":320,"height":171},"enabled":true,"visibleToUser":true,"hittable":true,"depth":0,"ref":"e1"}
+{"index":1,"type":"android.widget.LinearLayout","identifier":"bottomtabs.example:id/navigation_bar_item_content_container","bundleId":"bottomtabs.example","rect":{"x":1080,"y":2637,"width":79,"height":117},"enabled":true,"visibleToUser":true,"depth":1,"parentIndex":0,"ref":"e2"}
+{"index":2,"type":"android.widget.FrameLayout","identifier":"bottomtabs.example:id/navigation_bar_item_icon_container","bundleId":"bottomtabs.example","rect":{"x":1083,"y":2637,"width":72,"height":72},"enabled":true,"visibleToUser":true,"depth":2,"parentIndex":1,"ref":"e3"}
+{"index":3,"type":"android.widget.LinearLayout","identifier":"bottomtabs.example:id/navigation_bar_item_inner_content_container","bundleId":"bottomtabs.example","rect":{"x":1083,"y":2637,"width":72,"height":72},"enabled":true,"visibleToUser":true,"depth":3,"parentIndex":2,"ref":"e4"}
+{"index":4,"type":"android.widget.ImageView","identifier":"bottomtabs.example:id/navigation_bar_item_icon_view","bundleId":"bottomtabs.example","rect":{"x":1083,"y":2637,"width":72,"height":72},"enabled":true,"visibleToUser":true,"depth":4,"parentIndex":3,"ref":"e5"}
+{"index":5,"type":"android.view.ViewGroup","identifier":"bottomtabs.example:id/navigation_bar_item_labels_group","bundleId":"bottomtabs.example","rect":{"x":1080,"y":2712,"width":79,"height":42},"enabled":true,"visibleToUser":true,"depth":2,"parentIndex":1,"ref":"e6"}
+{"index":6,"type":"android.widget.TextView","label":"Chat","value":"Chat","identifier":"bottomtabs.example:id/navigation_bar_item_small_label_view","bundleId":"bottomtabs.example","rect":{"x":1080,"y":2712,"width":79,"height":42},"enabled":true,"visibleToUser":true,"depth":3,"parentIndex":5,"ref":"e7"}

@@ -40,6 +40,7 @@ export type TabViewItems = ReadonlyArray<{
 
 export interface TabViewProps extends ViewProps {
   items: TabViewItems;
+  iconSizes?: ReadonlyArray<Double>;
   selectedPage: string;
   onPageSelected?: DirectEventHandler<OnPageSelectedEventData>;
   onTabLongPress?: DirectEventHandler<OnPageSelectedEventData>;

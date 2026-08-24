@@ -21,6 +21,7 @@ export default function NativeBottomTabsOriginalIcons() {
         component={Contacts}
         options={{
           tabBarIcon: () => require('../../assets/avatar-1.png'),
+          tabBarIconSize: 34,
           tabBarIconRenderingMode: 'original',
         }}
       />
