@@ -238,7 +238,7 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
   auto eventEmitter = std::static_pointer_cast<const RNCTabViewEventEmitter>(_eventEmitter);
   if (eventEmitter) {
     eventEmitter->onPageSelected(RNCTabViewEventEmitter::OnPageSelected{
-      .key = [key cStringUsingEncoding:kCFStringEncodingUTF8]
+      .key = std::string([key UTF8String] ?: "")
     });
   }
 }
@@ -247,7 +247,7 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
   auto eventEmitter = std::static_pointer_cast<const RNCTabViewEventEmitter>(_eventEmitter);
   if (eventEmitter) {
     eventEmitter->onTabLongPress(RNCTabViewEventEmitter::OnTabLongPress {
-      .key = [key cStringUsingEncoding:kCFStringEncodingUTF8]
+      .key = std::string([key UTF8String] ?: "")
     });
   }
 }

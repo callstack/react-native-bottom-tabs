@@ -57,7 +57,7 @@ function NativeBottomTabs() {
         }}
       />
       <Tab.Screen
-        name="Albums"
+        name="메시지"
         component={Albums}
         options={{
           tabBarButtonTestID: 'albumsTestID',
