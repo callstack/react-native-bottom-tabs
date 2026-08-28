@@ -37,7 +37,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "ruby ios/__tests__/svg_configuration_test.rb && jest",
     "typecheck": "tsc -b",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "build": "bob build"
@@ -105,7 +105,7 @@
   },
   "codegenConfig": {
     "name": "RNCTabView",
-    "type": "all",
+    "type": "components",
     "jsSrcsDir": "./src",
     "android": {
       "javaPackageName": "com.rcttabview"
@@ -114,11 +114,6 @@
       "componentProvider": {
         "RNCTabView": "RCTTabViewComponentView",
         "BottomAccessoryView": "RCTBottomAccessoryComponentView"
-      },
-      "modulesConformingToProtocol": {
-        "RCTImageDataDecoder": [
-          "SvgDecoder"
-        ]
       }
     }
   }

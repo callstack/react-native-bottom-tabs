@@ -264,6 +264,21 @@ public final class TabInfo: NSObject {
     if let imageSources = icons as? [RCTImageSource?] {
       for (index, imageSource) in imageSources.enumerated() {
         guard let imageSource else { continue }
+
+        #if RN_BOTTOM_TABS_ENABLE_SVG
+          if isSVGRequest(imageSource.request) {
+            loadSVGIcon(with: imageSource.request) { [weak self] image in
+              guard let self else { return }
+              if let image {
+                updateIcon(image, at: index, focused: focused)
+              } else {
+                print("[TabView] Error loading SVG icon")
+              }
+            }
+            continue
+          }
+        #endif
+
         imageLoader.loadImage(
           with: imageSource.request,
           size: imageSource.size,
@@ -272,41 +287,93 @@ public final class TabInfo: NSObject {
           resizeMode: RCTResizeMode.contain,
           progressBlock: { _, _ in },
           partialLoad: { _ in },
-          completionBlock: { error, image in
-            if error != nil {
-              print("[TabView] Error loading image: \(error!.localizedDescription)")
+          completionBlock: { [weak self] error, image in
+            guard let self else { return }
+            if let error {
+              #if RN_BOTTOM_TABS_ENABLE_SVG
+                loadSVGIcon(with: imageSource.request) { [weak self] svgImage in
+                  guard let self else { return }
+                  if let svgImage {
+                    updateIcon(svgImage, at: index, focused: focused)
+                  } else {
+                    print("[TabView] Error loading image: \(error.localizedDescription)")
+                  }
+                }
+              #else
+                print("[TabView] Error loading image: \(error.localizedDescription)")
+              #endif
               return
             }
             guard let image else { return }
-            DispatchQueue.main.async { [weak self] in
-              guard let self else { return }
-              let icon = image.resizeImageTo(size: iconSize)
-              #if os(iOS)
-                if props.experimentalBakedTintColors {
-                  if focused {
-                    props.focusedIcons[index] = icon?.withRenderingMode(.alwaysTemplate)
-                  } else {
-                    props.icons[index] = icon?.withRenderingMode(.alwaysTemplate)
-                  }
-                } else {
-                  if focused {
-                    props.focusedIcons[index] = icon
-                  } else {
-                    props.icons[index] = icon
-                  }
-                }
-                props.iconsRevision += 1
-              #else
-                if focused {
-                  props.focusedIcons[index] = icon
-                } else {
-                  props.icons[index] = icon
-                }
-                props.iconsRevision += 1
-              #endif
-            }
+            updateIcon(image, at: index, focused: focused)
           })
       }
     }
   }
+
+  private func updateIcon(_ image: PlatformImage, at index: Int, focused: Bool) {
+    DispatchQueue.main.async { [weak self] in
+      guard let self else { return }
+      let icon = image.resizeImageTo(size: iconSize)
+      #if os(iOS)
+        if props.experimentalBakedTintColors {
+          if focused {
+            props.focusedIcons[index] = icon?.withRenderingMode(.alwaysTemplate)
+          } else {
+            props.icons[index] = icon?.withRenderingMode(.alwaysTemplate)
+          }
+        } else {
+          if focused {
+            props.focusedIcons[index] = icon
+          } else {
+            props.icons[index] = icon
+          }
+        }
+        props.iconsRevision += 1
+      #else
+        if focused {
+          props.focusedIcons[index] = icon
+        } else {
+          props.icons[index] = icon
+        }
+        props.iconsRevision += 1
+      #endif
+    }
+  }
+
+  #if RN_BOTTOM_TABS_ENABLE_SVG
+    private func isSVGRequest(_ request: URLRequest) -> Bool {
+      guard let url = request.url else { return false }
+      return url.pathExtension.lowercased() == "svg"
+        || url.absoluteString.lowercased().hasPrefix("data:image/svg+xml")
+    }
+
+    private func loadSVGIcon(
+      with request: URLRequest,
+      completion: @escaping (PlatformImage?) -> Void
+    ) {
+      guard let url = request.url else {
+        completion(nil)
+        return
+      }
+
+      let decode: (Data?) -> Void = { data in
+        guard let data else {
+          completion(nil)
+          return
+        }
+        completion(RNBottomTabsDecodeSVGData(data))
+      }
+
+      if url.scheme == "http" || url.scheme == "https" {
+        URLSession.shared.dataTask(with: request) { data, _, _ in
+          decode(data)
+        }.resume()
+      } else {
+        DispatchQueue.global(qos: .userInitiated).async {
+          decode(try? Data(contentsOf: url))
+        }
+      }
+    }
+  #endif
 }

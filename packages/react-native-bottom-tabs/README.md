@@ -19,6 +19,8 @@
 
 The full documentation can be found on our [website](https://callstackincubator.github.io/react-native-bottom-tabs/).
 
+SVG tab icons on Apple platforms are disabled by default. See the [icon configuration guide](https://oss.callstack.com/react-native-bottom-tabs/docs/guides/usage-with-react-navigation#svg-icons-on-apple-platforms) for the Podfile and Expo opt-ins.
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
