@@ -133,6 +133,13 @@ struct TabViewImpl: View {
 
     tabBar.isHidden = props.tabBarHidden
 
+    #if os(iOS)
+      if #available(iOS 26.0, *) {
+        let isOpaque = props.scrollEdgeAppearance == "opaque" || !props.translucent
+        tabBar.backgroundColor = isOpaque ? props.barTintColor ?? .systemBackground : nil
+      }
+    #endif
+
     if props.scrollEdgeAppearance == "transparent" {
       configureTransparentAppearance(tabBar: tabBar, props: props)
       return
