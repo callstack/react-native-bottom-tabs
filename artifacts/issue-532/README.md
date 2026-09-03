@@ -20,6 +20,8 @@ The transparent and opaque example screens use the same tabs and article content
 - agent-device: 0.20.10
 - Metro: repository example bundle on port 8085
 
+No iOS 26.x runtime is installed in the available environment. The requested reproduction range was iOS 26 or newer, so the iOS 27.0 runtime exercises the `#available(iOS 26.0, *)` implementation and satisfies that range. These captures must not be represented as exact iOS 26.x evidence; an iOS 26.x compatibility run remains optional follow-up evidence if that runtime becomes available.
+
 ## Reproduction
 
 The installed example app was opened with the repository's Metro bundle. For both existing example routes, the Article tab was captured at `What is Lorem Ipsum?`, scrolled down three equivalent agent-device scroll units, and explicitly verified at `Where can I get some?` before the bottom capture.
@@ -37,7 +39,7 @@ Before the fix, `Four Tabs - Transparent scroll edge appearance` and `Four Tabs 
 
 Runtime inspection confirmed that the JavaScript prop reached native code and that UIKit held the expected `UITabBarAppearance` values: the opaque route had `systemBackgroundColor` with a visible background, and the transparent route had a hidden scroll-edge background. On iOS 26 and newer, the floating Liquid Glass tab bar does not render those appearance-object background states as an opaque backing surface. Setting the public `UITabBar.backgroundColor` does control that backing surface.
 
-The fix therefore sets the tab bar's own background only when the requested appearance is opaque (or `translucent={false}` already requires opacity), using `barTintColor` when supplied and dynamic `systemBackground` otherwise. It clears that value for transparent/default configurations. The existing `UITabBarAppearance` configuration remains responsible for item styling, shadows, and pre-iOS-26 behavior.
+The fix therefore sets the tab bar's own background on iOS 26 and newer when the requested appearance is opaque, when `translucent={false}` already requires opacity, or when a `barTintColor` is supplied for a non-transparent appearance. It preserves the supplied dynamic `UIColor`; otherwise opaque configurations use dynamic `systemBackground`. Transparent always clears the backing, and default/unconfigured configurations without a custom color retain the platform default. The existing `UITabBarAppearance` configuration remains responsible for item styling, shadows, and pre-iOS-26 behavior.
 
 After the fix, the opaque route has a solid theme background while transparent and default preserve the platform Liquid Glass appearance. All cases were recorded at the same top and bottom article positions:
 
@@ -51,6 +53,15 @@ After the fix, the opaque route has a solid theme background while transparent a
 - [Opaque, bottom](verification/screenshots/opaque-bottom.png)
 - [Opaque scroll recording](verification/videos/opaque-scroll.mp4)
 
+The top/bottom screenshots above were refreshed from the final remediated binary on 2026-09-03. Additional compatibility evidence from the same simulator covers the adversarial-review findings:
+
+- [Custom background, top](verification/compatibility/custom-background-top.png) and [bottom](verification/compatibility/custom-background-bottom.png)
+- Opaque minimize behavior: [expanded](verification/compatibility/opaque-minimize-expanded.png), [collapsed](verification/compatibility/opaque-minimize-collapsed.png), and [restored](verification/compatibility/opaque-minimize-restored.png)
+- Opaque hide/show: [shown](verification/compatibility/opaque-hide-shown.png), [hidden](verification/compatibility/opaque-hide-hidden.png), and [restored](verification/compatibility/opaque-hide-restored.png)
+- Dynamic appearance: [dark](verification/compatibility/opaque-dark.png) and [light restored](verification/compatibility/opaque-light-restored.png)
+- [`translucent={false}`](verification/compatibility/translucent-false.png)
+- [Custom tab bar](verification/compatibility/custom-tabbar.png)
+
 ## Validation
 
 - iOS simulator build: Xcode 27.0, iOS 27.0 SDK, deployment target iOS 15.1 — passed
@@ -62,4 +73,4 @@ After the fix, the opaque route has a solid theme background while transparent a
 - `git diff --check` — passed
 - Device workflow: open, interactive snapshot, navigate, capture top, record and scroll, explicitly verify bottom content, capture bottom, close — passed
 
-The final automated checks and adversarial-review disposition are recorded alongside this evidence before the Draft PR is created.
+The adversarial-review findings and the exact remaining runtime verification are recorded in [review/dispositions.md](review/dispositions.md). The successful Fable JSON is preserved unchanged at [review/fable-review.json](review/fable-review.json).
