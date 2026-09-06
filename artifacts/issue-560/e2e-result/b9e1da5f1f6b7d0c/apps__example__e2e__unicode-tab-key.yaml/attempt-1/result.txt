@@ -1,0 +1,6 @@
+file: /Users/thiagobrez/.codex/worktrees/98e3/react-native-bottom-tabs/apps/example/e2e/unicode-tab-key.yaml
+session: issue560-e2e:test:b9e1da5f1f6b7d0c:1-unicode-tab-key:attempt-1
+attempt: 1/1
+status: passed
+replayed: 8
+healed: 0

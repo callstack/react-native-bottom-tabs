@@ -1,0 +1,18 @@
+appId: bottomtabs.example
+name: Interact with a Unicode tab key
+---
+- launchApp
+- scrollUntilVisible:
+    element:
+      text: ^Native Bottom Tabs$
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: ^Native Bottom Tabs$
+- assertVisible: Press me
+- tapOn:
+    text: ^메시지$
+- assertVisible: 메시지
+- longPressOn:
+    text: ^메시지$
+- assertVisible: 메시지
