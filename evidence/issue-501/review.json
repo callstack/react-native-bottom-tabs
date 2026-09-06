@@ -1,0 +1,46 @@
+{
+  "findings": [
+    {
+      "file": "packages/react-native-bottom-tabs/ios/RepresentableView.swift",
+      "line": 9,
+      "defect": "The guard validates that `lastFocusedView` is in the window, a descendant, and focusable, but never that the UIView still represents the same React element. Under Fabric, unmounted views are kept alive in a LIFO recycle pool (RCTComponentViewRegistry.mm:99-118, `prepareForRecycle` keeps the object alive so the weak ref does not nil out) and are re-issued with a new `tag` (RCTComponentViewRegistry.mm:53). Identity of the UIView is therefore not identity of the focused item. The evidence README (line 39) presents 'switching tabs uses the route default, not stale Button 5' as verified behavior, but nothing in the code enforces it; it is the incidental result of the pooled view failing `window != nil` at that instant.",
+      "failure_scenario": "tvOS, New Architecture, `freezeOnBlur: true` (exactly the repro config). 1) In Watching, focus Button 8. 2) Switch to Search: react-freeze sets display:none, Fabric marks the subtree Trait::Hidden and on iOS skips it from mounting (sliceChildShadowNodeViewPairs.cpp:62), so Button 8's RCTViewComponentView is enqueued into the View recycle pool; the wrapper's weak ref stays non-nil. 3) Switch back to Watching: Fabric dequeues views LIFO, so Button 8's old native view is reused for whichever <View>/<Pressable> mounts first in the Watching tree. If that element is a Pressable (e.g. Button 0 or the status row), `window != nil`, `isDescendant`, and `canBecomeFocused` all pass and the wrapper redirects focus to that arbitrary element instead of the default. Same failure without freezeOnBlur: open the sidebar, let the list refresh and remove the focused item while the sidebar is open, a new item takes the recycled view, press Right, focus lands on the new item. Fix: store `lastFocusedView.tag` when capturing and add `lastFocusedView.tag == lastFocusedTag` to the guard.",
+      "severity": "medium"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "line": 112,
+      "defect": "No CI job compiles the `#if os(tvOS)` block. `build-ios` builds apps/example, which depends on plain `react-native` 0.81.4 with no tvOS target, so FocusRestoringView is dead code to every CI job. The change is verified only by a manual, non-reproducible local build described in evidence/issue-501/README.md. The repo has already shipped tvOS-only compile regressions twice (CHANGELOG entries for #312 and #508).",
+      "failure_scenario": "Any later edit to FocusRestoringView (rename, availability change, Swift 6 strict-concurrency error on the UIView override) passes lint, typecheck, build-library, build-android and build-ios, is released, and fails `pod install`/xcodebuild for every react-native-tvos consumer. A tvOS xcodebuild step (or a tvOS scheme in the example app) is required for this file to have any coverage.",
+      "severity": "medium"
+    },
+    {
+      "file": ".changeset/config.json",
+      "line": 1,
+      "defect": "The diff contains no `.changeset/*.md`. Every fix in recent history adds one (e.g. android-tab-test-ids.md, fix-compiler-guards-ios26.md), and `publish-packages` runs `changeset version && changeset publish` with both packages in a `fixed` group.",
+      "failure_scenario": "After merge, `changeset version` produces no bump and no CHANGELOG entry for this fix. It either does not publish until an unrelated changeset lands, or ships silently with no release note, so tvOS users tracking issue 501 cannot tell which version contains it.",
+      "severity": "medium"
+    },
+    {
+      "file": "evidence/issue-501/README.md",
+      "line": 31,
+      "defect": "The untracked `evidence/` directory (3.1 MB: two .mp4 files totalling 2.8 MB plus four PNGs) is at the repo root, is not covered by .gitignore, and is outside every yarn workspace. `screenshots/issue-501-baseline-initial.png` and `screenshots/issue-501-baseline-after-return.png` are byte-identical (`cmp` reports IDENTICAL), so the 'after return' screenshot cited as evidence is not independent evidence. `repro/App.tsx` is not linted or typechecked by any turbo task (per-package eslint/tsc only) and uses `tvParallaxProperties`, which does not exist in the repo's react-native 0.81 Pressable types, so it would fail typecheck if ever included.",
+      "failure_scenario": "Committing this directory permanently adds ~3 MB of binary blobs to every clone and fetch of the repository with no consumer in the build, docs, or tests. A reviewer comparing the two baseline screenshots to confirm the regression sees identical images and cannot distinguish 'initial' from 'after return'. Videos/screenshots belong as PR or issue attachments, and the repro belongs in apps/example if it is to be kept.",
+      "severity": "low"
+    },
+    {
+      "file": "packages/react-native-bottom-tabs/ios/RepresentableView.swift",
+      "line": 28,
+      "defect": "Opening brace on its own line after a multi-line `if let ..., cond` condition. SwiftLint's default `opening_brace` rule (`ignore_multiline_statement_conditions: false`, not overridden in .swiftlint.yml) flags this; the rest of the codebase keeps the brace on the condition line (e.g. TabViewImpl.swift:119-121). Not confirmed locally because swiftlint is not installed on this machine.",
+      "failure_scenario": "The `swift-lint` CI job runs SwiftLint over the repo and reports a new warning on this line; if the action is ever switched to `--strict`, the job fails. Move the `{` to the end of line 27.",
+      "severity": "low"
+    },
+    {
+      "file": "packages/react-native-bottom-tabs/ios/TabViewProvider.swift",
+      "line": 199,
+      "defect": "On the old architecture, `didUpdateReactSubviews` rebuilds `props.children` with fresh `UUID`s for every child, so SwiftUI's ForEach treats every tab as a new identity, calls `makeUIView` again, and the new FocusRestoringView starts with `lastFocusedView == nil`. The focus memory introduced by this diff is discarded on every subview change in Paper mode.",
+      "failure_scenario": "react-native-tvos app on the old architecture with dynamic tabs. 1) Focus Button 8 in Watching. 2) App adds or removes a tab (e.g. after login) which triggers `didUpdateReactSubviews`. 3) Press Left to open the sidebar, then Right. Focus lands on Button 0, the exact issue-501 behavior, because the wrapper holding the memory was destroyed and the replacement has nothing recorded. Keying `IdentifiablePlatformView.id` on the view (e.g. `ObjectIdentifier(view)`) instead of a per-instance UUID would preserve identity.",
+      "severity": "low"
+    }
+  ]
+}

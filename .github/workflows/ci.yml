@@ -27,6 +27,11 @@ jobs:
       - name: Typecheck files
         run: yarn typecheck
 
+      - name: Validate issue 501 repro
+        run: |
+          yarn tsc --project evidence/issue-501/repro/tsconfig.json
+          yarn eslint evidence/issue-501/repro/App.tsx
+
   swift-lint:
     runs-on: ubuntu-latest
     steps:
@@ -108,7 +113,6 @@ jobs:
         run: |
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
-
   build-ios:
     runs-on: macos-15
     env:
@@ -122,6 +126,17 @@ jobs:
 
       - name: Build package
         run: yarn build
+
+      - name: Typecheck tvOS view wrapper
+        run: |
+          mkdir -p "$RUNNER_TEMP/swift-module-cache"
+          xcrun --sdk appletvsimulator swiftc \
+            -module-cache-path "$RUNNER_TEMP/swift-module-cache" \
+            -target arm64-apple-tvos15.1-simulator \
+            -sdk "$(xcrun --sdk appletvsimulator --show-sdk-path)" \
+            -typecheck \
+            packages/react-native-bottom-tabs/ios/PlatformAliases.swift \
+            packages/react-native-bottom-tabs/ios/RepresentableView.swift
 
       - name: Cache turborepo for iOS
         uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
@@ -152,4 +167,3 @@ jobs:
       - name: Build example for iOS
         run: |
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
-
