@@ -5,6 +5,10 @@
     { "path": "../../packages/react-navigation" },
   ],
   "compilerOptions": {
-    "rootDir": "."
+    "rootDir": ".",
+    "composite": false,
+    "moduleResolution": "bundler",
+    "customConditions": ["react-native"],
+    "noEmit": true
   }
 }

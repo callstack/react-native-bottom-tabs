@@ -4,6 +4,7 @@ import {
   Image,
   Platform,
   ScrollView,
+  type ScrollViewInstance,
   type ScrollViewProps,
   StyleSheet,
   useWindowDimensions,
@@ -43,7 +44,7 @@ export function Albums(props: Partial<ScrollViewProps>) {
   console.log(Platform.OS, ' Rendering Albums');
   const itemSize = dimensions.width / Math.floor(dimensions.width / 150);
 
-  const ref = React.useRef<ScrollView>(null);
+  const ref = React.useRef<ScrollViewInstance>(null);
 
   useScrollToTop(ref);
 

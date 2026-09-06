@@ -17189,6 +17189,7 @@ __metadata:
     react-native-test-app: "npm:^5.4.9"
     react-native-vector-icons: "npm:^10.2.0"
     react-native-worklets: "npm:^0.12.1"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 

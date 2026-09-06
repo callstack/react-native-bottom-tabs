@@ -15,7 +15,7 @@ const renderScene = SceneMap({
 export default function LabeledTabs({
   showLabels = true,
 }: {
-  showLabels: boolean;
+  showLabels?: boolean;
 }) {
   const [index, setIndex] = useState(0);
   const [routes] = useState([

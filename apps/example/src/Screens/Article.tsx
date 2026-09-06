@@ -5,6 +5,7 @@ import {
   Image,
   Platform,
   ScrollView,
+  type ScrollViewInstance,
   type ScrollViewProps,
   StyleSheet,
   Text,
@@ -46,7 +47,7 @@ export function Article({
   jumpTo,
   ...rest
 }: Props) {
-  const ref = React.useRef<ScrollView>(null);
+  const ref = React.useRef<ScrollViewInstance>(null);
 
   useScrollToTop(ref);
 
