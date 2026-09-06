@@ -25,6 +25,7 @@ module.exports = function (api) {
 
   return {
     presets: ['module:@react-native/babel-preset'],
+    plugins: ['react-native-worklets/plugin'],
     overrides: [
       {
         exclude: /\/node_modules\//,

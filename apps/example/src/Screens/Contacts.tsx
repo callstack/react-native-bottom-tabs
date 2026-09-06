@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   Alert,
   FlatList,
+  type FlatListInstance,
   type FlatListProps,
   Platform,
   SafeAreaView,
@@ -105,7 +106,7 @@ export function Contacts({ query, ...rest }: Props) {
   const renderItem = ({ item }: { item: Item }) => <ContactItem item={item} />;
 
   const tabBarHeight = React.useContext(BottomTabBarHeightContext) ?? 0;
-  const ref = React.useRef<FlatList>(null);
+  const ref = React.useRef<FlatListInstance>(null);
   useScrollToTop(ref);
 
   return (

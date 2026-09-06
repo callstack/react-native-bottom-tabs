@@ -18,7 +18,11 @@
 #import <React/RCTImageSource.h>
 #import <React/RCTBridge+Private.h>
 #import "RCTImagePrimitivesConversions.h"
+#if __has_include(<React/RCTConversions.h>)
+#import <React/RCTConversions.h>
+#else
 #import "RCTConversions.h"
+#endif
 #import <react/utils/ManagedObjectWrapper.h>
 
 #if TARGET_OS_OSX

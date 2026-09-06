@@ -4,17 +4,19 @@ import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
-import { I18nManager, type ColorValue } from 'react-native';
+import { I18nManager } from 'react-native';
 import type { LayoutDirection } from 'react-native-bottom-tabs';
+
+type TabViewProps = React.ComponentProps<typeof TabView>;
 
 interface Props {
   disablePageAnimations?: boolean;
   scrollEdgeAppearance?: 'default' | 'opaque' | 'transparent';
-  backgroundColor?: ColorValue;
+  backgroundColor?: NonNullable<TabViewProps['tabBarStyle']>['backgroundColor'];
   translucent?: boolean;
   hideOneTab?: boolean;
-  rippleColor?: ColorValue;
-  activeIndicatorColor?: ColorValue;
+  rippleColor?: TabViewProps['rippleColor'];
+  activeIndicatorColor?: TabViewProps['activeIndicatorColor'];
   layoutDirection?: LayoutDirection;
 }
 
