@@ -1,0 +1,39 @@
+{
+  "findings": [
+    {
+      "title": "Height subtracted from wrong edge on iPadOS/tvOS 26 where the tab bar is not at the bottom",
+      "body": "getSceneDimensions gates only on platform === ios and version >= 26, but Platform.OS is ios on iPad (and on tvOS with react-native-tvos). On iPadOS 18+/26 the native tab bar renders at the top of the screen (or as a sidebar with sidebarAdaptable), and on tvOS it is always at the top, yet onTabBarMeasured still reports tabController.tabBar.frame.size.height with no placement info. The scene View is absolutely positioned at the top-left, so subtracting tabBarHeight shrinks the scene at the bottom: every iPad/tvOS 26 screen gets a dead blank strip at the bottom equal to the bar height while content still underlaps the top bar. In sidebar mode the measured frame height is not validated at all, so an unexpected large value would collapse the scene toward Math.max(0, ...). Evidence covers only iPhone simulators; there is no Platform.isPad/idiom or bar-placement check.",
+      "priority": 1,
+      "file": "packages/react-native-bottom-tabs/src/utils/getSceneDimensions.ts",
+      "line": 26
+    },
+    {
+      "title": "iOS 26 scenes no longer render under the translucent Liquid Glass bar; breaks documented useBottomTabBarHeight offsets for all apps",
+      "body": "This changes layout for every iOS 26 screen, not just keyboard scenarios. Scenes were deliberately full-bleed so backgrounds and scroll content extend behind the translucent floating bar. After this change the scene ends exactly at the bar top, so the region behind glass can show the clear window background, ScrollViews cannot reach the bar, and existing useBottomTabBarHeight offsets become doubled. Existing iOS 26 apps regress visually with no opt-out.",
+      "priority": 1,
+      "file": "packages/react-native-bottom-tabs/src/TabView.tsx",
+      "line": 516
+    },
+    {
+      "title": "minimizeBehavior leaves a permanent dead strip: scene stays shortened by the full bar height after the bar minimizes",
+      "body": "The bar can shrink to a compact pill while tabBarHeight is emitted only from the introspection closure, leaving the scene shortened by the original full height or causing a mid-scroll jump if it re-emits.",
+      "priority": 2,
+      "file": "packages/react-native-bottom-tabs/src/TabView.tsx",
+      "line": 297
+    },
+    {
+      "title": "Fix does not account for renderBottomAccessoryView: bottom content still obscured on iOS 26",
+      "body": "The accessory floats above the tab bar, but the scene adjustment subtracts only tabBarHeight, so bottom-aligned controls can still be covered when an accessory is present.",
+      "priority": 3,
+      "file": "packages/react-native-bottom-tabs/src/TabView.tsx",
+      "line": 292
+    },
+    {
+      "title": "Binary evidence artifacts are untracked and not gitignored",
+      "body": "Committing screenshots and MP4s grows repository history. Ordinarily evidence should live in the PR or issue rather than the library repository.",
+      "priority": 3,
+      "file": "artifacts/issue-505/README.md",
+      "line": 1
+    }
+  ]
+}

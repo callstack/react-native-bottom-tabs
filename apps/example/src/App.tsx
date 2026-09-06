@@ -45,6 +45,7 @@ import CustomTabBar from './Examples/CustomTabBar';
 import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
 import OriginalIconColors from './Examples/OriginalIconColors';
 import NativeBottomTabsOriginalIcons from './Examples/NativeBottomTabsOriginalIcons';
+import KeyboardAvoidingViewExample from './Examples/KeyboardAvoidingView';
 import { useLogger } from '@react-navigation/devtools';
 import LazyTabs from './Examples/LazyTabs';
 import { LogBox } from 'react-native';
@@ -195,6 +196,11 @@ const examples = [
   {
     component: NativeBottomTabsOriginalIcons,
     name: 'Native Bottom Tabs with original icons',
+  },
+  {
+    component: KeyboardAvoidingViewExample,
+    name: 'Keyboard Avoiding View',
+    screenOptions: { headerShown: false },
   },
   { component: NativeBottomTabs, name: 'Native Bottom Tabs' },
   { component: JSBottomTabs, name: 'JS Bottom Tabs' },
