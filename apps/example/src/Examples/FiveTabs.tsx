@@ -5,19 +5,21 @@ import {
   type NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Button, StyleSheet, Text, View, type ColorValue } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
 
+type TabViewProps = React.ComponentProps<typeof TabView>;
+
 interface Props {
   disablePageAnimations?: boolean;
   scrollEdgeAppearance?: 'default' | 'opaque' | 'transparent';
-  backgroundColor?: ColorValue;
+  backgroundColor?: NonNullable<TabViewProps['tabBarStyle']>['backgroundColor'];
   translucent?: boolean;
-  rippleColor?: ColorValue;
-  activeIndicatorColor?: ColorValue;
+  rippleColor?: TabViewProps['rippleColor'];
+  activeIndicatorColor?: TabViewProps['activeIndicatorColor'];
 }
 
 type ReproStackParamList = {

@@ -1,19 +1,20 @@
 import TabView, { SceneMap } from 'react-native-bottom-tabs';
-import { useState } from 'react';
+import { useState, type ComponentProps } from 'react';
 import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
 import { Chat } from '../Screens/Chat';
-import type { ColorValue } from 'react-native';
+
+type TabViewProps = ComponentProps<typeof TabView>;
 
 interface Props {
   disablePageAnimations?: boolean;
   scrollEdgeAppearance?: 'default' | 'opaque' | 'transparent';
-  backgroundColor?: ColorValue;
+  backgroundColor?: NonNullable<TabViewProps['tabBarStyle']>['backgroundColor'];
   translucent?: boolean;
   hideOneTab?: boolean;
-  rippleColor?: ColorValue;
-  activeIndicatorColor?: ColorValue;
+  rippleColor?: TabViewProps['rippleColor'];
+  activeIndicatorColor?: TabViewProps['activeIndicatorColor'];
 }
 
 const renderScene = SceneMap({
