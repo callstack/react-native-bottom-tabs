@@ -1,0 +1,8 @@
+Before opening the sidebar:
+@e13 [cell] "Button 8" [focused]
+
+After moving Left into the sidebar:
+@e17 [button] "Watching" [focused]
+
+After moving Right back to the content:
+@e5 [cell] "Button 0" [focused]

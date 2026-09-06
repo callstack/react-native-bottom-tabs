@@ -1,0 +1,14 @@
+After moving Down eight times:
+@e13 [cell] "Button 8" [focused]
+
+After moving Left into the sidebar and Right back to the content:
+@e13 [cell] "Button 8" [focused]
+
+After two additional sidebar round trips:
+@e13 [cell] "Button 8" [focused]
+
+After scrolling farther and completing another sidebar round trip:
+@e15 [cell] "Button 15" [focused]
+
+After a fresh install, switching from Watching to Search, and switching back:
+@e5 [cell] "Button 0" [focused]
