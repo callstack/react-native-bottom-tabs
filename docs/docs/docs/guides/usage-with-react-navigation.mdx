@@ -272,8 +272,6 @@ Function that given `{ focused: boolean }` returns `ImageSource` or `AppleIcon` 
   component={Albums}
   options={{
     tabBarIcon: () => require('person.png'),
-    // SVG is also supported
-    tabBarIcon: () => require('person.svg'),
     // or
     tabBarIcon: () => ({ sfSymbol: 'person' }),
     // You can also pass a URL
@@ -285,6 +283,36 @@ Function that given `{ focused: boolean }` returns `ImageSource` or `AppleIcon` 
 :::note
 SF Symbols are only supported on Apple platforms.
 :::
+
+#### SVG icons on Apple platforms
+
+SVG tab icons remain available by default on Android. On Apple platforms, SVG support is disabled by default because its native decoder uses private CoreSVG APIs. PNG, JPEG, and SF Symbol icons do not need this decoder.
+
+To opt in, set the flag before React Native configures pods in your `Podfile`, then run `pod install` and rebuild the native app:
+
+```ruby
+$RNBottomTabsEnableSVG = true
+
+# require React Native's pod helpers and call use_react_native! below
+```
+
+With the decoder enabled, local and remote SVG sources can be used like other image sources:
+
+```tsx
+tabBarIcon: () => require('person.svg')
+```
+
+Enabling this flag compiles the optional CoreSVG implementation into the Apple-platform pod. The decoder is scoped to bottom-tab icons and is not registered with React Native's app-wide image loader.
+
+If you are upgrading from a version where Apple-platform SVG support was enabled automatically, add this flag before upgrading to preserve your existing SVG tab icons. Expo prebuild projects can use the package's `enableSVG` plugin option instead:
+
+```json
+{
+  "expo": {
+    "plugins": [["react-native-bottom-tabs", { "enableSVG": true }]]
+  }
+}
+```
 
 #### `tabBarIconRenderingMode`
 
