@@ -1,0 +1,465 @@
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/packages/react-native-bottom-tabs/ios/TabViewProvider.swift:284:46: warning: 'weak' ownership of capture 'self' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]
+276 |           progressBlock: { _, _ in },
+277 |           partialLoad: { _ in },
+278 |           completionBlock: { error, image in
+    |                            |- note: 'self' implicitly strongly captured here
+    |                            `- note: add 'self' as a capture list item to silence
+279 |             if error != nil {
+280 |               print("[TabView] Error loading image: \(error!.localizedDescription)")
+    :
+282 |             }
+283 |             guard let image else { return }
+284 |             DispatchQueue.main.async { [weak self] in
+    |                                              |- warning: 'weak' ownership of capture 'self' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]
+    |                                              `- note: explicitly assign the capture list item to silence
+285 |               guard let self else { return }
+286 |               let icon = image.resizeImageTo(size: iconSize)
+
+[#ImplicitStrongCapture]: <https://docs.swift.org/compiler/documentation/diagnostics/implicit-strong-capture>
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/packages/react-native-bottom-tabs/ios/RCTBottomAccessoryComponentView.mm:51:16: warning: ISO C++ requires field designators to be specified in declaration order; field 'height' will be initialized after field 'width' [-Wreorder-init-list]
+   51 |       .width = frame.size.width
+      |       ~~~~~~~~~^~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/packages/react-native-bottom-tabs/ios/RCTBottomAccessoryComponentView.mm:50:17: note: previous initialization for field 'height' is here
+   50 |       .height = frame.size.height,
+      |                 ^~~~~~~~~~~~~~~~~
+1 warning generated.
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/packages/react-native-bottom-tabs/ios/RCTTabViewComponentView.mm:271:16: warning: ISO C++ requires field designators to be specified in declaration order; field 'height' will be initialized after field 'width' [-Wreorder-init-list]
+  271 |       .width = size.width
+      |       ~~~~~~~~~^~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/packages/react-native-bottom-tabs/ios/RCTTabViewComponentView.mm:270:17: note: previous initialization for field 'height' is here
+  270 |       .height = size.height,
+      |                 ^~~~~~~~~~~
+1 warning generated.
+libtool: warning: 'EventEmitters-c3a7944599d428af88d8d6ee2e75742d.o' has no symbols
+libtool: warning: 'States-838acebc085771805dccebd11aed767a.o' has no symbols
+libtool: warning: 'States-8e25153dff0e281d57cd7fe938976393.o' has no symbols
+libtool: warning: 'States-747c0be5cfbc75a227c21018b97ea89c.o' has no symbols
+libtool: warning: 'States-302e61b6dcf500772a99797247da15e7.o' has no symbols
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsHostComponentView.mm:1:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsHostComponentView.h:9:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSViewControllerInvalidating.h:3:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandlerButtonComponentView.mm:3:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandlerButtonComponentView.h:11:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandlerButton.h:9:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandler.h:4:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandlerEvents.h:5:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGHStylusData.h:23:16: warning: unused function 'ghSpherical2tilt' [-Wunused-function]
+   23 | static CGPoint ghSpherical2tilt(double altitudeAngle, double azimuthAngle)
+      |                ^~~~~~~~~~~~~~~~
+1 warning generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-safe-area-context/common/cpp/react/renderer/components/safeareacontext/RNCSafeAreaViewShadowNode.cpp:3:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/components/view/conversions.h:17:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-renderercss/react/renderer/css/CSSAngle.h:13:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-renderercss/react/renderer/css/CSSDataType.h:15:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-renderercss/react/renderer/css/CSSSyntaxParser.h:150:13: warning: parameter '<ReturnT>' not found in the function declaration [-Wdocumentation]
+  150 |    * @param <ReturnT> caller-specified return type of visitors. This type will
+      |             ^~~~~~~~~
+1 warning generated.
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-safe-area-context/ios/Fabric/RNCSafeAreaProviderComponentView.mm:110:27: warning: ISO C++ requires field designators to be specified in declaration order; field 'left' will be initialized after field 'bottom' [-Wreorder-init-list]
+  110 |                 .bottom = safeAreaInsets.bottom,
+      |                 ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-safe-area-context/ios/Fabric/RNCSafeAreaProviderComponentView.mm:109:25: note: previous initialization for field 'left' is here
+  109 |                 .left = safeAreaInsets.left,
+      |                         ^~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-safe-area-context/ios/Fabric/RNCSafeAreaProviderComponentView.mm:111:26: warning: ISO C++ requires field designators to be specified in declaration order; field 'bottom' will be initialized after field 'right' [-Wreorder-init-list]
+  111 |                 .right = safeAreaInsets.right,
+      |                 ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-safe-area-context/ios/Fabric/RNCSafeAreaProviderComponentView.mm:110:27: note: previous initialization for field 'bottom' is here
+  110 |                 .bottom = safeAreaInsets.bottom,
+      |                           ^~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandlerModule.mm:80:1: warning: method possibly missing a [super invalidate] call [-Wobjc-missing-super-calls]
+   80 | }
+      | ^
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandlerModule.mm:22:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandler.h:4:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGestureHandlerEvents.h:5:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-gesture-handler/apple/RNGHStylusData.h:23:16: warning: unused function 'ghSpherical2tilt' [-Wunused-function]
+   23 | static CGPoint ghSpherical2tilt(double altitudeAngle, double azimuthAngle)
+      |                ^~~~~~~~~~~~~~~~
+2 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabsScreenViewController.mm:1:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabsScreenViewController.h:2:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsScreenComponentView.h:10:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSViewControllerInvalidating.h:3:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabBarControllerDelegate.mm:3:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabBarController.h:2:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabBarAppearanceCoordinator.h:2:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsHostComponentView.h:9:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSViewControllerInvalidating.h:3:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabBarController.mm:1:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabBarController.h:2:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabBarAppearanceCoordinator.h:2:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsHostComponentView.h:9:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSViewControllerInvalidating.h:3:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabBarAppearanceCoordinator.mm:1:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSTabBarAppearanceCoordinator.h:2:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsHostComponentView.h:9:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSViewControllerInvalidating.h:3:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+libtool: warning: 'ReactNativeHost+View.o' has no symbols
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSScreenStackHeaderConfig.mm:5:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-RCTFabric/React/RCTMountingTransactionObserving.h:10:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/MountingTransaction.h:10:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSScreenStack.mm:4:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-RCTFabric/React/RCTMountingTransactionObserving.h:10:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/MountingTransaction.h:10:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSScreenContentWrapper.mm:9:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-RCTFabric/React/RCTScrollViewComponentView.h:12:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-RCTFabric/React/RCTMountingTransactionObserving.h:10:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/MountingTransaction.h:10:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSScreen.mm:13:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-RCTFabric/React/RCTScrollViewComponentView.h:12:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-RCTFabric/React/RCTMountingTransactionObserving.h:10:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/MountingTransaction.h:10:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSScreen.mm:1752:69: warning: 'statusBarFrame' is deprecated: first deprecated in iOS 13.0 - Use the statusBarManager property of the window scene instead. [-Wdeprecated-declarations]
+ 1752 |   CGSize fallbackStatusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+      |                                                                     ^
+In file included from <built-in>:1:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Target Support Files/RNScreens/RNScreens-prefix.pch:2:
+In file included from /Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.h:13:
+In file included from /Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKitCore.h:29:
+In file included from /Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIAccessibility.h:20:
+In file included from /Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIAccessibilityElement.h:12:
+In file included from /Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIAccessibilityIdentification.h:13:
+In file included from /Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIAlertController.h:9:
+In file included from /Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIViewController.h:12:
+/Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIApplication.h:131:38: note: property 'statusBarFrame' is declared deprecated here
+  131 | @property(nonatomic,readonly) CGRect statusBarFrame API_DEPRECATED("Use the statusBarManager property of the window scene instead.", ios(2.0, 13.0)) API_UNAVAILABLE(tvos) API_UNAVAILABLE(visionos, watchos); // returns CGRectZero if the status bar is hidden
+      |                                      ^
+/Applications/Xcode-27.0.0-Beta.4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIApplication.h:131:38: note: 'statusBarFrame' has been explicitly marked deprecated here
+4 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSSafeAreaViewShadowNode.cpp:6:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/components/view/conversions.h:17:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-renderercss/react/renderer/css/CSSAngle.h:13:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-renderercss/react/renderer/css/CSSDataType.h:15:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-renderercss/react/renderer/css/CSSSyntaxParser.h:150:13: warning: parameter '<ReturnT>' not found in the function declaration [-Wdocumentation]
+  150 |    * @param <ReturnT> caller-specified return type of visitors. This type will
+      |             ^~~~~~~~~
+1 warning generated.
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/conversion/RNSConversions-BottomTabs.mm:331:11: warning: enumeration value 'RNSBottomTabsScreenSystemItemNone' not handled in switch [-Wswitch]
+  331 |   switch (systemItem) {
+      |           ^~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/conversion/RNSConversions-BottomTabs.mm:331:11: note: add missing switch cases
+  331 |   switch (systemItem) {
+      |           ^
+  332 |     case RNSBottomTabsScreenSystemItemBookmarks:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/conversion/RNSConversions-BottomTabs.mm:357:107: warning: enum values with underlying type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]
+  357 |   RCTAssert(true, @"Attempt to convert unknown bottom tabs screen systemItem to UITabBarSystemItem [%d]", systemItem);
+      |                                                                                                     ~~    ^~~~~~~~~~
+      |                                                                                                     %ld   static_cast<long>( )
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/conversion/RNSConversions-BottomTabs.mm:2:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-ImageManager/react/renderer/imagemanager/RCTImagePrimitivesConversions.h:10:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Core/React/RCTConvert.h:16:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Core/React/RCTLog.h:10:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Core/React/RCTAssert.h:26:66: note: expanded from macro 'RCTAssert'
+   26 |       _RCTAssertFormat(#condition, __FILE__, __LINE__, __func__, __VA_ARGS__);                       \
+      |                                                                  ^~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/conversion/RNSConversions-BottomTabs.mm:357:107: warning: enum values with underlying type 'NSInteger' should not be used as format arguments; add an explicit cast to 'long' instead [-Wformat]
+  357 |   RCTAssert(true, @"Attempt to convert unknown bottom tabs screen systemItem to UITabBarSystemItem [%d]", systemItem);
+      |                                                                                                     ~~    ^~~~~~~~~~
+      |                                                                                                     %ld   static_cast<long>( )
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/conversion/RNSConversions-BottomTabs.mm:2:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-ImageManager/react/renderer/imagemanager/RCTImagePrimitivesConversions.h:10:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Core/React/RCTConvert.h:16:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Core/React/RCTLog.h:10:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Core/React/RCTAssert.h:31:70: note: expanded from macro 'RCTAssert'
+   31 |                                                          description:__VA_ARGS__];                   \
+      |                                                                      ^~~~~~~~~~~
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsScreenComponentView.mm:1:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsScreenComponentView.h:10:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSViewControllerInvalidating.h:3:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/extensions/RNSBottomTabsHostComponentView+RNSImageLoader.mm:1:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/extensions/RNSBottomTabsHostComponentView+RNSImageLoader.h:1:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/bottom-tabs/RNSBottomTabsHostComponentView.h:9:
+In file included from /Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/node_modules/react-native-screens/ios/RNSViewControllerInvalidating.h:3:
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:47:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   47 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:49:3: note: add a deprecation attribute to the declaration to silence this warning
+   49 |   static ShadowViewMutation InsertMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:64:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   64 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:66:3: note: add a deprecation attribute to the declaration to silence this warning
+   66 |   static ShadowViewMutation RemoveMutation(
+      |   ^
+      |   FMT_DEPRECATED
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:83:7: warning: declaration is marked with '@deprecated' command but does not have a deprecation attribute [-Wdocumentation-deprecated-sync]
+   83 |    * @deprecated Pass parentTag instead of parentShadowView.
+      |      ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/apps/example/ios/Pods/Headers/Public/React-Fabric/react/renderer/mounting/ShadowViewMutation.h:85:3: note: add a deprecation attribute to the declaration to silence this warning
+   85 |   static ShadowViewMutation UpdateMutation(
+      |   ^
+      |   FMT_DEPRECATED
+3 warnings generated.
+libtool: warning: 'NSString+RNSUtility.o' has no symbols
+libtool: warning: 'RCTConvert+RNSBottomTabs.o' has no symbols
+libtool: warning: 'RCTConvert+RNScreens.o' has no symbols
+libtool: warning: 'RCTSurfaceTouchHandler+RNSUtility.o' has no symbols
+libtool: warning: 'RCTTouchHandler+RNSUtility.o' has no symbols
+libtool: warning: 'RNSSafeAreaViewEdges.o' has no symbols
+libtool: warning: 'RNSSafeAreaViewLocalData.o' has no symbols
+libtool: warning: 'RNSSafeAreaViewManager.o' has no symbols
+libtool: warning: 'RNSSafeAreaViewShadowView.o' has no symbols
+libtool: warning: 'UINavigationBar+RNSUtility.o' has no symbols
+libtool: warning: 'UIScrollView+RNScreens.o' has no symbols
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/SwiftUIIntrospect.build/Script-46EB2E0001E7D0.sh'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/react-native-bottom-tabs.build/Script-46EB2E0001F6C0.sh'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/hermes-engine.build/InputFileList-46EB2E0001FB50-hermes-engine-xcframeworks-input-files-a26538e34c6c1cea023e164c7a8f1dd1-resolved.xcfilelist'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/hermes-engine.build/OutputFileList-46EB2E0001FB50-hermes-engine-xcframeworks-output-files-5ec3a97362b0565f1003402a257df533-resolved.xcfilelist'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/hermes-engine.build/Script-46EB2E0001FB50.sh'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/hermes-engine.build/Script-46EB2E0001FB60.sh'
+
+warning: Run script build phase '[CP-User] [Hermes] Replace Hermes for the right configuration, if needed' will be run during every build because it does not specify any outputs. To address this issue, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'hermes-engine' from project 'Pods')
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/React-RCTFBReactNativeSpec.build/Script-46EB2E0001FB30.sh'
+
+note: Run script build phase '[CP-User] [RN]Check FBReactNativeSpec' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'React-RCTFBReactNativeSpec' from project 'Pods')
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/ReactCodegen.build/Objects-normal/arm64/RNEdgeToEdge-generated.o'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/ReactCodegen.build/Objects-normal/arm64/RNEdgeToEdgeJSI-generated.o'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/ReactCodegen.build/Script-46EB2E0001FB40.sh'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/ReactTestApp.build/Debug-iphonesimulator/ReactTestApp.build/InputFileList-13F8F792F719AC06E4486381-Pods-ReactTestApp-frameworks-Debug-input-files-d2519aa6b098a9f690358448bd3a4d26-resolved.xcfilelist'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/ReactTestApp.build/Debug-iphonesimulator/ReactTestApp.build/InputFileList-36DEB1A5AB8B4B21CD6EAED4-Pods-ReactTestApp-resources-Debug-input-files-126712cae02479c9502eb6cb43302857-resolved.xcfilelist'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/ReactTestApp.build/Debug-iphonesimulator/ReactTestApp.build/OutputFileList-13F8F792F719AC06E4486381-Pods-ReactTestApp-frameworks-Debug-output-files-1a4f4f161e071ba805592d60f9b9097e-resolved.xcfilelist'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/ReactTestApp.build/Debug-iphonesimulator/ReactTestApp.build/OutputFileList-36DEB1A5AB8B4B21CD6EAED4-Pods-ReactTestApp-resources-Debug-output-files-ce3075cbca3fc4018e2ad29d79083a06-resolved.xcfilelist'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/ReactTestApp.build/Debug-iphonesimulator/ReactTestApp.build/Script-13F8F792F719AC06E4486381.sh'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/ReactTestApp.build/Debug-iphonesimulator/ReactTestApp.build/Script-36DEB1A5AB8B4B21CD6EAED4.sh'
+
+note: Removed stale file '/Users/thiagobrez/.codex/worktrees/08e2/react-native-bottom-tabs/tmp/issue-547/DerivedData/Build/Intermediates.noindex/ReactTestApp.build/Debug-iphonesimulator/ReactTestApp.build/Script-E8CBB229F96C6144FA313E04.sh'
+
+note: Run script build phase 'Generate `ip.txt`' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'ReactTestApp' from project 'ReactTestApp')
+note: Run script build phase 'Embed Manifest' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'ReactTestApp' from project 'ReactTestApp')
