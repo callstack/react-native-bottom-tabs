@@ -1,0 +1,6 @@
+module react_native_bottom_tabs {
+    header "../RCTTabViewComponentView.h"
+    header "../RCTBottomAccessoryComponentView.h"
+    header "../SVG/SvgDecoder.h"
+    export *
+}

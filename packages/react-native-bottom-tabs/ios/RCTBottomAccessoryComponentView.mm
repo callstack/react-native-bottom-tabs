@@ -8,7 +8,13 @@
 
 #import <React/RCTFabricComponentsPlugins.h>
 
-#if __has_include("react_native_bottom_tabs/react_native_bottom_tabs-Swift.h")
+#if SWIFT_PACKAGE
+#if __has_include(<BottomTabsSwift/BottomTabsSwift-Swift.h>)
+#import <BottomTabsSwift/BottomTabsSwift-Swift.h>
+#else
+#import "BottomTabsSwift-Swift.h"
+#endif
+#elif __has_include("react_native_bottom_tabs/react_native_bottom_tabs-Swift.h")
 #import "react_native_bottom_tabs/react_native_bottom_tabs-Swift.h"
 #else
 #import "react_native_bottom_tabs-Swift.h"

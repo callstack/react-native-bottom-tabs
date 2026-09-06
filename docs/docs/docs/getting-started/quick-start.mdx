@@ -55,6 +55,35 @@ Edit `android/app/src/main/res/values/styles.xml` to inherit from provided theme
 Here you can read more about [Android Native Styling](/docs/guides/android-native-styling).
 
 
+### iOS with Swift Package Manager
+
+The library ships a `Package.swift` for React Native's SwiftPM autolinking flow,
+alongside its CocoaPods podspec. This requires a React Native installation that
+provides the `react-native spm` command, the New Architecture, and Swift tools 6.0
+or newer. The app must meet React Native's iOS deployment target as well as the
+package's iOS 15 minimum. The repository's React Native 0.81 example still uses
+CocoaPods.
+
+After installing the npm package, run this from an app already using SwiftPM:
+
+```sh
+npx react-native spm
+```
+
+To migrate an existing CocoaPods app, follow the
+[React Native SwiftPM setup guide](https://github.com/react/react-native/blob/main/packages/react-native/scripts/spm/__docs__/spm-scripts.md).
+The migration command is:
+
+```sh
+npx react-native spm add --deintegrate
+```
+
+React Native runs Codegen, prepares its native dependencies, and autolinks this
+library. SwiftPM resolves SwiftUIIntrospect automatically. The manifest is intended
+for this app-generated package graph; adding the GitHub repository directly in
+Xcode does not provide the required React Native and Codegen packages. Other native
+dependencies in your app also need SwiftPM support.
+
 ## Example usage
 
 Please follow the guides below to integrate the library with your navigation library:

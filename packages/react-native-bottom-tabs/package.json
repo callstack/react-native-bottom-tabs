@@ -22,6 +22,7 @@
     "ios",
     "cpp",
     "common",
+    "Package.swift",
     "react-native.config.js",
     "app.plugin.js",
     "*.podspec",
