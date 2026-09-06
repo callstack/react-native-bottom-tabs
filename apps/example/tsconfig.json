@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "rootDir": ".",
+    "paths": {},
     "composite": false,
     "moduleResolution": "bundler",
     "customConditions": ["react-native"],
