@@ -9,11 +9,7 @@
 #import <React/RCTFabricComponentsPlugins.h>
 
 #if SWIFT_PACKAGE
-#if __has_include(<BottomTabsSwift/BottomTabsSwift-Swift.h>)
-#import <BottomTabsSwift/BottomTabsSwift-Swift.h>
-#else
-#import "BottomTabsSwift-Swift.h"
-#endif
+#import "BottomTabsBridge.h"
 #elif __has_include("react_native_bottom_tabs/react_native_bottom_tabs-Swift.h")
 #import "react_native_bottom_tabs/react_native_bottom_tabs-Swift.h"
 #else
@@ -22,7 +18,13 @@
 
 using namespace facebook::react;
 
-@interface RCTBottomAccessoryComponentView () <BottomAccessoryProviderDelegate> {
+#if SWIFT_PACKAGE
+typedef NSObject BottomAccessoryProvider;
+@interface RCTBottomAccessoryComponentView () <RNCBottomAccessoryProviderDelegate>
+#else
+@interface RCTBottomAccessoryComponentView () <BottomAccessoryProviderDelegate>
+#endif
+{
   BottomAccessoryProvider* bottomAccessoryProvider;
 }
 @end
@@ -39,7 +41,11 @@ using namespace facebook::react;
   if (self = [super initWithFrame:frame]) {
     static const auto defaultProps = std::make_shared<const BottomAccessoryViewProps>();
     if (@available(iOS 26.0, *)) {
+#if SWIFT_PACKAGE
+      bottomAccessoryProvider = RNCCreateBottomAccessoryProvider(self);
+#else
       bottomAccessoryProvider = [[BottomAccessoryProvider alloc] initWithDelegate:self];
+#endif
     }
   }
 

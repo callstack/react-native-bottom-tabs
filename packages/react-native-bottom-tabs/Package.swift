@@ -14,7 +14,6 @@ let package = Package(
     products: [
         .library(
             name: "react_native_bottom_tabs",
-            type: .dynamic,
             targets: ["react_native_bottom_tabs"]
         ),
     ],
@@ -41,15 +40,23 @@ let package = Package(
                 "react-native-bottom-tabs-Bridging-Header.h",
                 "SVG",
                 "include",
+                "Bridge",
             ]
+        ),
+        .target(
+            name: "BottomTabsBridge",
+            dependencies: reactHeaders + ["BottomTabsSwift"],
+            path: "ios/Bridge",
+            publicHeadersPath: "."
         ),
         .target(
             name: "react_native_bottom_tabs",
             dependencies: reactHeaders + [
-                "BottomTabsSwift",
+                "BottomTabsBridge",
                 .product(name: "ReactAppHeaders", package: "React-GeneratedCode"),
             ],
             path: ".",
+            exclude: ["node_modules", "android", "lib", "src"],
             sources: [
                 "ios/RCTTabViewComponentView.mm",
                 "ios/RCTBottomAccessoryComponentView.mm",

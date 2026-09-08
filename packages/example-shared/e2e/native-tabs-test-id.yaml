@@ -1,4 +1,4 @@
-appId: bottomtabs.example
+appId: ${APP_ID}
 name: Navigate tabs via testIDs
 ---
 - launchApp

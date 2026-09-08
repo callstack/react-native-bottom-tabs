@@ -9,11 +9,7 @@
 #import <React/RCTFabricComponentsPlugins.h>
 
 #if SWIFT_PACKAGE
-#if __has_include(<BottomTabsSwift/BottomTabsSwift-Swift.h>)
-#import <BottomTabsSwift/BottomTabsSwift-Swift.h>
-#else
-#import "BottomTabsSwift-Swift.h"
-#endif
+#import "BottomTabsBridge.h"
 #elif __has_include("react_native_bottom_tabs/react_native_bottom_tabs-Swift.h")
 #import "react_native_bottom_tabs/react_native_bottom_tabs-Swift.h"
 #else
@@ -23,7 +19,9 @@
 #import <React/RCTImageLoader.h>
 #import <React/RCTImageSource.h>
 #import <React/RCTBridge+Private.h>
-#if __has_include(<React/RCTImagePrimitivesConversions.h>)
+#if SWIFT_PACKAGE
+#import <react/renderer/imagemanager/RCTImagePrimitivesConversions.h>
+#elif __has_include(<React/RCTImagePrimitivesConversions.h>)
 #import <React/RCTImagePrimitivesConversions.h>
 #else
 #import "RCTImagePrimitivesConversions.h"
@@ -68,7 +66,14 @@ bool operator!=(const RNCTabViewItemsStruct& lhs, const RNCTabViewItemsStruct& r
 
 using namespace facebook::react;
 
-@interface RCTTabViewComponentView () <RCTRNCTabViewViewProtocol, TabViewProviderDelegate> {
+#if SWIFT_PACKAGE
+typedef UIView<RNCTabViewProvider> TabViewProvider;
+typedef NSObject TabInfo;
+@interface RCTTabViewComponentView () <RCTRNCTabViewViewProtocol, RNCTabViewProviderDelegate>
+#else
+@interface RCTTabViewComponentView () <RCTRNCTabViewViewProtocol, TabViewProviderDelegate>
+#endif
+{
 }
 
 @end
@@ -86,7 +91,11 @@ using namespace facebook::react;
 {
   if (self = [super initWithFrame:frame]) {
     static const auto defaultProps = std::make_shared<const RNCTabViewProps>();
+#if SWIFT_PACKAGE
+    _tabViewProvider = RNCCreateTabViewProvider(self);
+#else
     _tabViewProvider = [[TabViewProvider alloc] initWithDelegate:self];
+#endif
     self.contentView = _tabViewProvider;
     _props = defaultProps;
   }
@@ -218,7 +227,11 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
   NSMutableArray<TabInfo *> *result = [NSMutableArray array];
 
   for (const auto& item : items) {
+#if SWIFT_PACKAGE
+    auto tabInfo = [RNCTabInfo createWithKey:RCTNSStringFromString(item.key)
+#else
     auto tabInfo = [[TabInfo alloc] initWithKey:RCTNSStringFromString(item.key)
+#endif
                                           title:RCTNSStringFromString(item.title)
                                           badge:RCTNSStringFromStringNilIfEmpty(item.badge)
                                        sfSymbol:RCTNSStringFromStringNilIfEmpty(item.sfSymbol)

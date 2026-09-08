@@ -21,6 +21,9 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Check example dependency constraints
+        run: yarn constraints
+
       - name: Lint files
         run: yarn lint
 
@@ -153,3 +156,28 @@ jobs:
         run: |
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
+  build-ios-swiftpm:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Set up SwiftPM integration
+        run: yarn workspace example-swiftpm spm --yes
+
+      - name: Build SwiftPM example for iOS
+        run: |
+          xcodebuild \
+            -project apps/example-swiftpm/ios/ExampleSwiftPM.xcodeproj \
+            -scheme ExampleSwiftPM \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/example-swiftpm-build" \
+            ARCHS=arm64 \
+            CODE_SIGNING_ALLOWED=NO \
+            build
