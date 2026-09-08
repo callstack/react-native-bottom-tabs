@@ -6,7 +6,7 @@ First install `@bottom-tabs/react-navigation` which provides a native bottom tab
 
 <PackageManagerTabs command="install @bottom-tabs/react-navigation" />
 
-Next, create a custom layout adapter for the native bottom tabs using `withLayoutContext` from Expo Router:
+Next, create a custom layout adapter for the native bottom tabs using `withLayoutContext` from Expo Router. Put it in `components/bottom-tabs.tsx` and export the navigator, so your layouts can import it:
 
 ```tsx
 import { withLayoutContext } from 'expo-router';
@@ -19,7 +19,7 @@ import { ParamListBase, TabNavigationState } from '@react-navigation/native';
 
 const BottomTabNavigator = createNativeBottomTabNavigator().Navigator;
 
-const Tabs = withLayoutContext<
+export const Tabs = withLayoutContext<
   NativeBottomTabNavigationOptions,
   typeof BottomTabNavigator,
   TabNavigationState<ParamListBase>,
@@ -32,6 +32,8 @@ const Tabs = withLayoutContext<
 Then, use the `Tabs` navigator in your app:
 
 ```tsx
+import { Platform } from "react-native";
+
 import { Tabs } from "@/components/bottom-tabs";
 
 export default function TabLayout() {
@@ -41,14 +43,20 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: () => ({ sfSymbol: "house" }),
+          tabBarIcon: () =>
+            Platform.OS === "ios"
+              ? { sfSymbol: "house" }
+              : require("@/assets/icons/house.png"),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: "Explore",
-          tabBarIcon: () => ({ sfSymbol: "person" }),
+          tabBarIcon: () =>
+            Platform.OS === "ios"
+              ? { sfSymbol: "person" }
+              : require("@/assets/icons/person.png"),
         }}
       />
     </Tabs>
@@ -56,7 +64,9 @@ export default function TabLayout() {
 }
 ```
 
-For props and more information, see the [React Navigation integration guide](/docs/guides/usage-with-react-navigation).
+> [!NOTE] SF Symbols are only available on Apple platforms. On Android and web, pass an image with `require()` or a `{ uri }` object instead — a tab given only an `sfSymbol` renders without an icon there.
+
+For props and more information, see the [React Navigation integration guide](/docs/guides/usage-with-react-navigation), which documents every accepted `tabBarIcon` source.
 
 Example: [okwasniewski/ExpoNativeTabs](https://github.com/okwasniewski/ExpoNativeTabs)
 
