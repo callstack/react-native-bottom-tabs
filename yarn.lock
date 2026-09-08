@@ -3920,6 +3920,7 @@ __metadata:
     "@changesets/changelog-github": "npm:^0.6.0"
     "@changesets/cli": "npm:^2.30.0"
     "@commitlint/config-conventional": "npm:^17.0.2"
+    "@react-native/eslint-config": "npm:0.87.1"
     commitlint: "npm:^17.0.2"
     devmoji: "npm:^2.3.0"
     eslint: "npm:^8.51.0"
