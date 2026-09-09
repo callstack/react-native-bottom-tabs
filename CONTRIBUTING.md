@@ -89,10 +89,9 @@ We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint]
 Our pre-commit hooks verify that the linter and tests pass when committing.
 
 `yarn lint` and `yarn typecheck` deliberately skip `@bottom-tabs/expo-template`. The template has
-its own `lint` and `typecheck` scripts, but running them from the monorepo reports results no user
-ever sees: the repo root pins `@types/react` through `resolutions`, while the template declares its
-own version. Check the template the way people actually consume it - pack it, scaffold an app, and
-run its scripts there:
+its own `lint` and `typecheck` scripts.
+
+Check the template the way people actually consume it - pack it, scaffold an app, and run its scripts there:
 
 ```sh
 yarn workspace @bottom-tabs/expo-template pack --out /tmp/expo-template.tgz
