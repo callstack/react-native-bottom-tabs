@@ -9,9 +9,9 @@
     ]
   },
   "scripts": {
-    "lint": "turbo run lint",
+    "lint": "turbo run lint --filter='!@bottom-tabs/expo-template'",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck",
+    "typecheck": "turbo run typecheck --filter='!@bottom-tabs/expo-template'",
     "build": "turbo run build",
     "build:android": "turbo run build:android",
     "build:ios": "turbo run build:ios",
