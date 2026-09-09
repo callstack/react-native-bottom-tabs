@@ -1,0 +1,59 @@
+{
+  "name": "example-swiftpm",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "ios": "react-native run-ios",
+    "lint": "eslint .",
+    "start": "react-native start",
+    "typecheck": "tsc --noEmit",
+    "spm": "react-native spm",
+    "e2e:ios": "maestro test --platform=ios --env APP_ID=bottomtabs.exampleswiftpm ../../packages/example-shared/e2e"
+  },
+  "dependencies": {
+    "@bottom-tabs/example-shared": "workspace:*",
+    "@bottom-tabs/react-navigation": "*",
+    "@react-navigation/bottom-tabs": "^7.15.9",
+    "@react-navigation/devtools": "^7.0.44",
+    "@react-navigation/native": "^7.3.0",
+    "@react-navigation/native-stack": "^7.14.11",
+    "@react-navigation/stack": "^7.8.10",
+    "color": "^5.0.0",
+    "react": "^19.2.3",
+    "react-native": "^0.87.1",
+    "react-native-bottom-tabs": "*",
+    "react-native-edge-to-edge": "^1.7.0",
+    "react-native-gesture-handler": "patch:react-native-gesture-handler@npm%3A3.2.1#~/.yarn/patches/react-native-gesture-handler-npm-3.2.1-73a74f5c79.patch",
+    "react-native-paper": "^5.14.5",
+    "react-native-safe-area-context": "patch:react-native-safe-area-context@npm%3A5.9.1#~/.yarn/patches/react-native-safe-area-context-npm-5.9.1-b51fb9c5f7.patch",
+    "react-native-screens": "patch:react-native-screens@npm%3A4.27.0#~/.yarn/patches/react-native-screens-npm-4.27.0-78335f53c6.patch",
+    "react-native-vector-icons": "patch:react-native-vector-icons@npm%3A10.2.0#~/.yarn/patches/react-native-vector-icons-npm-10.2.0-e1aad1f85c.patch",
+    "react-native-worklets": "patch:react-native-worklets@npm%3A0.12.1#~/.yarn/patches/react-native-worklets-npm-0.12.1-aa8a1b2670.patch"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/runtime": "^7.25.0",
+    "@react-native-community/cli": "20.2.0",
+    "@react-native-community/cli-platform-ios": "20.2.0",
+    "@react-native/babel-preset": "0.87.1",
+    "@react-native/eslint-config": "0.87.1",
+    "@react-native/jest-preset": "0.87.1",
+    "@react-native/metro-config": "0.87.1",
+    "@react-native/typescript-config": "0.87.1",
+    "@rnx-kit/metro-config": "^2.2.4",
+    "@types/jest": "^29.5.13",
+    "@types/react": "^19.2.0",
+    "@types/react-native-vector-icons": "^6.4.18",
+    "@types/react-test-renderer": "^19.1.0",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "eslint": "^8.19.0",
+    "jest": "^29.6.3",
+    "prettier": "^3.0.0",
+    "react-test-renderer": "19.2.3",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">= 22.11.0"
+  }
+}
