@@ -1,5 +1,23 @@
 # @bottom-tabs/expo-template
 
+## 1.1.4
+
+### Patch Changes
+
+- [#576](https://github.com/callstack/react-native-bottom-tabs/pull/576) [`1283040`](https://github.com/callstack/react-native-bottom-tabs/commit/1283040e76ed7621c965108e5d14173bf5274c4c) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Render tab bar icons on Android, and apply the template's own colors to the tab bar
+
+- [#574](https://github.com/callstack/react-native-bottom-tabs/pull/574) [`67c02ec`](https://github.com/callstack/react-native-bottom-tabs/commit/67c02ec2d7803a3bb6b4ac7da3818c2988da6379) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Target development builds instead of Expo Go, and add `ios.bundleIdentifier` and `android.package` placeholders
+
+- [#578](https://github.com/callstack/react-native-bottom-tabs/pull/578) [`cc8ce1f`](https://github.com/callstack/react-native-bottom-tabs/commit/cc8ce1f7f5daa631bf08af3bf39e6752d5d0df82) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Replace react-test-renderer with React Native Testing Library, and add lint and typecheck scripts
+
+- [#577](https://github.com/callstack/react-native-bottom-tabs/pull/577) [`34f7117`](https://github.com/callstack/react-native-bottom-tabs/commit/34f71176e6ac51a143b7cb7c936019f59f14591a) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Align dependencies with Expo SDK 54, drop unused packages, and fix the template's TypeScript errors
+
+- [#579](https://github.com/callstack/react-native-bottom-tabs/pull/579) [`dd72e8b`](https://github.com/callstack/react-native-bottom-tabs/commit/dd72e8bcc6134dc2db7504dcdd186c2578a474d4) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add the missing test-renderer dependency required by React Native Testing Library, using the version compatible with React 19.1.
+
+- Updated dependencies [[`251bc1e`](https://github.com/callstack/react-native-bottom-tabs/commit/251bc1e362d0814a742c45cc6fb4f2e3169fea9c), [`85e14d7`](https://github.com/callstack/react-native-bottom-tabs/commit/85e14d797905a483628cea7668a63fabafe4c78f), [`6b8e865`](https://github.com/callstack/react-native-bottom-tabs/commit/6b8e865af0b795eeeb11265fa103c818013bcd6e)]:
+  - react-native-bottom-tabs@1.5.0
+  - @bottom-tabs/react-navigation@1.5.0
+
 ## 1.1.3
 
 ### Patch Changes
