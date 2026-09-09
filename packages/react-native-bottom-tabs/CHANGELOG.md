@@ -1,5 +1,17 @@
 # react-native-bottom-tabs
 
+## 1.5.0
+
+### Minor Changes
+
+- [#575](https://github.com/callstack/react-native-bottom-tabs/pull/575) [`85e14d7`](https://github.com/callstack/react-native-bottom-tabs/commit/85e14d797905a483628cea7668a63fabafe4c78f) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add iOS Swift Package Manager support
+
+### Patch Changes
+
+- [#568](https://github.com/callstack/react-native-bottom-tabs/pull/568) [`251bc1e`](https://github.com/callstack/react-native-bottom-tabs/commit/251bc1e362d0814a742c45cc6fb4f2e3169fea9c) Thanks [@gabrieldonadel](https://github.com/gabrieldonadel)! - Fix Android build with AGP 9 built-in Kotlin: skip applying the `kotlin-android` plugin when AGP has already registered the `kotlin` extension
+
+- [#571](https://github.com/callstack/react-native-bottom-tabs/pull/571) [`6b8e865`](https://github.com/callstack/react-native-bottom-tabs/commit/6b8e865af0b795eeeb11265fa103c818013bcd6e) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add support for React Native 0.87
+
 ## 1.4.0
 
 ### Minor Changes
