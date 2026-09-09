@@ -19,9 +19,6 @@ const Tabs = withLayoutContext<
   NativeBottomTabNavigationEventMap
 >(BottomTabNavigator);
 
-// SF Symbols are only available on Apple platforms, everything else uses images.
-const supportsSFSymbols = Platform.OS === 'ios';
-
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
   const colorTheme = Colors[colorScheme];
@@ -36,7 +33,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: () =>
-            supportsSFSymbols
+            Platform.OS === 'ios'
               ? { sfSymbol: 'house.fill' }
               : require('@/assets/icons/house.png'),
         }}
@@ -46,7 +43,7 @@ export default function TabLayout() {
         options={{
           title: 'Explore',
           tabBarIcon: () =>
-            supportsSFSymbols
+            Platform.OS === 'ios'
               ? { sfSymbol: 'paperplane.fill' }
               : require('@/assets/icons/send.png'),
         }}
