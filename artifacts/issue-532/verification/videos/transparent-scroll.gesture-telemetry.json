@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-31T18:52:41.806Z",
+  "events": [
+    {
+      "kind": "scroll",
+      "tMs": 106,
+      "x": 201,
+      "y": 787,
+      "x2": 201,
+      "y2": 87,
+      "referenceWidth": 402,
+      "referenceHeight": 874,
+      "durationMs": 250,
+      "contentDirection": "down",
+      "amount": 3,
+      "pixels": 700
+    }
+  ]
+}
