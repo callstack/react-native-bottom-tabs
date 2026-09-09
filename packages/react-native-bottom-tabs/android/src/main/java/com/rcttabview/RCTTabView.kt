@@ -100,17 +100,23 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     uiModeConfiguration = resources.configuration.uiMode
 
     post {
-      addOnLayoutChangeListener { _, left, top, right, bottom,
+      addOnLayoutChangeListener { _, _, _, _, _,
                                   _, _, _, _ ->
-        val newWidth = right - left
-        val newHeight = bottom - top
+        // Key the change-guard on the same view we report (layoutHolder), not
+        // on this outer view: during startup the outer frame can settle while
+        // layoutHolder is still mid-layout, so guarding on the outer size
+        // latches a transient layoutHolder height for the whole session (tab
+        // content clipped, dead space below). Guarding on layoutHolder itself
+        // means any later correct layout re-reports and the view self-heals.
+        val newWidth = layoutHolder.width
+        val newHeight = layoutHolder.height
 
         // Notify about tab bar height.
         onTabBarMeasuredListener?.invoke(Utils.convertPixelsToDp(context, bottomNavigation.height).toInt())
 
         if (newWidth != lastReportedSize?.width || newHeight != lastReportedSize?.height) {
-          val dpWidth = Utils.convertPixelsToDp(context, layoutHolder.width)
-          val dpHeight = Utils.convertPixelsToDp(context, layoutHolder.height)
+          val dpWidth = Utils.convertPixelsToDp(context, newWidth)
+          val dpHeight = Utils.convertPixelsToDp(context, newHeight)
 
           onNativeLayoutListener?.invoke(dpWidth, dpHeight)
           lastReportedSize = Size(newWidth, newHeight)
