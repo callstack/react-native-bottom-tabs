@@ -3906,6 +3906,7 @@ __metadata:
     react-native-screens: "npm:~4.16.0"
     react-native-web: "npm:~0.21.0"
     react-native-worklets: "npm:0.5.1"
+    test-renderer: "npm:~1.1.0"
     typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
@@ -8344,6 +8345,15 @@ __metadata:
   dependencies:
     "@types/react": "npm:*"
   checksum: 10/43b280990f7a3c45cd707098d686ddbf353270cc463c9bb4306a5f675e3fe84010a32e344274b00b8a11629d73a8df1a1075af267d182a0f7094599616ae622c
+  languageName: node
+  linkType: hard
+
+"@types/react-reconciler@npm:~0.32.0":
+  version: 0.32.3
+  resolution: "@types/react-reconciler@npm:0.32.3"
+  peerDependencies:
+    "@types/react": "*"
+  checksum: 10/b1708087c3e3611c66ed5ee3e23be5051278bdd12dd5a72995ca70908ad84b990059b044bee1391aa6f1f82e3e243fd9909074ca125259b87f216e8dcefde07e
   languageName: node
   linkType: hard
 
@@ -19887,6 +19897,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-reconciler@npm:~0.32.0":
+  version: 0.32.0
+  resolution: "react-reconciler@npm:0.32.0"
+  dependencies:
+    scheduler: "npm:^0.26.0"
+  peerDependencies:
+    react: ^19.1.0
+  checksum: 10/aa6813eed55c15b8b28facb8dc762ad467fc83b2e1c55548c2bee50c21380867c98a951c07dbd29a11db35afe66a37080a97cd3346766944d977bf1eb51692f4
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.14.0, react-refresh@npm:^0.14.2":
   version: 0.14.2
   resolution: "react-refresh@npm:0.14.2"
@@ -21910,6 +21931,18 @@ __metadata:
     glob: "npm:^7.1.4"
     minimatch: "npm:^3.0.4"
   checksum: 10/8fccb2cb6c8fcb6bb4115394feb833f8b6cf4b9503ec2485c2c90febf435cac62abe882a0c5c51a37b9bbe70640cdd05acf5f45e486ac4583389f4b0855f69e5
+  languageName: node
+  linkType: hard
+
+"test-renderer@npm:~1.1.0":
+  version: 1.1.0
+  resolution: "test-renderer@npm:1.1.0"
+  dependencies:
+    "@types/react-reconciler": "npm:~0.32.0"
+    react-reconciler: "npm:~0.32.0"
+  peerDependencies:
+    react: ^19.0.0
+  checksum: 10/e9eab1426ead3ba04fdafd7e49e511de24c6c285648f605702b5615bc948c93244d52547d4f554c766676f38c6a8a69bdbe95f33c073195d7ddf5ffb8e1021e0
   languageName: node
   linkType: hard
 
