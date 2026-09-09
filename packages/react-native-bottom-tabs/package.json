@@ -43,6 +43,10 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "build": "bob build"
   },
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": ["<rootDir>/lib/"]
+  },
   "keywords": [
     "react-native",
     "ios",
