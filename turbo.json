@@ -14,7 +14,9 @@
         "$TURBO_ROOT$/tsconfig.json"
       ]
     },
-    "test": {},
+    "test": {
+      "dependsOn": ["^build"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["lib/**"]

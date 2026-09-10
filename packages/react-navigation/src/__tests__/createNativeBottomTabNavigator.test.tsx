@@ -49,12 +49,9 @@ const renderNavigator = async ({
     <NavigationContainer theme={theme}>
       <Tab.Navigator screenOptions={screenOptions} {...navigatorProps}>
         {ROUTES.map((name) => (
-          <Tab.Screen
-            key={name}
-            name={name}
-            options={options[name]}
-            component={() => <Text>{name} screen</Text>}
-          />
+          <Tab.Screen key={name} name={name} options={options[name]}>
+            {() => <Text>{name} screen</Text>}
+          </Tab.Screen>
         ))}
       </Tab.Navigator>
     </NavigationContainer>
