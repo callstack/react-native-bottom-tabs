@@ -45,7 +45,9 @@
   },
   "jest": {
     "preset": "react-native",
-    "modulePathIgnorePatterns": ["<rootDir>/lib/"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ]
   },
   "keywords": [
     "react-native",

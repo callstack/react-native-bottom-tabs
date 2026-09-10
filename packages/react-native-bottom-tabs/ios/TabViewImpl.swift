@@ -426,6 +426,7 @@ extension View {
       if enabled {
         #if compiler(>=6.0)
           self.tabViewStyle(.sidebarAdaptable)
+            .modifier(AdaptiveSidebarPlacementModifier())
         #else
           self
         #endif
@@ -562,5 +563,27 @@ extension View {
     } else {
       self
     }
+  }
+}
+
+private struct AdaptiveSidebarPlacementModifier: ViewModifier {
+  @ViewBuilder
+  func body(content: Content) -> some View {
+    #if os(iOS) && compiler(>=6.4)
+      if #available(iOS 27.0, *) {
+        content
+          .defaultTabBarPlacement(.sidebar)
+          .introspectTabView { controller in
+            guard controller.traitCollection.userInterfaceIdiom == .phone else { return }
+            // Tile the selected scene next to the sidebar so React Native measures the
+            // visible area instead of drawing underneath an overlapping sidebar.
+            controller.sidebar.preferredLayout = .tile
+          }
+      } else {
+        content
+      }
+    #else
+      content
+    #endif
   }
 }
