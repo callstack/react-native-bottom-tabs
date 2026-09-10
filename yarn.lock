@@ -3937,13 +3937,16 @@ __metadata:
   resolution: "@bottom-tabs/react-navigation@workspace:packages/react-navigation"
   dependencies:
     "@react-navigation/native": "npm:^7.3.0"
+    "@testing-library/react-native": "npm:^14.0.1"
     "@types/color": "npm:^4.2.0"
+    "@types/jest": "npm:^29.5.5"
     color: "npm:^5.0.0"
     jest: "npm:^29.7.0"
     react: "npm:^19.1.0"
     react-native: "npm:0.81.1"
     react-native-bottom-tabs: "npm:*"
     react-native-builder-bob: "npm:^0.40.13"
+    test-renderer: "npm:^1.2.0"
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": ">=7"
@@ -8354,6 +8357,15 @@ __metadata:
   peerDependencies:
     "@types/react": "*"
   checksum: 10/b1708087c3e3611c66ed5ee3e23be5051278bdd12dd5a72995ca70908ad84b990059b044bee1391aa6f1f82e3e243fd9909074ca125259b87f216e8dcefde07e
+  languageName: node
+  linkType: hard
+
+"@types/react-reconciler@npm:~0.33.0":
+  version: 0.33.0
+  resolution: "@types/react-reconciler@npm:0.33.0"
+  peerDependencies:
+    "@types/react": "*"
+  checksum: 10/b65408e08f9e9924a6040fb7a4820ed12efdad598dccb9e08efc70a7101199cce4a5aa1f8695a82d8efe7b503bd9b8dc5122db8a23bac39f9bc473d595873ba4
   languageName: node
   linkType: hard
 
@@ -19908,6 +19920,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-reconciler@npm:~0.33.0":
+  version: 0.33.0
+  resolution: "react-reconciler@npm:0.33.0"
+  dependencies:
+    scheduler: "npm:^0.27.0"
+  peerDependencies:
+    react: ^19.2.0
+  checksum: 10/eb8ddb8b5cfe850e022379df5330fad1871ab75dd7bc3a4e4c4fef7aa1b951b4cd784263186a0e5b01313de91b389499f95fc616f96b7d9e5dd33c13bdacb014
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.14.0, react-refresh@npm:^0.14.2":
   version: 0.14.2
   resolution: "react-refresh@npm:0.14.2"
@@ -21931,6 +21954,18 @@ __metadata:
     glob: "npm:^7.1.4"
     minimatch: "npm:^3.0.4"
   checksum: 10/8fccb2cb6c8fcb6bb4115394feb833f8b6cf4b9503ec2485c2c90febf435cac62abe882a0c5c51a37b9bbe70640cdd05acf5f45e486ac4583389f4b0855f69e5
+  languageName: node
+  linkType: hard
+
+"test-renderer@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "test-renderer@npm:1.2.0"
+  dependencies:
+    "@types/react-reconciler": "npm:~0.33.0"
+    react-reconciler: "npm:~0.33.0"
+  peerDependencies:
+    react: ^19.0.0
+  checksum: 10/65be16c35ce1e0e2cef6b6f28043de96954077c303016fad98feee5d8fafd81ca62c215d566780e99b0f80064c40a92364122fbc96ec672e647f3f40fc365830
   languageName: node
   linkType: hard
 
