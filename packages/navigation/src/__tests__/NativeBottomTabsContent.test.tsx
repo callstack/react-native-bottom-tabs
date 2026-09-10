@@ -101,6 +101,28 @@ describe('navigation state', () => {
   });
 });
 
+describe('tint colors', () => {
+  it('falls back to the defaults supplied by the integrator', async () => {
+    await renderContent({
+      defaultTintColors: { active: '#ff0000', inactive: '#808080' },
+    });
+
+    expect(tabViewProps.tabBarActiveTintColor).toBe('#ff0000');
+    expect(tabViewProps.tabBarInactiveTintColor).toBe('#808080');
+  });
+
+  it('lets explicit props win over the defaults', async () => {
+    await renderContent({
+      defaultTintColors: { active: '#ff0000', inactive: '#808080' },
+      tabBarActiveTintColor: '#00ff00',
+      tabBarInactiveTintColor: '#0000ff',
+    });
+
+    expect(tabViewProps.tabBarActiveTintColor).toBe('#00ff00');
+    expect(tabViewProps.tabBarInactiveTintColor).toBe('#0000ff');
+  });
+});
+
 describe('router options', () => {
   it('does not forward backBehavior to the native view', async () => {
     await renderContent({ backBehavior: 'history' });

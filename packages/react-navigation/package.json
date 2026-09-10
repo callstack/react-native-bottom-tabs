@@ -69,6 +69,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
+    "@bottom-tabs/navigation": "1.4.0",
     "color": "^5.0.0"
   },
   "peerDependencies": {

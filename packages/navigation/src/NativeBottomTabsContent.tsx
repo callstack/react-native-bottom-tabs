@@ -8,6 +8,10 @@ export default function NativeBottomTabsContent({
   actions,
   emitter,
   tabBar,
+  tabBarActiveTintColor,
+  tabBarInactiveTintColor,
+  defaultTintColors,
+  extraTabBarProps,
   backBehavior: _backBehavior,
   ...rest
 }: NativeBottomTabsContentProps & { backBehavior?: unknown }) {
@@ -20,6 +24,10 @@ export default function NativeBottomTabsContent({
   return (
     <TabView
       {...rest}
+      tabBarActiveTintColor={tabBarActiveTintColor ?? defaultTintColors?.active}
+      tabBarInactiveTintColor={
+        tabBarInactiveTintColor ?? defaultTintColors?.inactive
+      }
       navigationState={state}
       renderScene={({ route }) => descriptors[route.key]?.render()}
       getActiveTintColor={({ route }) =>
@@ -47,7 +55,14 @@ export default function NativeBottomTabsContent({
       }
       tabBar={
         tabBar
-          ? () => tabBar({ state, descriptors, actions, emitter })
+          ? () =>
+              tabBar({
+                state,
+                descriptors,
+                actions,
+                emitter,
+                ...extraTabBarProps,
+              })
           : undefined
       }
       getIcon={({ route, focused }) => {

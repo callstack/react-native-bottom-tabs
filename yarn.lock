@@ -3932,7 +3932,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@bottom-tabs/navigation@workspace:packages/navigation":
+"@bottom-tabs/navigation@npm:1.4.0, @bottom-tabs/navigation@workspace:packages/navigation":
   version: 0.0.0-use.local
   resolution: "@bottom-tabs/navigation@workspace:packages/navigation"
   dependencies:
@@ -3957,6 +3957,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@bottom-tabs/react-navigation@workspace:packages/react-navigation"
   dependencies:
+    "@bottom-tabs/navigation": "npm:1.4.0"
     "@react-navigation/native": "npm:^7.3.0"
     "@testing-library/react-native": "npm:^14.0.1"
     "@types/color": "npm:^4.2.0"

@@ -10,7 +10,7 @@ export type NavigatorRoute = {
   key: string;
   name: string;
   params?: object | undefined;
-  href: string | undefined;
+  href?: string | undefined;
 };
 
 export type NavigatorState = {
@@ -173,6 +173,8 @@ export type NativeBottomTabsNavigatorProps = Partial<
   >
 > & {
   tabBar?: (props: NativeBottomTabsTabBarProps) => React.ReactNode;
+  defaultTintColors?: { active?: string; inactive?: string };
+  extraTabBarProps?: object;
 };
 
 export type NativeBottomTabsContentProps =

@@ -1,99 +1,37 @@
+import { nativeBottomTabsNavigator } from '@bottom-tabs/navigation';
 import {
-  createNavigatorFactory,
-  type DefaultNavigatorOptions,
+  createStandardNavigationFactories,
   type NavigatorTypeBagBase,
   type ParamListBase,
   type StaticConfig,
-  type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
-  type TabRouterOptions,
   type TypedNavigator,
-  useNavigationBuilder,
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
 
 import type {
-  NativeBottomTabNavigationConfig,
   NativeBottomTabNavigationEventMap,
   NativeBottomTabNavigationOptions,
   NativeBottomTabNavigationProp,
 } from '../types';
-import NativeBottomTabView from '../views/NativeBottomTabView';
 
-export type NativeBottomTabNavigatorProps = DefaultNavigatorOptions<
-  ParamListBase,
-  string | undefined,
-  TabNavigationState<ParamListBase>,
-  NativeBottomTabNavigationOptions,
-  NativeBottomTabNavigationEventMap,
-  NativeBottomTabNavigationProp<ParamListBase>
-> &
-  TabRouterOptions &
-  NativeBottomTabNavigationConfig;
+const { createNavigator } = createStandardNavigationFactories(
+  nativeBottomTabsNavigator,
+  TabRouter,
+  ({ navigation }) => {
+    const { colors } = useTheme();
 
-function NativeBottomTabNavigator({
-  id,
-  initialRouteName,
-  backBehavior,
-  UNSTABLE_routeNamesChangeBehavior,
-  children,
-  layout,
-  screenListeners,
-  screenOptions,
-  screenLayout,
-  UNSTABLE_router,
-  tabBarActiveTintColor: customActiveTintColor,
-  tabBarInactiveTintColor: customInactiveTintColor,
-  layoutDirection = 'locale',
-  ...rest
-}: NativeBottomTabNavigatorProps) {
-  const { colors } = useTheme();
-  const activeTintColor =
-    customActiveTintColor === undefined
-      ? colors.primary
-      : customActiveTintColor;
-
-  const inactiveTintColor =
-    customInactiveTintColor === undefined
-      ? Color(colors.text).mix(Color(colors.card), 0.5).hex()
-      : customInactiveTintColor;
-
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      TabNavigationState<ParamListBase>,
-      TabRouterOptions,
-      TabActionHelpers<ParamListBase>,
-      NativeBottomTabNavigationOptions,
-      NativeBottomTabNavigationEventMap
-    >(TabRouter, {
-      id,
-      initialRouteName,
-      backBehavior,
-      UNSTABLE_routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      UNSTABLE_router,
-    });
-
-  return (
-    <NavigationContent>
-      <NativeBottomTabView
-        {...rest}
-        layoutDirection={layoutDirection}
-        tabBarActiveTintColor={activeTintColor}
-        tabBarInactiveTintColor={inactiveTintColor}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
-    </NavigationContent>
-  );
-}
+    return {
+      defaultTintColors: {
+        active: colors.primary,
+        inactive: Color(colors.text).mix(Color(colors.card), 0.5).hex(),
+      },
+      extraTabBarProps: { navigation },
+    };
+  }
+);
 
 export default function createNativeBottomTabNavigator<
   const ParamList extends ParamListBase,
@@ -111,9 +49,12 @@ export default function createNativeBottomTabNavigator<
         NavigatorID
       >;
     };
-    Navigator: typeof NativeBottomTabNavigator;
+    Navigator: React.ComponentType<any>;
   },
   const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
-  return createNavigatorFactory(NativeBottomTabNavigator)(config);
+  return createNavigator(config as never) as unknown as TypedNavigator<
+    TypeBag,
+    Config
+  >;
 }
