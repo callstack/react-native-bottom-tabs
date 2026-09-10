@@ -5,7 +5,8 @@
   "fixed": [
     [
       "react-native-bottom-tabs",
-      "@bottom-tabs/react-navigation"
+      "@bottom-tabs/react-navigation",
+      "@bottom-tabs/navigation"
     ]
   ],
   "linked": [],

@@ -1,8 +1,13 @@
 {
   "compilerOptions": {
     "paths": {
-      "react-native-bottom-tabs": ["./packages/react-native-bottom-tabs/src/index"],
-      "@bottom-tabs/react-navigation": ["./packages/react-navigation/src/index"],
+      "react-native-bottom-tabs": [
+        "./packages/react-native-bottom-tabs/src/index"
+      ],
+      "@bottom-tabs/react-navigation": [
+        "./packages/react-navigation/src/index"
+      ],
+      "@bottom-tabs/navigation": ["./packages/navigation/src/index"]
     },
     "composite": true,
     "allowUnreachableCode": false,

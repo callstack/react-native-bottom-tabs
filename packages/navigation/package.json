@@ -1,0 +1,108 @@
+{
+  "name": "@bottom-tabs/navigation",
+  "version": "1.4.0",
+  "description": "Framework-agnostic native bottom tabs navigator built on the standard-navigation contract",
+  "source": "./src/index.tsx",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "scripts": {
+    "test": "jest",
+    "typecheck": "tsc -b",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "build": "bob build"
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android",
+    "standard-navigation",
+    "react-navigation",
+    "expo-router"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/callstack/react-native-bottom-tabs.git"
+  },
+  "author": "Oskar Kwasniewski <oskarkwasniewski@icloud.com> (https://github.com/okwasniewski)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/callstack/react-native-bottom-tabs/issues"
+  },
+  "homepage": "https://github.com/callstack/react-native-bottom-tabs#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "^14.0.1",
+    "@types/jest": "^29.5.5",
+    "jest": "^29.7.0",
+    "react": "^19.1.0",
+    "react-native": "0.81.1",
+    "react-native-bottom-tabs": "*",
+    "react-native-builder-bob": "^0.40.13",
+    "standard-navigation": "^0.0.9",
+    "test-renderer": "^1.2.0",
+    "typescript": "^5.9.2"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "react-native-bottom-tabs": "*"
+  },
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ]
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "commonjs",
+        {
+          "esm": true,
+          "configFile": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true,
+          "configFile": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  }
+}
