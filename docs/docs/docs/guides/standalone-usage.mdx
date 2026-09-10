@@ -120,9 +120,13 @@ Whether to show labels in tabs. When `false`, only icons will be displayed.
 A tab bar style that adapts to each platform:
 
 - iPadOS: Top tab bar that can adapt into a sidebar
-- iOS: Bottom tab bar
+- iOS: Bottom tab bar. On iOS 27+ (built with Xcode 27 or later), large enough screens such as an unfolded iPhone Duo show a sidebar instead
 - macOS/tvOS: Sidebar
 - visionOS: Ornament with sidebar for secondary tabs
+
+Set `sidebarAdaptable` to `true` to opt in. Defaults to `false`.
+
+On iOS 27+, the placement follows the window size: the sidebar appears once the window is at least 920pt wide with a regular vertical size class (for example an unfolded iPhone Duo, or Resize Mode in Xcode's Device Hub), and the bottom tab bar returns when the window shrinks. Regular phones, including landscape, keep the bottom tab bar.
 
 #### `disablePageAnimations` <Badge text="iOS" type="info" />
 
