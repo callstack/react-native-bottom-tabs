@@ -2,11 +2,91 @@ import { PackageManagerTabs } from '@theme';
 
 # Usage with Expo Router
 
-First install `@bottom-tabs/react-navigation` which provides a native bottom tab navigator for React Navigation.
+Which package you need depends on your Expo SDK version, because Expo Router stopped depending on React Navigation starting from SDK 56.
+
+| Expo SDK     | Package                         | Integration                              |
+| ------------ | ------------------------------- | ---------------------------------------- |
+| 56 and newer | `@bottom-tabs/navigation`       | `unstable_createStandardRouterNavigator` |
+| 55 and older | `@bottom-tabs/react-navigation` | `withLayoutContext`                      |
+
+## Expo SDK 56 and newer
+
+Install `@bottom-tabs/navigation`, which provides a native bottom tab navigator built on the [`standard-navigation`](https://github.com/react-navigation/standard-navigation) contract that Expo Router speaks.
+
+<PackageManagerTabs command="install @bottom-tabs/navigation" />
+
+:::warning
+Do not install `@bottom-tabs/react-navigation` in an Expo Router 56+ app. Expo Router bundles its own copy of React Navigation.
+:::
+
+Create the navigator by handing the tab view to Expo Router's `unstable_createStandardRouterNavigator`. Put it in `components/bottom-tabs.tsx` and export it, so your layouts can import it:
+
+```tsx
+import { NativeBottomTabsContent } from '@bottom-tabs/navigation';
+import { TabRouter, unstable_createStandardRouterNavigator } from 'expo-router';
+
+export const Tabs = unstable_createStandardRouterNavigator(
+  NativeBottomTabsContent,
+  TabRouter
+);
+```
+
+Then use it in your layout:
+
+```tsx
+import { Platform } from 'react-native';
+
+import { Tabs } from '@/components/bottom-tabs';
+
+export default function TabLayout() {
+  return (
+    <Tabs>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: () =>
+            Platform.OS === 'ios'
+              ? { sfSymbol: 'house' }
+              : require('@/assets/icons/house.png'),
+        }}
+      />
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Explore',
+          tabBarIcon: () =>
+            Platform.OS === 'ios'
+              ? { sfSymbol: 'person' }
+              : require('@/assets/icons/person.png'),
+        }}
+      />
+    </Tabs>
+  );
+}
+```
+
+> [!NOTE] SF Symbols are only available on Apple platforms. On Android and web, pass an image with `require()` or a `{ uri }` object instead.
+
+> [!NOTE] `unstable_createStandardRouterNavigator` is marked unstable by Expo and may change between minor releases.
+
+### Tint colors
+
+There is no theme in the Expo Router integration, so the tab bar falls back to platform defaults. Pass `tabBarActiveTintColor` and `tabBarInactiveTintColor` on the navigator to set them yourself.
+
+### Custom tab bar
+
+The `tabBar` function receives `state`, `descriptors`, `actions` and `emitter` - the vocabulary of the navigation contract rather than a React Navigation `navigation` object. If your tab bar needs the router, call `useNavigation()` from `expo-router` inside it.
+
+`BottomTabBar` from `@react-navigation/bottom-tabs` cannot be used here, since it expects a React Navigation `navigation` object.
+
+## Expo SDK 55 and older
+
+Install `@bottom-tabs/react-navigation`, which provides a native bottom tab navigator for React Navigation.
 
 <PackageManagerTabs command="install @bottom-tabs/react-navigation" />
 
-Next, create a custom layout adapter for the native bottom tabs using `withLayoutContext` from Expo Router. Put it in `components/bottom-tabs.tsx` and export the navigator, so your layouts can import it:
+Create a custom layout adapter using `withLayoutContext` from Expo Router. Put it in `components/bottom-tabs.tsx` and export the navigator, so your layouts can import it:
 
 ```tsx
 import { withLayoutContext } from 'expo-router';
@@ -29,44 +109,18 @@ export const Tabs = withLayoutContext<
 
 > [!NOTE] Make sure to provide the correct types for the `withLayoutContext` function. Without it screen options won't have proper types.
 
-Then, use the `Tabs` navigator in your app:
+The layout itself is the same as above.
 
-```tsx
-import { Platform } from "react-native";
+### Upgrading to SDK 56 or newer
 
-import { Tabs } from "@/components/bottom-tabs";
+On SDK 56+ this setup loads a second copy of React Navigation, whose contexts do not line up with the router's.
 
-export default function TabLayout() {
-  return (
-    <Tabs>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: () =>
-            Platform.OS === "ios"
-              ? { sfSymbol: "house" }
-              : require("@/assets/icons/house.png"),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: () =>
-            Platform.OS === "ios"
-              ? { sfSymbol: "person" }
-              : require("@/assets/icons/person.png"),
-        }}
-      />
-    </Tabs>
-  );
-}
-```
+To upgrade:
 
-> [!NOTE] SF Symbols are only available on Apple platforms. On Android and web, pass an image with `require()` or a `{ uri }` object instead.
+1. Replace `@bottom-tabs/react-navigation` with `@bottom-tabs/navigation`.
+2. Swap `withLayoutContext` for `unstable_createStandardRouterNavigator` as shown above. The generic type arguments are no longer needed.
+3. Uninstall the `@react-navigation/*` packages, and import from `expo-router/react-navigation` instead. That entry point re-exports Expo Router's own copy of React Navigation.
 
-For props and more information, see the [React Navigation integration guide](/docs/guides/usage-with-react-navigation), which documents every accepted `tabBarIcon` source.
+## Options and props
 
-Example: [okwasniewski/ExpoNativeTabs](https://github.com/okwasniewski/ExpoNativeTabs)
-
+For props and more information, see the [React Navigation integration guide](/docs/guides/usage-with-react-navigation), which documents every accepted `tabBarIcon` source. Screen options are identical across both integrations.
