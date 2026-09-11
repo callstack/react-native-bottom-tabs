@@ -497,26 +497,53 @@ import { BottomTabBarHeightContext } from 'react-native-bottom-tabs';
 `createNativeBottomTabNavigator` is a thin wrapper over the framework-agnostic navigator in `@bottom-tabs/navigation`. If you need a different router, or want to supply your own props, wire it up yourself:
 
 ```tsx
-import { nativeBottomTabsNavigator } from '@bottom-tabs/navigation';
+import {
+  nativeBottomTabsNavigator,
+  type NativeBottomTabNavigationOptions,
+  type NativeBottomTabsEventMap,
+  type NativeBottomTabsNavigatorProps,
+} from '@bottom-tabs/navigation';
 import {
   createStandardNavigationFactories,
   TabRouter,
+  type ParamListBase,
+  type StandardNavigationTypeBagBase,
+  type TabActionHelpers,
+  type TabNavigationState,
+  type TabRouterOptions,
 } from '@react-navigation/native';
+import type { ComponentType } from 'react';
 
-const { createNavigator } = createStandardNavigationFactories(
-  nativeBottomTabsNavigator,
-  TabRouter
-);
+interface NativeBottomTabsTypeBag extends StandardNavigationTypeBagBase {
+  State: TabNavigationState<ParamListBase>;
+  ScreenOptions: NativeBottomTabNavigationOptions;
+  EventMap: NativeBottomTabsEventMap;
+  RouterOptions: TabRouterOptions;
+  ActionHelpers: TabActionHelpers<ParamListBase>;
+  Navigator: ComponentType<NativeBottomTabsNavigatorProps>;
+}
+
+const { createNavigator } = createStandardNavigationFactories<
+  NativeBottomTabsTypeBag,
+  NativeBottomTabsNavigatorProps
+>(nativeBottomTabsNavigator, TabRouter);
 
 const Tab = createNavigator();
 ```
 
 This requires `@react-navigation/native` 7.3.0 or newer.
 
-Wiring it yourself skips the theme, so the tab bar falls back to platform defaults. Pass `defaultTintColors` to supply your own fallbacks, either as a prop or from a mapper:
+> [!NOTE] `createStandardNavigationFactories` cannot infer it, so calling it without the type arguments leaves screen options as `{}` and makes every navigator prop a type error. `Navigator` is what carries the navigator props through to `Tab.Navigator`; swap `State`, `RouterOptions` and `ActionHelpers` to match whichever router you pass.
+
+Wiring it yourself skips the theme, so the tab bar falls back to platform defaults. Pass `defaultTintColors` to supply your own fallbacks, either as a prop on `Tab.Navigator` or from a mapper:
 
 ```tsx
-createStandardNavigationFactories(nativeBottomTabsNavigator, TabRouter, () => {
+import { useTheme } from '@react-navigation/native';
+
+const { createNavigator } = createStandardNavigationFactories<
+  NativeBottomTabsTypeBag,
+  NativeBottomTabsNavigatorProps
+>(nativeBottomTabsNavigator, TabRouter, () => {
   const { colors } = useTheme();
 
   return { defaultTintColors: { active: colors.primary } };
