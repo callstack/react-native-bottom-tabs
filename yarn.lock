@@ -4007,7 +4007,7 @@ __metadata:
     test-renderer: "npm:^1.2.0"
     typescript: "npm:^5.9.2"
   peerDependencies:
-    "@react-navigation/native": ">=7"
+    "@react-navigation/native": ">=7.3.0"
     react: "*"
     react-native: "*"
     react-native-bottom-tabs: "*"
