@@ -1,5 +1,6 @@
 import { processColor } from 'react-native';
 
+// eslint-disable-next-line no-bitwise
 const channel = (color: number, shift: number) => (color >> shift) & 0xff;
 
 const hex = (value: number) => Math.round(value).toString(16).padStart(2, '0');

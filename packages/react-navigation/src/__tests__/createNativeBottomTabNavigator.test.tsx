@@ -75,6 +75,19 @@ beforeEach(() => {
   tabViewProps = {};
 });
 
+describe('navigator props', () => {
+  it('rejects a prop of the wrong type', () => {
+    type TintColor = React.ComponentProps<
+      typeof Tab.Navigator
+    >['tabBarActiveTintColor'];
+
+    // @ts-expect-error - a number is not a valid tint color
+    const invalidTintColor: TintColor = 42;
+
+    expect(invalidTintColor).toBe(42);
+  });
+});
+
 describe('navigation state', () => {
   it('passes the router state straight through to the tab view', async () => {
     await renderNavigator();
@@ -311,6 +324,29 @@ describe('custom tab bar', () => {
     ]);
     expect(Object.keys(props.descriptors)).toHaveLength(2);
     expect(typeof props.navigation.emit).toBe('function');
+  });
+
+  /**
+   * `BottomTabBar` from `@react-navigation/bottom-tabs` reads `state.key` and
+   * the per-route `navigation` and `route` off the descriptors. The standard
+   * navigation contract projects those away, so the navigator has to keep
+   * building the React Navigation state itself.
+   */
+  it('is called with descriptors carrying the full React Navigation shape', async () => {
+    const tabBar = jest.fn((_: BottomTabBarProps) => null);
+
+    await renderNavigator({ tabBar });
+
+    tabViewProps.tabBar();
+
+    const props = tabBar.mock.calls[0]![0];
+    const descriptor = props.descriptors[props.state.routes[0]!.key]!;
+
+    expect(typeof props.state.key).toBe('string');
+    expect(typeof descriptor.navigation.dispatch).toBe('function');
+    expect(typeof descriptor.navigation.navigate).toBe('function');
+    expect(descriptor.route.name).toBe('Home');
+    expect(typeof descriptor.render).toBe('function');
   });
 
   it('is left undefined when no custom tab bar is given', async () => {

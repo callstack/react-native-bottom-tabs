@@ -71,13 +71,16 @@
     "@bottom-tabs/navigation": "1.4.0"
   },
   "peerDependencies": {
-    "@react-navigation/native": ">=7",
+    "@react-navigation/native": ">=7.3.0",
     "react": "*",
     "react-native": "*",
     "react-native-bottom-tabs": "*"
   },
   "jest": {
     "preset": "react-native",
+    "moduleNameMapper": {
+      "^@bottom-tabs/navigation$": "<rootDir>/../navigation/src/index.tsx"
+    },
     "modulePathIgnorePatterns": [
       "<rootDir>/lib/"
     ],

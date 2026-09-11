@@ -15,6 +15,7 @@ type Props = NativeBottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
   navigation: NativeBottomTabNavigationHelpers;
   descriptors: NativeBottomTabDescriptorMap;
+  defaultTintColors?: { active?: string; inactive?: string };
 };
 
 export default function NativeBottomTabView({
