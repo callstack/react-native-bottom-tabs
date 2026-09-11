@@ -491,3 +491,34 @@ import { BottomTabBarHeightContext } from 'react-native-bottom-tabs';
   )}
 </BottomTabBarHeightContext.Consumer>
 ```
+
+## Using the shared navigator directly
+
+`createNativeBottomTabNavigator` is a thin wrapper over the framework-agnostic navigator in `@bottom-tabs/navigation`. If you need a different router, or want to supply your own props, wire it up yourself:
+
+```tsx
+import { nativeBottomTabsNavigator } from '@bottom-tabs/navigation';
+import {
+  createStandardNavigationFactories,
+  TabRouter,
+} from '@react-navigation/native';
+
+const { createNavigator } = createStandardNavigationFactories(
+  nativeBottomTabsNavigator,
+  TabRouter
+);
+
+const Tab = createNavigator();
+```
+
+This requires `@react-navigation/native` 7.3.0 or newer.
+
+Wiring it yourself skips the theme, so the tab bar falls back to platform defaults. Pass `defaultTintColors` to supply your own fallbacks, either as a prop or from a mapper:
+
+```tsx
+createStandardNavigationFactories(nativeBottomTabsNavigator, TabRouter, () => {
+  const { colors } = useTheme();
+
+  return { defaultTintColors: { active: colors.primary } };
+});
+```
