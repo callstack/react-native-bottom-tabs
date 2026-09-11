@@ -13,6 +13,7 @@ export type {
   NativeBottomTabsContentProps,
   NativeBottomTabsDescriptorMap,
   NativeBottomTabsEventMap,
+  NativeBottomTabsInferenceCarrier,
   NativeBottomTabsNavigatorProps,
   NativeBottomTabsTabBarProps,
   NavigatorActions,

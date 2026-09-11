@@ -177,6 +177,14 @@ export type NativeBottomTabsNavigatorProps = Partial<
   extraTabBarProps?: object;
 };
 
+export type NativeBottomTabsInferenceCarrier = {
+  /** @internal */
+  readonly __eventMap__?: NativeBottomTabsEventMap;
+  /** @internal */
+  readonly __navigatorProps__?: NativeBottomTabsNavigatorProps;
+};
+
 export type NativeBottomTabsContentProps =
   NavigatorArgs<NativeBottomTabNavigationOptions> &
-    NativeBottomTabsNavigatorProps;
+    NativeBottomTabsNavigatorProps &
+    NativeBottomTabsInferenceCarrier;
