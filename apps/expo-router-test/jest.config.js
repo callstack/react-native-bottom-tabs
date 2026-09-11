@@ -1,9 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const preset = require('jest-expo/jest-preset');
-
-const TRANSFORM_ALSO = ['color'];
 const PROJECT_COPIES = ['react', 'react-dom'];
 
 const reactNavigationScope = path.dirname(
@@ -32,9 +29,4 @@ module.exports = {
     ...Object.fromEntries(reactNavigationCopies),
   },
 
-  transformIgnorePatterns: preset.transformIgnorePatterns.map((pattern) =>
-    pattern.startsWith('/node_modules/(?!(')
-      ? pattern.replace(/\)\)$/, `|${TRANSFORM_ALSO.join('|')}))`)
-      : pattern
-  ),
 };

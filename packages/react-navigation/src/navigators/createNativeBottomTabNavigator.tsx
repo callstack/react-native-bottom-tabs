@@ -9,13 +9,13 @@ import {
   type TypedNavigator,
   useTheme,
 } from '@react-navigation/native';
-import Color from 'color';
 
 import type {
   NativeBottomTabNavigationEventMap,
   NativeBottomTabNavigationOptions,
   NativeBottomTabNavigationProp,
 } from '../types';
+import mixColors from '../mixColors';
 
 const { createNavigator } = createStandardNavigationFactories(
   nativeBottomTabsNavigator,
@@ -26,7 +26,7 @@ const { createNavigator } = createStandardNavigationFactories(
     return {
       defaultTintColors: {
         active: colors.primary,
-        inactive: Color(colors.text).mix(Color(colors.card), 0.5).hex(),
+        inactive: mixColors(colors.text, colors.card, 0.5),
       },
       extraTabBarProps: { navigation },
     };
