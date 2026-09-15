@@ -3970,32 +3970,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@bottom-tabs/navigation@npm:*, @bottom-tabs/navigation@npm:1.4.0, @bottom-tabs/navigation@workspace:packages/navigation":
-  version: 0.0.0-use.local
-  resolution: "@bottom-tabs/navigation@workspace:packages/navigation"
-  dependencies:
-    "@testing-library/react-native": "npm:^14.0.1"
-    "@types/jest": "npm:^29.5.5"
-    jest: "npm:^29.7.0"
-    react: "npm:^19.1.0"
-    react-native: "npm:0.81.1"
-    react-native-bottom-tabs: "npm:*"
-    react-native-builder-bob: "npm:^0.40.13"
-    standard-navigation: "npm:^0.0.9"
-    test-renderer: "npm:^1.2.0"
-    typescript: "npm:^5.9.2"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-    react-native-bottom-tabs: "*"
-  languageName: unknown
-  linkType: soft
-
 "@bottom-tabs/react-navigation@npm:*, @bottom-tabs/react-navigation@npm:1.4.0, @bottom-tabs/react-navigation@workspace:packages/react-navigation":
   version: 0.0.0-use.local
   resolution: "@bottom-tabs/react-navigation@workspace:packages/react-navigation"
   dependencies:
-    "@bottom-tabs/navigation": "npm:1.4.0"
+    "@bottom-tabs/standard-navigation": "npm:1.4.0"
     "@react-navigation/native": "npm:^7.3.0"
     "@testing-library/react-native": "npm:^14.0.1"
     "@types/jest": "npm:^29.5.5"
@@ -4008,6 +3987,27 @@ __metadata:
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": ">=7.3.0"
+    react: "*"
+    react-native: "*"
+    react-native-bottom-tabs: "*"
+  languageName: unknown
+  linkType: soft
+
+"@bottom-tabs/standard-navigation@npm:*, @bottom-tabs/standard-navigation@npm:1.4.0, @bottom-tabs/standard-navigation@workspace:packages/standard-navigation":
+  version: 0.0.0-use.local
+  resolution: "@bottom-tabs/standard-navigation@workspace:packages/standard-navigation"
+  dependencies:
+    "@testing-library/react-native": "npm:^14.0.1"
+    "@types/jest": "npm:^29.5.5"
+    jest: "npm:^29.7.0"
+    react: "npm:^19.1.0"
+    react-native: "npm:0.81.1"
+    react-native-bottom-tabs: "npm:*"
+    react-native-builder-bob: "npm:^0.40.13"
+    standard-navigation: "npm:^0.0.9"
+    test-renderer: "npm:^1.2.0"
+    typescript: "npm:^5.9.2"
+  peerDependencies:
     react: "*"
     react-native: "*"
     react-native-bottom-tabs: "*"
@@ -13701,8 +13701,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "expo-router-test@workspace:apps/expo-router-test"
   dependencies:
-    "@bottom-tabs/navigation": "npm:*"
     "@bottom-tabs/react-navigation": "npm:*"
+    "@bottom-tabs/standard-navigation": "npm:*"
     "@react-native/jest-preset": "npm:^0.86.3"
     "@react-navigation/native": "npm:^7.3.0"
     "@testing-library/react-native": "npm:^14.0.1"

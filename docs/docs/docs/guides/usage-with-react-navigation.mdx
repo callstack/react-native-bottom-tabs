@@ -494,7 +494,7 @@ import { BottomTabBarHeightContext } from 'react-native-bottom-tabs';
 
 ## Using the shared navigator directly
 
-`createNativeBottomTabNavigator` is a thin wrapper over the framework-agnostic navigator in `@bottom-tabs/navigation`. If you need a different router, or want to supply your own props, wire it up yourself:
+`createNativeBottomTabNavigator` is a thin wrapper over the framework-agnostic navigator in `@bottom-tabs/standard-navigation`. If you need a different router, or want to supply your own props, wire it up yourself:
 
 ```tsx
 import {
@@ -502,7 +502,7 @@ import {
   type NativeBottomTabNavigationOptions,
   type NativeBottomTabsEventMap,
   type NativeBottomTabsNavigatorProps,
-} from '@bottom-tabs/navigation';
+} from '@bottom-tabs/standard-navigation';
 import {
   createStandardNavigationFactories,
   TabRouter,

@@ -6,7 +6,7 @@
     [
       "react-native-bottom-tabs",
       "@bottom-tabs/react-navigation",
-      "@bottom-tabs/navigation"
+      "@bottom-tabs/standard-navigation"
     ]
   ],
   "linked": [],

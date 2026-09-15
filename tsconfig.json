@@ -7,7 +7,9 @@
       "@bottom-tabs/react-navigation": [
         "./packages/react-navigation/src/index"
       ],
-      "@bottom-tabs/navigation": ["./packages/navigation/src/index"]
+      "@bottom-tabs/standard-navigation": [
+        "./packages/standard-navigation/src/index"
+      ]
     },
     "composite": true,
     "allowUnreachableCode": false,

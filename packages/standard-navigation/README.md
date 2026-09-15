@@ -1,4 +1,4 @@
-# `@bottom-tabs/navigation`
+# `@bottom-tabs/standard-navigation`
 
 Framework-agnostic native bottom tabs navigator for `react-native-bottom-tabs`.
 

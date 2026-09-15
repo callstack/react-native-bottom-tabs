@@ -1,5 +1,5 @@
 {
-  "name": "@bottom-tabs/navigation",
+  "name": "@bottom-tabs/standard-navigation",
   "version": "1.4.0",
   "description": "Framework-agnostic native bottom tabs navigator built on the standard-navigation contract",
   "source": "./src/index.tsx",

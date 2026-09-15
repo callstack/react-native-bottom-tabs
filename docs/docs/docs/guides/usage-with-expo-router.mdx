@@ -4,16 +4,16 @@ import { PackageManagerTabs } from '@theme';
 
 Which package you need depends on your Expo SDK version, because Expo Router stopped depending on React Navigation starting from SDK 56.
 
-| Expo SDK     | Package                         | Integration                              |
-| ------------ | ------------------------------- | ---------------------------------------- |
-| 56 and newer | `@bottom-tabs/navigation`       | `unstable_createStandardRouterNavigator` |
-| 55 and older | `@bottom-tabs/react-navigation` | `withLayoutContext`                      |
+| Expo SDK     | Package                            | Integration                              |
+| ------------ | ---------------------------------- | ---------------------------------------- |
+| 56 and newer | `@bottom-tabs/standard-navigation` | `unstable_createStandardRouterNavigator` |
+| 55 and older | `@bottom-tabs/react-navigation`    | `withLayoutContext`                      |
 
 ## Expo SDK 56 and newer
 
-Install `@bottom-tabs/navigation`, which provides a native bottom tab navigator built on the [`standard-navigation`](https://github.com/react-navigation/standard-navigation) contract that Expo Router speaks.
+Install `@bottom-tabs/standard-navigation`, which provides a native bottom tab navigator built on the [`standard-navigation`](https://github.com/react-navigation/standard-navigation) contract that Expo Router speaks.
 
-<PackageManagerTabs command="install @bottom-tabs/navigation" />
+<PackageManagerTabs command="install @bottom-tabs/standard-navigation" />
 
 :::warning
 Do not install `@bottom-tabs/react-navigation` in an Expo Router 56+ app. Expo Router bundles its own copy of React Navigation.
@@ -22,7 +22,7 @@ Do not install `@bottom-tabs/react-navigation` in an Expo Router 56+ app. Expo R
 Create the navigator by handing the tab view to Expo Router's `unstable_createStandardRouterNavigator`. Put it in `components/bottom-tabs.tsx` and export it, so your layouts can import it:
 
 ```tsx
-import { NativeBottomTabsContent } from '@bottom-tabs/navigation';
+import { NativeBottomTabsContent } from '@bottom-tabs/standard-navigation';
 import { TabRouter, unstable_createStandardRouterNavigator } from 'expo-router';
 
 export const Tabs = unstable_createStandardRouterNavigator(
@@ -117,7 +117,7 @@ On SDK 56+ this setup loads a second copy of React Navigation, whose contexts do
 
 To upgrade:
 
-1. Replace `@bottom-tabs/react-navigation` with `@bottom-tabs/navigation`.
+1. Replace `@bottom-tabs/react-navigation` with `@bottom-tabs/standard-navigation`.
 2. Swap `withLayoutContext` for `unstable_createStandardRouterNavigator` as shown above. The generic type arguments are no longer needed.
 3. Uninstall the `@react-navigation/*` packages, and import from `expo-router/react-navigation` instead. That entry point re-exports Expo Router's own copy of React Navigation.
 

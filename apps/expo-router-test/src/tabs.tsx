@@ -1,4 +1,4 @@
-import { NativeBottomTabsContent } from '@bottom-tabs/navigation';
+import { NativeBottomTabsContent } from '@bottom-tabs/standard-navigation';
 import { createNativeBottomTabNavigator } from '@bottom-tabs/react-navigation';
 import { TabRouter, unstable_createStandardRouterNavigator } from 'expo-router';
 

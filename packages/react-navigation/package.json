@@ -68,7 +68,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@bottom-tabs/navigation": "1.4.0"
+    "@bottom-tabs/standard-navigation": "1.4.0"
   },
   "peerDependencies": {
     "@react-navigation/native": ">=7.3.0",
@@ -79,7 +79,7 @@
   "jest": {
     "preset": "react-native",
     "moduleNameMapper": {
-      "^@bottom-tabs/navigation$": "<rootDir>/../navigation/src/index.tsx"
+      "^@bottom-tabs/standard-navigation$": "<rootDir>/../standard-navigation/src/index.tsx"
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/lib/"

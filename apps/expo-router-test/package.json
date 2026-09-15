@@ -7,8 +7,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@bottom-tabs/navigation": "*",
     "@bottom-tabs/react-navigation": "*",
+    "@bottom-tabs/standard-navigation": "*",
     "@react-navigation/native": "^7.3.0",
     "expo": "~57.0.21",
     "expo-constants": "~57.0.17",

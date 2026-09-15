@@ -3,7 +3,7 @@ import {
   type NativeBottomTabNavigationOptions,
   type NativeBottomTabsEventMap,
   type NativeBottomTabsNavigatorProps,
-} from '@bottom-tabs/navigation';
+} from '@bottom-tabs/standard-navigation';
 import {
   createStandardNavigationFactories,
   NavigationContainer,

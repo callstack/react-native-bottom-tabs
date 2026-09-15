@@ -1,4 +1,4 @@
-import { NativeBottomTabsContent } from '@bottom-tabs/navigation';
+import { NativeBottomTabsContent } from '@bottom-tabs/standard-navigation';
 import {
   CommonActions,
   type ParamListBase,
