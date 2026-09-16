@@ -7,7 +7,9 @@ Which package you need depends on your Expo SDK version, because Expo Router sto
 | Expo SDK     | Package                            | Integration                              |
 | ------------ | ---------------------------------- | ---------------------------------------- |
 | 56 and newer | `@bottom-tabs/standard-navigation` | `unstable_createStandardRouterNavigator` |
-| 55 and older | `@bottom-tabs/react-navigation`    | `withLayoutContext`                      |
+| 52 to 55     | `@bottom-tabs/react-navigation`    | `withLayoutContext`                      |
+
+Expo SDK 51 and older is not supported. Those versions ship React Navigation 6, and `@bottom-tabs/react-navigation` requires React Navigation 7.
 
 ## Expo SDK 56 and newer
 
@@ -80,7 +82,7 @@ The `tabBar` function receives `state`, `descriptors`, `actions` and `emitter` -
 
 `BottomTabBar` from `@react-navigation/bottom-tabs` cannot be used here, since it expects a React Navigation `navigation` object.
 
-## Expo SDK 55 and older
+## Expo SDK 52 to 55
 
 Install `@bottom-tabs/react-navigation`, which provides a native bottom tab navigator for React Navigation.
 
