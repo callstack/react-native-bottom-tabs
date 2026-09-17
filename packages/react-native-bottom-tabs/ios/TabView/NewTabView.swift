@@ -48,6 +48,7 @@ struct NewTabView: AnyTabView {
                 title: tabData.title,
                 icon: icon,
                 sfSymbol: tabData.sfSymbol,
+                sfSymbolOptions: tabData.sfSymbolOptions,
                 labeled: props.labeled,
                 iconRenderingMode: tabData.iconRenderingMode
               )

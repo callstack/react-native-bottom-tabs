@@ -19,5 +19,11 @@ export type {
   AppleIcon,
   IconRenderingMode,
   LayoutDirection,
+  SFSymbolColorRenderingMode,
+  SFSymbolColors,
+  SFSymbolRenderingMode,
+  SFSymbolScale,
+  SFSymbolVariableValueMode,
+  SFSymbolWeight,
   TabRole,
 } from './types';

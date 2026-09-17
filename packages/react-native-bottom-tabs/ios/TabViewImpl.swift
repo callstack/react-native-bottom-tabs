@@ -227,9 +227,15 @@ struct TabViewImpl: View {
 
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
       let assetIcon = props.icons[itemIndex]
-      let icon = assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol)
+      let icon =
+        assetIcon
+        ?? makeSFSymbolImage(named: tabData.sfSymbol, options: tabData.sfSymbolOptions)
       let focusedIcon =
-        props.focusedIcons[itemIndex] ?? makeSFSymbolImage(named: tabData.focusedSfSymbol) ?? icon
+        props.focusedIcons[itemIndex]
+        ?? makeSFSymbolImage(
+          named: tabData.focusedSfSymbol,
+          options: tabData.focusedSfSymbolOptions
+        ) ?? icon
       let preservesOriginalIconColors = preservesOriginalIconColors(tabData: tabData)
       let useBakedTintColors = shouldUseExperimentalBakedTintColors(props: props)
       let shouldRenderLabelIntoImage =
@@ -290,7 +296,15 @@ struct TabViewImpl: View {
   }
 
   private func preservesOriginalIconColors(tabData: TabInfo) -> Bool {
-    tabData.iconRenderingMode == "original"
+    if tabData.iconRenderingMode == "original" {
+      return true
+    }
+
+    // A symbol configured with its own colors, or with a non-monochrome
+    // rendering mode, would be flattened by the tab bar tint. Treat it the
+    // same way as an image icon that opts out of tinting.
+    return tabData.sfSymbolOptions?.preservesOwnColors == true
+      || tabData.focusedSfSymbolOptions?.preservesOwnColors == true
   }
 
   private func renderTabBarIcon(
@@ -310,10 +324,10 @@ struct TabViewImpl: View {
     return icon.withTintColor(color, renderingMode: .alwaysOriginal)
   }
 
-  private func makeSFSymbolImage(named sfSymbol: String?) -> UIImage? {
+  private func makeSFSymbolImage(named sfSymbol: String?, options: SFSymbolOptions?) -> UIImage? {
     guard let sfSymbol, !sfSymbol.isEmpty else { return nil }
 
-    return UIImage(systemName: sfSymbol)
+    return SFSymbolOptions.makeImage(named: sfSymbol, options: options)
   }
 
   private func selectedAttributes(props: TabViewProps) -> [NSAttributedString.Key: Any] {
