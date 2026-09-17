@@ -33,12 +33,12 @@ struct TabItem: View {
   private func symbolImage(_ sfSymbol: String) -> some View {
     if let sfSymbolOptions, !sfSymbolOptions.isEmpty,
       let image = SFSymbolOptions.makeImage(named: sfSymbol, options: sfSymbolOptions) {
+      // The image already carries its own rendering mode, so a colored symbol
+      // keeps its colors here without any further SwiftUI modifier.
 #if os(macOS)
       Image(nsImage: image)
-        .symbolRenderingModeIfNeeded(preservesOwnColors: sfSymbolOptions.preservesOwnColors)
 #else
       Image(uiImage: image)
-        .symbolRenderingModeIfNeeded(preservesOwnColors: sfSymbolOptions.preservesOwnColors)
 #endif
     } else {
       Image(systemName: sfSymbol)
@@ -55,17 +55,4 @@ struct TabItem: View {
     preservesOriginalIconColors ? icon.withRenderingMode(.alwaysOriginal) : icon
   }
 #endif
-}
-
-extension Image {
-  /// Keeps the symbol's own colors when a non-monochrome rendering mode or an
-  /// explicit color was configured, otherwise leaves templating to the tab bar.
-  @ViewBuilder
-  func symbolRenderingModeIfNeeded(preservesOwnColors: Bool) -> some View {
-    if preservesOwnColors {
-      self.renderingMode(.original)
-    } else {
-      self
-    }
-  }
 }

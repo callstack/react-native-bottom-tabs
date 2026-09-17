@@ -149,7 +149,12 @@ extension SFSymbolOptions {
 
       guard let configuration = options.symbolConfiguration() else { return image }
 
-      return image.withSymbolConfiguration(configuration) ?? image
+      let configured = image.withSymbolConfiguration(configuration) ?? image
+      // A template image is recolored by the tab bar, discarding the symbol's
+      // own colors, so a colored symbol has to opt out of templating.
+      configured.isTemplate = !options.preservesOwnColors
+
+      return configured
     }
 
     @available(macOS 12.0, *)
@@ -272,27 +277,52 @@ extension SFSymbolOptions {
         ?? UIImage(named: name)?.applyingSymbolConfiguration(configuration)
     }
 
-    /// Bakes the requested color into the image.
+    /// Settles the final colors and rendering mode of the image.
     ///
-    /// A tab bar item cannot carry a tint of its own, so a monochrome symbol
-    /// with an explicit color has to be tinted up front. The multi-layer modes
-    /// get their colors from the symbol configuration instead, except before
-    /// iOS 15 where those APIs do not exist and a flat tint is the best
-    /// available approximation.
+    /// A tab bar templates whatever image it is handed, which throws away the
+    /// symbol's own colors, so a colored symbol has to opt out with
+    /// `.alwaysOriginal` the same way an `original` image icon does. A
+    /// monochrome symbol has no layer colors to keep, so its color is baked in
+    /// as a flat tint instead.
     private func tinted(_ image: UIImage) -> UIImage {
-      guard let color = effectivePrimaryColor else { return image }
+      guard preservesOwnColors else { return image }
 
       switch renderingMode {
       case "multicolor":
-        return image
+        return Self.flattened(image)
       case "hierarchical", "palette":
         if #available(iOS 15.0, tvOS 15.0, *) {
-          return image
+          return Self.flattened(image)
         }
-        return image.withTintColor(color, renderingMode: .alwaysOriginal)
+        // Layered color APIs do not exist before iOS 15, so the primary color
+        // is applied as a flat tint as the closest approximation.
+        guard let color = effectivePrimaryColor else { return image }
+        return Self.flattened(image.withTintColor(color, renderingMode: .alwaysOriginal))
       default:
-        return image.withTintColor(color, renderingMode: .alwaysOriginal)
+        guard let color = effectivePrimaryColor else { return image }
+        return Self.flattened(image.withTintColor(color, renderingMode: .alwaysOriginal))
       }
+    }
+
+    /// Draws the symbol into a plain bitmap that keeps the colors it was
+    /// configured with.
+    ///
+    /// Colors have to survive two separate attempts to recolor them. A tab bar
+    /// templates the image it is handed, and SwiftUI applies its own
+    /// `symbolRenderingMode` to anything it recognises as a symbol, which
+    /// flattens the layered modes back to a single tint. Rasterizing drops the
+    /// symbol identity, so neither applies, and `.alwaysOriginal` keeps the
+    /// result untinted.
+    private static func flattened(_ image: UIImage) -> UIImage {
+      let format = UIGraphicsImageRendererFormat()
+      format.scale = image.scale
+      format.opaque = false
+
+      let rendered = UIGraphicsImageRenderer(size: image.size, format: format).image { _ in
+        image.draw(in: CGRect(origin: .zero, size: image.size))
+      }
+
+      return rendered.withRenderingMode(.alwaysOriginal)
     }
 
     /// Translates the options into a `UIImage.SymbolConfiguration`.
