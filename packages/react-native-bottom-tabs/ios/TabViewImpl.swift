@@ -233,7 +233,7 @@ struct TabViewImpl: View {
       let preservesOriginalIconColors = preservesOriginalIconColors(tabData: tabData)
       let useBakedTintColors = shouldUseExperimentalBakedTintColors(props: props)
       let shouldRenderLabelIntoImage =
-        props.hasCustomTintColors && props.labeled && tabData.role != .search && icon != nil
+        props.hasCustomTintColors && props.labeled && tabData.role == nil && icon != nil
 
       item.accessibilityLabel = tabData.title
 

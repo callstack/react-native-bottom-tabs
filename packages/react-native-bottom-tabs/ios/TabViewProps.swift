@@ -30,12 +30,22 @@ internal enum MinimizeBehavior: String {
 
 public enum TabBarRole: String {
   case search
+  case prominent
 
   @available(iOS 18, macOS 15, visionOS 2, tvOS 18, *)
-  func convert() -> TabRole {
+  func convert() -> TabRole? {
     switch self {
     case .search:
       return .search
+    case .prominent:
+      #if compiler(>=6.4)
+        if #available(iOS 27, macOS 27, visionOS 27, tvOS 27, *) {
+          return .prominent
+        }
+      #endif
+      // `.prominent` role was introduced in iOS 27 SDK; ignore it on older OS versions
+      // instead of crashing or silently mapping to the wrong role.
+      return nil
     }
   }
 }

@@ -38,7 +38,7 @@ struct NewTabView: AnyTabView {
               onSelect: onSelect
             )
 
-            Tab(value: tabData.key, role: tabData.role?.convert()) {
+            Tab(value: tabData.key, role: tabData.role.flatMap { $0.convert() }) {
               RepresentableView(view: child.view)
                 .ignoresSafeArea(.container, edges: .all)
                 .tabAppear(using: context)
