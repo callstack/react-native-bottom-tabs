@@ -48,6 +48,7 @@ public final class TabInfo: NSObject {
   func onPageSelected(key: String, reactTag: NSNumber?)
   func onLongPress(key: String, reactTag: NSNumber?)
   func onTabBarMeasured(height: Int, reactTag: NSNumber?)
+  func onSceneInsetsChange(key: String, top: CGFloat, right: CGFloat, bottom: CGFloat, left: CGFloat)
   func onLayout(size: CGSize, reactTag: NSNumber?)
 }
 
@@ -220,6 +221,8 @@ public final class TabInfo: NSObject {
       self.delegate?.onPageSelected(key: key, reactTag: self.reactTag)
     } onLongPress: { key in
       self.delegate?.onLongPress(key: key, reactTag: self.reactTag)
+    } onSceneInsetsChange: { key, top, right, bottom, left in
+      self.delegate?.onSceneInsetsChange(key: key, top: top, right: right, bottom: bottom, left: left)
     } onLayout: { size  in
       self.delegate?.onLayout(size: size, reactTag: self.reactTag)
     } onTabBarMeasured: { height in

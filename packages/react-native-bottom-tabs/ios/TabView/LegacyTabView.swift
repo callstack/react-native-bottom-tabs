@@ -3,6 +3,7 @@ import SwiftUI
 struct LegacyTabView: AnyTabView {
   @ObservedObject var props: TabViewProps
 
+  var onSceneInsetsChange: (String, CGFloat, CGFloat, CGFloat, CGFloat) -> Void
   var onLayout: (CGSize) -> Void
   var onSelect: (String) -> Void
   var updateTabBarAppearance: () -> Void
@@ -49,7 +50,9 @@ struct LegacyTabView: AnyTabView {
           onSelect: onSelect
         )
 
-        RepresentableView(view: child)
+        RepresentableView(view: child, onInsetsChange: { top, right, bottom, left in
+          onSceneInsetsChange(tabData.key, top, right, bottom, left)
+        })
           .ignoresSafeArea(.container, edges: .all)
           .tabItem {
             TabItem(

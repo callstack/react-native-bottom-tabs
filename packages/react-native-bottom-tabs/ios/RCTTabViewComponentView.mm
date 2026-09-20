@@ -288,6 +288,19 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
   }
 }
 
+- (void)onSceneInsetsChangeWithKey:(NSString *)key top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left {
+  auto eventEmitter = std::static_pointer_cast<const RNCTabViewEventEmitter>(_eventEmitter);
+  if (eventEmitter) {
+    eventEmitter->onSceneInsetsChange(RNCTabViewEventEmitter::OnSceneInsetsChange {
+      .key = [key cStringUsingEncoding:kCFStringEncodingUTF8],
+      .top = top,
+      .right = right,
+      .bottom = bottom,
+      .left = left
+    });
+  }
+}
+
 - (void)onLayoutWithSize:(CGSize)size reactTag:(NSNumber *)reactTag {
   auto eventEmitter = std::static_pointer_cast<const RNCTabViewEventEmitter>(_eventEmitter);
   if (eventEmitter) {

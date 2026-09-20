@@ -17,6 +17,7 @@ struct TabViewImpl: View {
     if #available(iOS 18, macOS 15, visionOS 2, tvOS 18, *) {
       NewTabView(
         props: props,
+        onSceneInsetsChange: onSceneInsetsChange,
         onLayout: onLayout,
         onSelect: onSelect
       ) {
@@ -27,6 +28,7 @@ struct TabViewImpl: View {
     } else {
       LegacyTabView(
         props: props,
+        onSceneInsetsChange: onSceneInsetsChange,
         onLayout: onLayout,
         onSelect: onSelect
       ) {
@@ -39,6 +41,7 @@ struct TabViewImpl: View {
 
   var onSelect: (_ key: String) -> Void
   var onLongPress: (_ key: String) -> Void
+  var onSceneInsetsChange: (String, CGFloat, CGFloat, CGFloat, CGFloat) -> Void
   var onLayout: (_ size: CGSize) -> Void
   var onTabBarMeasured: (_ height: Int) -> Void
 

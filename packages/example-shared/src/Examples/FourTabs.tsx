@@ -1,5 +1,6 @@
-import TabView, { SceneMap } from 'react-native-bottom-tabs';
+import TabView, { SceneMap, useTabSceneInsets } from 'react-native-bottom-tabs';
 import { useState, type ComponentProps } from 'react';
+import { I18nManager } from 'react-native';
 import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
@@ -17,8 +18,28 @@ interface Props {
   activeIndicatorColor?: TabViewProps['activeIndicatorColor'];
 }
 
+function InsetArticle(props: ComponentProps<typeof Article>) {
+  const insets = useTabSceneInsets();
+  return (
+    <Article
+      {...props}
+      contentInsetAdjustmentBehavior={insets ? 'never' : 'automatic'}
+      contentContainerStyle={
+        insets
+          ? {
+              paddingTop: 16 + insets.top,
+              paddingEnd: I18nManager.isRTL ? insets.left : insets.right,
+              paddingBottom: 16 + insets.bottom,
+              paddingStart: I18nManager.isRTL ? insets.right : insets.left,
+            }
+          : { paddingVertical: 16 }
+      }
+    />
+  );
+}
+
 const renderScene = SceneMap({
-  article: Article,
+  article: InsetArticle,
   albums: Albums,
   contacts: Contacts,
   chat: Chat,

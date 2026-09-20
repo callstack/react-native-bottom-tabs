@@ -17,6 +17,14 @@ export type OnTabBarMeasured = Readonly<{
   height: Int32;
 }>;
 
+export type OnSceneInsetsChange = Readonly<{
+  key: string;
+  top: Double;
+  right: Double;
+  bottom: Double;
+  left: Double;
+}>;
+
 export type OnNativeLayout = Readonly<{
   width: Double;
   height: Double;
@@ -44,6 +52,7 @@ export interface TabViewProps extends ViewProps {
   onPageSelected?: DirectEventHandler<OnPageSelectedEventData>;
   onTabLongPress?: DirectEventHandler<OnPageSelectedEventData>;
   onTabBarMeasured?: DirectEventHandler<OnTabBarMeasured>;
+  onSceneInsetsChange?: DirectEventHandler<OnSceneInsetsChange>;
   onNativeLayout?: DirectEventHandler<OnNativeLayout>;
   icons?: ReadonlyArray<ImageSource>;
   focusedIcons?: ReadonlyArray<ImageSource>;
