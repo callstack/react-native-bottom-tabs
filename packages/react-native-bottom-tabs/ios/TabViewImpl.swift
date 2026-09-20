@@ -10,6 +10,7 @@ struct TabViewImpl: View {
     @Weak var tabBar: NSTabView?
   #else
     @Weak var tabBar: UITabBar?
+    @Weak var moreTabBarItem: UITabBarItem?
   #endif
 
   @ViewBuilder
@@ -70,8 +71,11 @@ struct TabViewImpl: View {
           tabBar = tabController
         #else
           tabBar = tabController.tabBar
+          #if os(iOS)
+            moreTabBarItem = tabController.moreNavigationController.tabBarItem
+          #endif
           updateTabBarAppearance(props: props, tabBar: tabController.tabBar)
-          updateTabBarItemImages(props: props, tabBar: tabController.tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabController.tabBar, moreTabBarItem: moreTabBarItem)
           if !props.tabBarHidden {
             onTabBarMeasured(
               Int(tabController.tabBar.frame.size.height)
@@ -80,7 +84,7 @@ struct TabViewImpl: View {
         #endif
       }
       #if !os(macOS)
-        .configureAppearance(props: props, tabBar: tabBar)
+        .configureAppearance(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
       #endif
       .tintColor(props.selectedActiveTintColor)
       .getSidebarAdaptable(enabled: props.sidebarAdaptable ?? false)
@@ -115,16 +119,16 @@ struct TabViewImpl: View {
 }
 
 #if !os(macOS)
-  private func updateTabBarItemImages(props: TabViewProps, tabBar: UITabBar?) {
+  private func updateTabBarItemImages(props: TabViewProps, tabBar: UITabBar?, moreTabBarItem: UITabBarItem?) {
     guard let tabBar,
       let items = tabBar.items
     else { return }
 
-    configureTabBarItemImages(items: items, props: props)
+    configureTabBarItemImages(items: items, props: props, moreTabBarItem: moreTabBarItem)
 
     DispatchQueue.main.async { [weak tabBar] in
       guard let tabBar, let items = tabBar.items else { return }
-      configureTabBarItemImages(items: items, props: props)
+      configureTabBarItemImages(items: items, props: props, moreTabBarItem: moreTabBarItem)
     }
   }
 
@@ -219,8 +223,12 @@ struct TabViewImpl: View {
     }
   }
 
-  private func configureTabBarItemImages(items: [UITabBarItem], props: TabViewProps) {
+  private func configureTabBarItemImages(items: [UITabBarItem], props: TabViewProps, moreTabBarItem: UITabBarItem?) {
     for (tabBarIndex, item) in items.enumerated() {
+      // UIKit inserts its own overflow item when the available space is limited.
+      // Its label and icon must not be replaced with the next route's appearance.
+      guard item !== moreTabBarItem else { continue }
+
       guard let tabData = props.filteredItems[safe: tabBarIndex],
         let itemIndex = props.items.firstIndex(where: { $0.key == tabData.key })
       else { continue }
@@ -456,7 +464,7 @@ extension View {
 
   #if !os(macOS)
     @ViewBuilder
-    func configureAppearance(props: TabViewProps, tabBar: UITabBar?) -> some View {
+    func configureAppearance(props: TabViewProps, tabBar: UITabBar?, moreTabBarItem: UITabBarItem?) -> some View {
       self
         .onChange(of: props.barTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
@@ -469,36 +477,36 @@ extension View {
         }
         .onChange(of: props.inactiveTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateTabBarItemImages(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
         }
         .onChange(of: props.activeTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateTabBarItemImages(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
         }
         .onChange(of: props.selectedActiveTintColor) { newValue in
           tabBar?.tintColor = newValue
         }
         .onChange(of: props.iconsRevision) { _ in
-          updateTabBarItemImages(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
         }
         .onChange(of: props.labeled) { _ in
-          updateTabBarItemImages(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
         }
         .onChange(of: props.fontSize) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateTabBarItemImages(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
         }
         .onChange(of: props.fontFamily) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateTabBarItemImages(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
         }
         .onChange(of: props.fontWeight) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateTabBarItemImages(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
         }
         .onChange(of: props.experimentalBakedTintColors) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
-          updateTabBarItemImages(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar, moreTabBarItem: moreTabBarItem)
         }
         .onChange(of: props.tabBarHidden) { newValue in
           tabBar?.isHidden = newValue
