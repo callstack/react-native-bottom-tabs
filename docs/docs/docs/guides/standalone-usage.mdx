@@ -319,3 +319,51 @@ Function to get the style for a tab scene.
 Function to determine if a tab should prevent default switching behavior when pressed.
 
 - Default: Uses `route.preventsDefault`
+
+### Scene safe-area insets (iOS)
+
+`useTabSceneInsets()` exposes the native scene's safe area as physical `top`,
+`right`, `bottom`, and `left` distances in points. It updates when the scene's
+safe area changes, including when the system moves the tab bar to a side.
+Scenes retain their full bounds so backgrounds can extend behind system bars.
+Apply the insets to foreground content when needed:
+
+```tsx
+import { useTabSceneInsets } from 'react-native-bottom-tabs';
+import { I18nManager, ScrollView, Text } from 'react-native';
+
+function Article() {
+  const insets = useTabSceneInsets();
+
+  return (
+    <ScrollView
+      style={{ flex: 1, backgroundColor: 'white' }}
+      contentInsetAdjustmentBehavior={insets ? 'never' : 'automatic'}
+      contentContainerStyle={
+        insets && {
+          paddingTop: insets.top,
+          paddingEnd: I18nManager.isRTL ? insets.left : insets.right,
+          paddingBottom: insets.bottom,
+          paddingStart: I18nManager.isRTL ? insets.right : insets.left,
+        }
+      }
+    >
+      <Text>Content stays clear of the native bars.</Text>
+    </ScrollView>
+  );
+}
+```
+
+The hook must be used in a rendered tab scene. It returns `undefined` before
+native measurement, outside a scene, with a custom tab bar, and on unsupported
+platforms. Insets belong to each scene separately, including lazily mounted
+scenes. They describe the scene's total native safe area, not just the tab bar:
+do not add them to an existing safe-area inset or automatic scroll adjustment.
+The left and right values remain physical edges in RTL layouts. The example maps
+them to logical start/end padding because React Native can swap left/right
+styles in RTL. If the content overrides its layout direction, use that direction
+for the mapping.
+
+This hook does not resize scenes, change `useBottomTabBarHeight()`, or provide
+keyboard avoidance. Apps using React Navigation can import it from
+`react-native-bottom-tabs` inside a native tab screen as well.

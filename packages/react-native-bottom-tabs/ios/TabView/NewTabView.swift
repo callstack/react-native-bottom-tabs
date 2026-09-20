@@ -5,6 +5,7 @@ import SwiftUI
 struct NewTabView: AnyTabView {
   @ObservedObject var props: TabViewProps
 
+  var onSceneInsetsChange: (String, CGFloat, CGFloat, CGFloat, CGFloat) -> Void
   var onLayout: (CGSize) -> Void
   var onSelect: (String) -> Void
   var updateTabBarAppearance: () -> Void
@@ -39,7 +40,9 @@ struct NewTabView: AnyTabView {
             )
 
             Tab(value: tabData.key, role: tabData.role?.convert()) {
-              RepresentableView(view: child.view)
+              RepresentableView(view: child.view, onInsetsChange: { top, right, bottom, left in
+                onSceneInsetsChange(tabData.key, top, right, bottom, left)
+              })
                 .ignoresSafeArea(.container, edges: .all)
                 .tabAppear(using: context)
                 .hideTabBar(props.tabBarHidden)

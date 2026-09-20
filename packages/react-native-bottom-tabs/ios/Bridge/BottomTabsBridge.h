@@ -10,6 +10,7 @@
 - (void)onPageSelectedWithKey:(NSString *)key reactTag:(NSNumber *)reactTag;
 - (void)onLongPressWithKey:(NSString *)key reactTag:(NSNumber *)reactTag;
 - (void)onTabBarMeasuredWithHeight:(NSInteger)height reactTag:(NSNumber *)reactTag;
+- (void)onSceneInsetsChangeWithKey:(NSString *)key top:(CGFloat)top right:(CGFloat)right bottom:(CGFloat)bottom left:(CGFloat)left;
 - (void)onLayoutWithSize:(CGSize)size reactTag:(NSNumber *)reactTag;
 @end
 

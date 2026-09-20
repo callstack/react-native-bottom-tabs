@@ -1,5 +1,10 @@
+import {
+  TabSceneInsetsContext,
+  type TabSceneInsets,
+} from './utils/TabSceneInsetsContext';
 import React, { useLayoutEffect, useRef } from 'react';
 import type {
+  OnSceneInsetsChange,
   OnNativeLayout,
   OnPageSelectedEventData,
   OnTabBarMeasured,
@@ -282,6 +287,9 @@ const TabView = <Route extends BaseRoute>({
   // @ts-ignore
   const focusedKey = navigationState.routes[navigationState.index].key;
   const customTabBarWrapperRef = useRef<View>(null);
+  const [sceneInsets, setSceneInsets] = React.useState<
+    Record<string, TabSceneInsets>
+  >({});
   const [tabBarHeight, setTabBarHeight] = React.useState<number | undefined>(0);
   const [measuredDimensions, setMeasuredDimensions] = React.useState<
     { width: DimensionValue; height: DimensionValue } | undefined
@@ -435,6 +443,30 @@ const TabView = <Route extends BaseRoute>({
     [setTabBarHeight]
   );
 
+  const handleSceneInsetsChange = React.useCallback(
+    ({
+      nativeEvent: { key, top, right, bottom, left },
+    }: {
+      nativeEvent: OnSceneInsetsChange;
+    }) => {
+      const insets = { top, right, bottom, left };
+      setSceneInsets((previous) => {
+        const current = previous[key];
+        if (
+          current &&
+          current.top === insets.top &&
+          current.right === insets.right &&
+          current.bottom === insets.bottom &&
+          current.left === insets.left
+        ) {
+          return previous;
+        }
+        return { ...previous, [key]: insets };
+      });
+    },
+    []
+  );
+
   const handleNativeLayout = React.useCallback(
     ({ nativeEvent: { width, height } }: { nativeEvent: OnNativeLayout }) => {
       setMeasuredDimensions({ width, height });
@@ -469,6 +501,7 @@ const TabView = <Route extends BaseRoute>({
         onPageSelected={handlePageSelected}
         onTabBarMeasured={handleTabBarMeasured}
         onNativeLayout={handleNativeLayout}
+        onSceneInsetsChange={handleSceneInsetsChange}
         hapticFeedbackEnabled={hapticFeedbackEnabled}
         layoutDirection={layoutDirection}
         activeTintColor={activeTintColor}
@@ -510,12 +543,16 @@ const TabView = <Route extends BaseRoute>({
                 focused ? 'auto' : 'no-hide-descendants'
               }
             >
-              <DelayedFreeze freeze={!!freeze}>
-                {renderScene({
-                  route,
-                  jumpTo,
-                })}
-              </DelayedFreeze>
+              <TabSceneInsetsContext.Provider
+                value={renderCustomTabBar ? undefined : sceneInsets[route.key]}
+              >
+                <DelayedFreeze freeze={!!freeze}>
+                  {renderScene({
+                    route,
+                    jumpTo,
+                  })}
+                </DelayedFreeze>
+              </TabSceneInsetsContext.Provider>
             </View>
           );
         })}
