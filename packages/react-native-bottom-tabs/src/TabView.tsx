@@ -3,6 +3,7 @@ import type {
   OnNativeLayout,
   OnPageSelectedEventData,
   OnTabBarMeasured,
+  SFSymbolOptions,
   TabViewItems,
 } from './TabViewNativeComponent';
 import {
@@ -36,8 +37,56 @@ import {
   type BottomAccessoryViewProps,
 } from './BottomAccessoryView';
 
-const isAppleSymbol = (icon: any): icon is { sfSymbol: string } =>
-  icon?.sfSymbol;
+const isAppleSymbol = (icon: any): icon is AppleIcon => icon?.sfSymbol;
+
+const SF_SYMBOL_WEIGHTS = {
+  thin: 100,
+  ultralight: 200,
+  light: 300,
+  regular: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extrabold: 800,
+  black: 900,
+} as const;
+
+/**
+ * `variableValue` accepts `0`, so it needs a sentinel outside its `0...1`
+ * range to mean "not configured".
+ */
+const UNSET_VARIABLE_VALUE = -1;
+
+/**
+ * Flattens an `AppleIcon` into the scalar fields the native side reads.
+ *
+ * Values left undefined by the user are sent as sentinels so native keeps
+ * using the platform default instead of overriding it with a zero.
+ */
+const createSfSymbolOptions = (
+  icon: AppleIcon | undefined
+): SFSymbolOptions | undefined => {
+  if (!icon) {
+    return undefined;
+  }
+
+  return {
+    size: icon.size ?? 0,
+    weight:
+      typeof icon.weight === 'string'
+        ? SF_SYMBOL_WEIGHTS[icon.weight]
+        : (icon.weight ?? 0),
+    scale: icon.scale ?? '',
+    color: processColor(icon.color),
+    primaryColor: processColor(icon.colors?.primary),
+    secondaryColor: processColor(icon.colors?.secondary),
+    tertiaryColor: processColor(icon.colors?.tertiary),
+    renderingMode: icon.renderingMode ?? '',
+    variableValue: icon.variableValue ?? UNSET_VARIABLE_VALUE,
+    variableValueMode: icon.variableValueMode ?? '',
+    colorRenderingMode: icon.colorRenderingMode ?? '',
+  };
+};
 
 interface Props<Route extends BaseRoute> {
   /*
@@ -352,7 +401,11 @@ const TabView = <Route extends BaseRoute>({
           key: route.key,
           title: getLabelText({ route }) ?? route.key,
           sfSymbol: isSfSymbol ? icon.sfSymbol : undefined,
+          sfSymbolOptions: isSfSymbol ? createSfSymbolOptions(icon) : undefined,
           focusedSfSymbol: isFocusedSfSymbol ? focusedIcon.sfSymbol : undefined,
+          focusedSfSymbolOptions: isFocusedSfSymbol
+            ? createSfSymbolOptions(focusedIcon)
+            : undefined,
           badge: getBadge?.({ route }),
           badgeBackgroundColor: processColor(
             getBadgeBackgroundColor?.({ route })
