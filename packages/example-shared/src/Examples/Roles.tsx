@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, StyleSheet, Switch, Text, View } from 'react-native';
 import TabView, { SceneMap } from 'react-native-bottom-tabs';
 import type { TabRole } from 'react-native-bottom-tabs';
@@ -15,6 +15,37 @@ const renderScene = SceneMap({
 export default function Roles() {
   const [role, setRole] = useState<TabRole>('search');
   const [bakedTintColors, setBakedTintColors] = useState(false);
+  const [index, setIndex] = useState(0);
+  const routes = useMemo(
+    () => [
+      {
+        key: 'article',
+        title: 'Article',
+        focusedIcon: { sfSymbol: 'document' },
+      },
+      {
+        key: 'albums',
+        title: 'Albums',
+        focusedIcon: { sfSymbol: 'square.grid.2x2' },
+      },
+      {
+        key: 'role',
+        title: role === 'search' ? 'Search' : 'Contacts',
+        focusedIcon: {
+          sfSymbol:
+            role === 'search' ? 'magnifyingglass' : 'person.crop.circle',
+        },
+        role,
+        testID: `roles-${role}-tab`,
+      },
+    ],
+    [role]
+  );
+
+  const selectRole = (nextRole: TabRole) => {
+    setIndex(0);
+    setRole(nextRole);
+  };
 
   return (
     <View style={styles.container}>
@@ -23,12 +54,12 @@ export default function Roles() {
           <Button
             title="Search"
             disabled={role === 'search'}
-            onPress={() => setRole('search')}
+            onPress={() => selectRole('search')}
           />
           <Button
             title="Prominent"
             disabled={role === 'prominent'}
-            onPress={() => setRole('prominent')}
+            onPress={() => selectRole('prominent')}
           />
         </View>
         <Text>
@@ -45,51 +76,18 @@ export default function Roles() {
           />
         </View>
       </View>
-      <RoleTabs key={role} role={role} bakedTintColors={bakedTintColors} />
+      <TabView
+        key={role}
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+        labeled
+        tabBarActiveTintColor="red"
+        tabBarInactiveTintColor="orange"
+        experimental_bakedTintColors={bakedTintColors}
+        minimizeBehavior='onScrollDown'
+      />
     </View>
-  );
-}
-
-function RoleTabs({
-  role,
-  bakedTintColors,
-}: {
-  role: TabRole;
-  bakedTintColors: boolean;
-}) {
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    {
-      key: 'article',
-      title: 'Article',
-      focusedIcon: { sfSymbol: 'doc.text' },
-    },
-    {
-      key: 'albums',
-      title: 'Albums',
-      focusedIcon: { sfSymbol: 'square.grid.2x2' },
-    },
-    {
-      key: 'role',
-      title: role === 'search' ? 'Search' : 'Contacts',
-      focusedIcon: {
-        sfSymbol: role === 'search' ? 'magnifyingglass' : 'person.crop.circle',
-      },
-      role,
-      testID: `roles-${role}-tab`,
-    },
-  ]);
-
-  return (
-    <TabView
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-      labeled
-      tabBarActiveTintColor="red"
-      tabBarInactiveTintColor="orange"
-      experimental_bakedTintColors={bakedTintColors}
-    />
   );
 }
 
