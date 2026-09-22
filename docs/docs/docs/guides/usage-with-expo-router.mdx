@@ -78,9 +78,7 @@ There is no theme in the Expo Router integration, so the tab bar falls back to p
 
 ### Custom tab bar
 
-The `tabBar` function receives `state`, `descriptors`, `actions` and `emitter` - the vocabulary of the navigation contract rather than a React Navigation `navigation` object. If your tab bar needs the router, call `useNavigation()` from `expo-router` inside it.
-
-`BottomTabBar` from `@react-navigation/bottom-tabs` cannot be used here, since it expects a React Navigation `navigation` object.
+The `tabBar` function receives `state`, `descriptors`, `actions` and `emitter`. If your tab bar needs the router, call `useNavigation()` from `expo-router` inside it.
 
 ## Expo SDK 52 to 55
 
