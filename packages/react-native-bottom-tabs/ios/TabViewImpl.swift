@@ -232,8 +232,14 @@ struct TabViewImpl: View {
         props.focusedIcons[itemIndex] ?? makeSFSymbolImage(named: tabData.focusedSfSymbol) ?? icon
       let preservesOriginalIconColors = preservesOriginalIconColors(tabData: tabData)
       let useBakedTintColors = shouldUseExperimentalBakedTintColors(props: props)
+      let hasEffectiveRole: Bool
+      if #available(iOS 18, macOS 15, visionOS 2, tvOS 18, *) {
+        hasEffectiveRole = tabData.role?.convert() != nil
+      } else {
+        hasEffectiveRole = false
+      }
       let shouldRenderLabelIntoImage =
-        props.hasCustomTintColors && props.labeled && tabData.role == nil && icon != nil
+        props.hasCustomTintColors && props.labeled && !hasEffectiveRole && icon != nil
 
       item.accessibilityLabel = tabData.title
 
