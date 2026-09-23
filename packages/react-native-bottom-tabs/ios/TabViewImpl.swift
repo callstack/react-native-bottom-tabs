@@ -11,6 +11,9 @@ struct TabViewImpl: View {
   #else
     @Weak var tabBar: UITabBar?
   #endif
+  #if os(iOS)
+    @Weak var tabBarController: UITabBarController?
+  #endif
 
   @ViewBuilder
   var tabContent: some View {
@@ -70,6 +73,9 @@ struct TabViewImpl: View {
           tabBar = tabController
         #else
           tabBar = tabController.tabBar
+          #if os(iOS)
+            tabBarController = tabController
+          #endif
           updateTabBarAppearance(props: props, tabBar: tabController.tabBar)
           updateTabBarItemImages(props: props, tabBar: tabController.tabBar)
           if !props.tabBarHidden {
@@ -95,6 +101,9 @@ struct TabViewImpl: View {
         #endif
         #if os(tvOS) || os(macOS) || os(visionOS)
           onSelect(newValue)
+        #endif
+        #if os(iOS)
+          refreshProminentTab(tabBarController: tabBarController)
         #endif
       }
   }
@@ -139,6 +148,29 @@ struct TabViewImpl: View {
     }
 
     configureStandardAppearance(tabBar: tabBar, props: props)
+  }
+#endif
+
+#if os(iOS)
+  /// Workaround to a SwiftUI bug.
+  /// On iOS 27, the prominent tab keeps its selected styling after another tab is selected
+  /// if the tab bar was updated during its selection animation (e.g. item images being
+  /// reconfigured, or React re-rendering in response to the selection).
+  /// Re-assigning the prominent tab identifier makes UIKit rebuild the prominent tab button.
+  private func refreshProminentTab(tabBarController: UITabBarController?) {
+    #if compiler(>=6.4)
+      guard #available(iOS 27, *) else { return }
+
+      DispatchQueue.main.async { [weak tabBarController] in
+        guard let tabBarController,
+          let identifier = tabBarController.prominentTabIdentifier,
+          tabBarController.selectedTab?.identifier != identifier
+        else { return }
+
+        tabBarController.setProminentTabIdentifier(nil, animated: false)
+        tabBarController.setProminentTabIdentifier(identifier, animated: false)
+      }
+    #endif
   }
 #endif
 
