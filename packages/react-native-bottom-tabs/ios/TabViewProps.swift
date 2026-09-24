@@ -83,6 +83,9 @@ class TabViewProps: ObservableObject {
   @Published var fontFamily: String?
   @Published var fontWeight: String?
   @Published var tabBarHidden: Bool = false
+  #if !os(macOS)
+    let itemImages = TabBarItemImageCache()
+  #endif
 
   var selectedActiveTintColor: PlatformColor? {
     if let selectedPage,

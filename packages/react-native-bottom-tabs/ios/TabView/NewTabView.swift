@@ -28,7 +28,11 @@ struct NewTabView: AnyTabView {
           let isFocused = props.selectedPage == tabData.key
 
           if !tabData.hidden || isFocused {
-            let icon = props.icons[index]
+            #if os(macOS)
+              let labelImage: PlatformImage? = nil
+            #else
+              let labelImage = props.itemImages.images(for: tabData, props: props)?.labelImage
+            #endif
 
             let context = TabAppearContext(
               index: index,
@@ -46,10 +50,11 @@ struct NewTabView: AnyTabView {
             } label: {
               TabItem(
                 title: tabData.title,
-                icon: icon,
+                icon: labelImage ?? props.icons[index],
                 sfSymbol: tabData.sfSymbol,
                 labeled: props.labeled,
-                iconRenderingMode: tabData.iconRenderingMode
+                // Rendered label images already have their final rendering mode.
+                iconRenderingMode: labelImage == nil ? tabData.iconRenderingMode : nil
               )
             }
             #if !os(tvOS)
