@@ -241,7 +241,7 @@ Each route in the `routes` array can have the following properties:
 - `activeTintColor`: Custom active tint color for this specific tab
 - `lazy`: Whether to lazy load this tab's content
 - `freezeOnBlur`: Whether to freeze the tab's content when it's not visible
-- `role`: A value that defines the purpose of the tab
+- `role`: A value that defines the purpose of the tab on iOS: `'search'` (iOS 18+) or `'prominent'` (iOS 27+, displayed as a regular tab on earlier versions)
 - `style`: Style object for the component wrapping the screen content
 - `preventsDefault`: Whether to prevent default tab switching behavior when pressed
 
