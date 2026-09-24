@@ -398,12 +398,12 @@ Test ID for the tab item. This can be used to find the tab item in the native vi
 
 #### `role` <Badge text="iOS 18+" type="info" />
 
-A value that defines the purpose of the tab. This can be used to pin and separate search tabs
+A value that defines the purpose of the tab.
 
 Available options:
 
-- `search` - The search role.
-- `prominent` - Mark one tab as visually more important than the others (`SDK 27+`).
+- `search` - Marks the tab as the search tab, which the system can pin to the trailing end of the tab bar. On iOS 27+, it may also receive the prominent treatment when no tab has the `prominent` role.
+- `prominent` <Badge text="iOS 27+" type="info" /> - Gives the tab more visual emphasis than the others. Only one tab can be prominent. Requires building with the iOS 27 SDK, and on earlier iOS versions the tab is displayed as a regular tab.
 
 #### `sceneStyle`
 
