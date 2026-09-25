@@ -100,22 +100,33 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     uiModeConfiguration = resources.configuration.uiMode
 
     post {
-      addOnLayoutChangeListener { _, left, top, right, bottom,
+      addOnLayoutChangeListener { _, _, _, _, _,
                                   _, _, _, _ ->
-        val newWidth = right - left
-        val newHeight = bottom - top
-
         // Notify about tab bar height.
         onTabBarMeasuredListener?.invoke(Utils.convertPixelsToDp(context, bottomNavigation.height).toInt())
 
-        if (newWidth != lastReportedSize?.width || newHeight != lastReportedSize?.height) {
-          val dpWidth = Utils.convertPixelsToDp(context, layoutHolder.width)
-          val dpHeight = Utils.convertPixelsToDp(context, layoutHolder.height)
-
-          onNativeLayoutListener?.invoke(dpWidth, dpHeight)
-          lastReportedSize = Size(newWidth, newHeight)
-        }
+        reportLayoutHolderSizeIfChanged()
       }
+      // When only the tab bar visibility changes (tabBarHidden), the container keeps
+      // its bounds so the listener above never fires — only layoutHolder grows or
+      // shrinks. Observe layoutHolder itself so the new content size reaches JS.
+      layoutHolder.addOnLayoutChangeListener { _, _, _, _, _,
+                                               _, _, _, _ ->
+        reportLayoutHolderSizeIfChanged()
+      }
+    }
+  }
+
+  private fun reportLayoutHolderSizeIfChanged() {
+    val newWidth = layoutHolder.width
+    val newHeight = layoutHolder.height
+
+    if (newWidth != lastReportedSize?.width || newHeight != lastReportedSize?.height) {
+      val dpWidth = Utils.convertPixelsToDp(context, newWidth)
+      val dpHeight = Utils.convertPixelsToDp(context, newHeight)
+
+      onNativeLayoutListener?.invoke(dpWidth, dpHeight)
+      lastReportedSize = Size(newWidth, newHeight)
     }
   }
 
