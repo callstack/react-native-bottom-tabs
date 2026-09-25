@@ -80,6 +80,9 @@ public final class TabInfo: NSObject {
   @objc public var sidebarAdaptable: Bool = false {
     didSet {
       props.sidebarAdaptable = sidebarAdaptable
+      #if os(iOS)
+        setNeedsLayout()
+      #endif
     }
   }
 
@@ -208,6 +211,39 @@ public final class TabInfo: NSObject {
   override public func layoutSubviews() {
     super.layoutSubviews()
     setupView()
+    #if os(iOS)
+      updateSidebarSizeClassOverride()
+    #endif
+  }
+#endif
+
+#if os(iOS)
+  /// Minimum width, in points, at which an iPhone window is wide enough for the sidebar.
+  /// UIKit keeps the iPhone sidebar collapsed below roughly 905pt even in a regular width, and
+  /// hides the tab bar at the same time, so stay a little above that. Phones never reach this
+  /// width in portrait, and landscape phones are excluded by their compact vertical size class.
+  private static let sidebarMinimumWidth: CGFloat = 920
+
+  private func updateSidebarSizeClassOverride() {
+    guard #available(iOS 27.0, *), let hostingController else { return }
+
+    let overrides = hostingController.traitOverrides
+    guard sidebarAdaptable, traitCollection.userInterfaceIdiom == .phone else {
+      if overrides.contains(UITraitHorizontalSizeClass.self) {
+        hostingController.traitOverrides.remove(UITraitHorizontalSizeClass.self)
+      }
+      return
+    }
+
+    let fitsSidebar =
+      traitCollection.verticalSizeClass == .regular
+      && bounds.width >= Self.sidebarMinimumWidth
+    let desired: UIUserInterfaceSizeClass = fitsSidebar ? .regular : .compact
+
+    if !overrides.contains(UITraitHorizontalSizeClass.self)
+      || overrides.horizontalSizeClass != desired {
+      hostingController.traitOverrides.horizontalSizeClass = desired
+    }
   }
 #endif
 

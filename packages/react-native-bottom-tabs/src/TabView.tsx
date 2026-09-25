@@ -50,7 +50,9 @@ interface Props<Route extends BaseRoute> {
    * that varies depending on the platform:
    * Tab views using the sidebar adaptable style have an appearance
    * - iPadOS displays a top tab bar that can adapt into a sidebar.
-   * - iOS displays a bottom tab bar.
+   * - iOS displays a bottom tab bar. On iOS 27+ (built with Xcode 27+), large enough
+   *   screens such as an unfolded iPhone Duo display a sidebar instead, and the
+   *   bottom tab bar returns when the window shrinks.
    * - macOS and tvOS always show a sidebar.
    * - visionOS shows an ornament and also shows a sidebar for secondary tabs within a `TabSection`.
    */
