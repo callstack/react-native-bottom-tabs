@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React from 'react';
 import type {
   OnNativeLayout,
   OnPageSelectedEventData,
@@ -9,6 +9,7 @@ import {
   type ColorValue,
   type DimensionValue,
   Image,
+  type LayoutChangeEvent,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -281,8 +282,11 @@ const TabView = <Route extends BaseRoute>({
 }: Props<Route>) => {
   // @ts-ignore
   const focusedKey = navigationState.routes[navigationState.index].key;
-  const customTabBarWrapperRef = useRef<View>(null);
   const [tabBarHeight, setTabBarHeight] = React.useState<number | undefined>(0);
+  const [customTabBarWrapperHeight, setCustomTabBarWrapperHeight] =
+    React.useState(0);
+  const [customTabBarElementHeight, setCustomTabBarElementHeight] =
+    React.useState(0);
   const [measuredDimensions, setMeasuredDimensions] = React.useState<
     { width: DimensionValue; height: DimensionValue } | undefined
   >({ width: '100%', height: '100%' });
@@ -442,17 +446,36 @@ const TabView = <Route extends BaseRoute>({
     [setMeasuredDimensions]
   );
 
-  useLayoutEffect(() => {
-    // If we are rendering a custom tab bar, we need to measure it to set the tab bar height.
-    if (renderCustomTabBar && customTabBarWrapperRef.current) {
-      customTabBarWrapperRef.current.measure((_x, _y, _width, height) => {
-        setTabBarHeight(height);
-      });
-    }
-  }, [renderCustomTabBar]);
+  const handleCustomTabBarWrapperLayout = React.useCallback(
+    (event: LayoutChangeEvent) => {
+      setCustomTabBarWrapperHeight(event.nativeEvent.layout.height);
+    },
+    []
+  );
+
+  const handleCustomTabBarElementLayout = React.useCallback(
+    (event: LayoutChangeEvent) => {
+      setCustomTabBarElementHeight(event.nativeEvent.layout.height);
+    },
+    []
+  );
+
+  const customTabBar = renderCustomTabBar?.();
+  const customTabBarElement = React.isValidElement<{
+    onLayout?: (event: LayoutChangeEvent) => void;
+  }>(customTabBar)
+    ? customTabBar
+    : null;
+  const customTabBarHeight = Math.max(
+    customTabBarWrapperHeight,
+    // Drop a stale element height once the tab bar stops rendering an element to measure.
+    customTabBarElement ? customTabBarElementHeight : 0
+  );
 
   return (
-    <BottomTabBarHeightContext.Provider value={tabBarHeight}>
+    <BottomTabBarHeightContext.Provider
+      value={renderCustomTabBar ? customTabBarHeight : tabBarHeight}
+    >
       <NativeTabView
         {...props}
         {...tabLabelStyle}
@@ -529,7 +552,16 @@ const TabView = <Route extends BaseRoute>({
         ) : null}
       </NativeTabView>
       {renderCustomTabBar ? (
-        <View ref={customTabBarWrapperRef}>{renderCustomTabBar()}</View>
+        <View onLayout={handleCustomTabBarWrapperLayout}>
+          {customTabBarElement
+            ? React.cloneElement(customTabBarElement, {
+                onLayout: (event: LayoutChangeEvent) => {
+                  customTabBarElement.props.onLayout?.(event);
+                  handleCustomTabBarElementLayout(event);
+                },
+              })
+            : customTabBar}
+        </View>
       ) : null}
     </BottomTabBarHeightContext.Provider>
   );
