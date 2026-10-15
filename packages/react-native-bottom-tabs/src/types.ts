@@ -5,7 +5,7 @@ export type IconSource = string | ImageSourcePropType;
 
 export type AppleIcon = { sfSymbol: SFSymbol };
 
-export type TabRole = 'search';
+export type TabRole = 'search' | 'prominent';
 
 export type IconRenderingMode = 'automatic' | 'original';
 

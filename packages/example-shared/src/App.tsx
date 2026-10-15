@@ -28,6 +28,7 @@ import SixTabs from './Examples/SixTabs';
 import FourTabsRTL from './Examples/FourTabsRTL';
 import MaterialBottomTabs from './Examples/MaterialBottomTabs';
 import SFSymbols from './Examples/SFSymbols';
+import Roles from './Examples/Roles';
 import LabeledTabs from './Examples/Labeled';
 import NativeBottomTabs from './Examples/NativeBottomTabs';
 import TintColorsExample from './Examples/TintColors';
@@ -99,6 +100,7 @@ const examples = [
   { component: FourTabs, name: 'Four Tabs' },
   { component: FiveTabs, name: 'Five Tabs' },
   { component: SixTabs, name: 'Six Tabs' },
+  { component: Roles, name: 'Roles', platform: 'ios' },
   {
     component: SFSymbols,
     name: 'SF Symbols',
