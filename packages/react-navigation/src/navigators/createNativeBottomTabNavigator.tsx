@@ -12,8 +12,8 @@ import {
   useNavigationBuilder,
   useTheme,
 } from '@react-navigation/native';
+import Color from 'color';
 
-import mixColors from '../mixColors';
 import type {
   NativeBottomTabNavigationConfig,
   NativeBottomTabNavigationEventMap,
@@ -74,7 +74,7 @@ function NativeBottomTabNavigator({
         {...rest}
         defaultTintColors={{
           active: colors.primary,
-          inactive: mixColors(colors.text, colors.card, 0.5),
+          inactive: Color(colors.text).mix(Color(colors.card), 0.5).hex(),
         }}
         state={state}
         navigation={navigation}

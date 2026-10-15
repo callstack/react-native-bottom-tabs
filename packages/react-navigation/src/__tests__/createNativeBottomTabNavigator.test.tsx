@@ -205,6 +205,18 @@ describe('tint colors', () => {
     expect(tabViewProps.tabBarInactiveTintColor).toBe('#808080');
   });
 
+  it('weighs the default inactive tint by alpha', async () => {
+    await renderNavigator({
+      theme: {
+        ...theme,
+        colors: { ...theme.colors, text: 'rgba(0, 0, 0, 0)' },
+      },
+    });
+
+    // A fully transparent text color contributes nothing to the mix.
+    expect(tabViewProps.tabBarInactiveTintColor).toBe('#FFFFFF');
+  });
+
   it('lets the navigator props win over the theme', async () => {
     await renderNavigator({
       theme,
