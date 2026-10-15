@@ -156,6 +156,8 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
   fun setSelectedItem(value: String) {
     selectedItem = value
     setSelectedIndex(items.indexOfFirst { it.key == value })
+    // Per-tab active tint color depends on the selected item.
+    updateTintColors()
   }
 
   override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams?) {
