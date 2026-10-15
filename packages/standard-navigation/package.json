@@ -1,7 +1,7 @@
 {
   "name": "@bottom-tabs/standard-navigation",
   "version": "1.4.0",
-  "description": "Framework-agnostic native bottom tabs navigator built on the standard-navigation contract",
+  "description": "Framework-agnostic native bottom tabs navigator",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
@@ -59,6 +59,7 @@
   "devDependencies": {
     "@testing-library/react-native": "^14.0.1",
     "@types/jest": "^29.5.5",
+    "expo-router": "~57.0.20",
     "jest": "^29.7.0",
     "react": "^19.1.0",
     "react-native": "0.81.1",
