@@ -27,8 +27,6 @@ if (project.extensions.findByName('kotlin') == null) {
   apply plugin: "kotlin-android"
 }
 
-apply plugin: "kotlin-kapt"
-
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
 }
