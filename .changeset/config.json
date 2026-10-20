@@ -11,10 +11,11 @@
   "linked": [],
   "access": "public",
   "baseBranch": "main",
-  "ignore": [
-    "react-native-bottom-tabs-docs",
-    "react-native-bottom-tabs-example"
-  ],
+  "ignore": [],
+  "privatePackages": {
+    "version": false,
+    "tag": false
+  },
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true,
     "updateInternalDependents": "always"
