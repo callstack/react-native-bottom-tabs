@@ -1,26 +1,17 @@
 import { Platform } from 'react-native';
-import { withLayoutContext } from 'expo-router';
-import {
-  createNativeBottomTabNavigator,
-  NativeBottomTabNavigationOptions,
-  NativeBottomTabNavigationEventMap,
-} from '@bottom-tabs/react-navigation';
-import { ParamListBase, TabNavigationState } from '@react-navigation/native';
+import { TabRouter, unstable_createStandardRouterNavigator } from 'expo-router';
+import { NativeBottomTabsContent } from '@bottom-tabs/standard-navigation';
 
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-const BottomTabNavigator = createNativeBottomTabNavigator().Navigator;
-
-const Tabs = withLayoutContext<
-  NativeBottomTabNavigationOptions,
-  typeof BottomTabNavigator,
-  TabNavigationState<ParamListBase>,
-  NativeBottomTabNavigationEventMap
->(BottomTabNavigator);
+const Tabs = unstable_createStandardRouterNavigator(
+  NativeBottomTabsContent,
+  TabRouter
+);
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme() ?? 'light';
+  const colorScheme = useColorScheme();
   const colorTheme = Colors[colorScheme];
 
   return (

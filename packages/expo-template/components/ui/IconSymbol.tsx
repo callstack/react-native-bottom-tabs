@@ -1,7 +1,7 @@
 // This file is a fallback for using MaterialIcons on Android and web.
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolWeight } from 'expo-symbols';
+import { SymbolViewProps, SymbolWeight } from 'expo-symbols';
 import React from 'react';
 import { OpaqueColorValue, StyleProp, TextStyle } from 'react-native';
 
@@ -15,7 +15,7 @@ const MAPPING = {
   'chevron.right': 'chevron-right',
 } as Partial<
   Record<
-    import('expo-symbols').SymbolViewProps['name'],
+    Extract<SymbolViewProps['name'], string>,
     React.ComponentProps<typeof MaterialIcons>['name']
   >
 >;

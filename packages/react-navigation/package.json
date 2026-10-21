@@ -29,7 +29,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "typecheck": "tsc -b",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "build": "bob build"
@@ -57,16 +57,18 @@
   },
   "devDependencies": {
     "@react-navigation/native": "^7.3.0",
-    "@types/color": "^4.2.0",
+    "@testing-library/react-native": "^14.0.1",
+    "@types/jest": "^29.5.5",
     "jest": "^29.7.0",
     "react": "^19.1.0",
     "react-native": "0.81.1",
     "react-native-bottom-tabs": "*",
     "react-native-builder-bob": "^0.40.13",
+    "test-renderer": "^1.2.0",
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "color": "^5.0.0"
+    "@bottom-tabs/standard-navigation": "1.4.0"
   },
   "peerDependencies": {
     "@react-navigation/native": ">=7",
@@ -76,9 +78,14 @@
   },
   "jest": {
     "preset": "react-native",
+    "moduleNameMapper": {
+      "^@bottom-tabs/standard-navigation$": "<rootDir>/../standard-navigation/src/index.tsx"
+    },
     "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?|@react-navigation|standard-navigation)/)"
     ]
   },
   "react-native-builder-bob": {
