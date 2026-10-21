@@ -120,12 +120,25 @@ struct TabViewImpl: View {
       let items = tabBar.items
     else { return }
 
-    configureTabBarItemImages(items: items, props: props)
+    configureTabBarItemImages(items: items, tabBar: tabBar, props: props)
 
     DispatchQueue.main.async { [weak tabBar] in
       guard let tabBar, let items = tabBar.items else { return }
-      configureTabBarItemImages(items: items, props: props)
+      configureTabBarItemImages(items: items, tabBar: tabBar, props: props)
     }
+  }
+
+  /// Maps a tab bar item to its index in `filteredItems`. When linked against the iOS 27 SDK,
+  /// `UITabBar.items` follows display order (a `search` role tab moves to the end), while `tabs`
+  /// keeps declaration order.
+  private func declarationIndex(of item: UITabBarItem, at tabBarIndex: Int, in tabBar: UITabBar) -> Int {
+    if #available(iOS 18.0, tvOS 18.0, visionOS 2.0, *),
+      let tabController = tabBar.delegate as? UITabBarController,
+      let index = tabController.tabs.firstIndex(where: { $0.viewController?.tabBarItem === item })
+    {
+      return index
+    }
+    return tabBarIndex
   }
 
   private func updateTabBarAppearance(props: TabViewProps, tabBar: UITabBar?) {
@@ -225,9 +238,10 @@ struct TabViewImpl: View {
   /// so it's never assigned here. Assigning item images while the tab bar animates (e.g. minimizing or
   /// switching tabs) breaks its selection styling on iOS 27, so `selectedImage` is only assigned when it
   /// changes, and SwiftUI updates its images only when a label changes.
-  private func configureTabBarItemImages(items: [UITabBarItem], props: TabViewProps) {
+  private func configureTabBarItemImages(items: [UITabBarItem], tabBar: UITabBar, props: TabViewProps) {
     for (tabBarIndex, item) in items.enumerated() {
-      guard let tabData = props.filteredItems[safe: tabBarIndex] else { continue }
+      let tabIndex = declarationIndex(of: item, at: tabBarIndex, in: tabBar)
+      guard let tabData = props.filteredItems[safe: tabIndex] else { continue }
 
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
       let images = props.itemImages.images(for: tabData, props: props)
