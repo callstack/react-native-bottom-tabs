@@ -1,0 +1,32 @@
+{
+  "findings": [
+    {
+      "file": "packages/react-native-bottom-tabs/ios/TabViewImpl.swift",
+      "line": 138,
+      "defect": "The iOS 26 opacity condition (`scrollEdgeAppearance == \"opaque\" || !translucent`) ignores a supplied barTintColor, so the documented `tabBarStyle.backgroundColor` contract (docs/docs/docs/guides/usage-with-react-navigation.mdx:155 and standalone-usage.mdx:209, 'Background color of the tab bar') remains non-functional on iOS 26+ when scrollEdgeAppearance is \"default\" or unset. On iOS <= 18 the same props render the custom color via appearance.backgroundColor (TabViewImpl.swift:193-195); on iOS 26 the new code actively clears tabBar.backgroundColor for that configuration. The fix touches exactly this code path and consumes props.barTintColor only in the opaque branch, leaving the documented API inconsistent across OS versions, and no checked-in evidence exercises a barTintColor route.",
+      "failure_scenario": "An app (or the repository's own 'Four Tabs - Custom Background Color of Tabs' example, apps/example/src/App.tsx:74-76, which passes backgroundColor '#87CEEB' with default scrollEdgeAppearance) sets only tabBarStyle.backgroundColor — a common React Navigation configuration. On iOS 18 the tab bar shows the custom color; on iOS 26 the color is silently ignored and the plain Liquid Glass bar renders, reproducing the same class of 'appearance prop has no effect on iOS 26' bug this branch claims to fix.",
+      "severity": "medium"
+    },
+    {
+      "file": "packages/react-native-bottom-tabs/ios/TabViewImpl.swift",
+      "line": 139,
+      "defect": "Setting the UITabBar view's own UIView.backgroundColor paints an unmanaged opaque layer under the Liquid Glass bar instead of configuring the bar's background, and its interaction with iOS-26-only features the library itself exposes is unverified. With tabBarMinimizeBehavior (TabViewImpl.swift:47, 528) the system collapses the bar into a floating pill during scroll, and a full-frame view background is not part of the system-managed transition; toolbar(.hidden) tab-bar hiding transitions and dark-mode rendering of the new opaque strip are likewise untested. The checked-in evidence covers only static, light-mode captures of the default/transparent/opaque routes with no minimize behavior, no hide transition, and no dark appearance.",
+      "failure_scenario": "A user combines scrollEdgeAppearance=\"opaque\" with tabBarMinimizeBehavior=\"onScrollDown\" on iOS 26: while the system animates the bar down to its minimized pill, the UITabBar view's full-frame opaque backgroundColor persists or animates as a solid band that does not match the minimized Liquid Glass presentation, producing a visible rectangle artifact over scrolled content. Nothing in the branch's evidence or tests would catch this before release.",
+      "severity": "medium"
+    },
+    {
+      "file": "artifacts/issue-532/README.md",
+      "line": 19,
+      "defect": "All baseline and verification evidence was captured on an iOS 27.0 beta simulator runtime with Xcode 27.0 Beta 4, but the code gate is #available(iOS 26.0, *), the changeset claims 'Fix scrollEdgeAppearance on iOS 26 and newer', and issue #532 reports released iOS 26 behavior. No capture on any iOS 26.x runtime exists, so the checked-in visual evidence does not prove the stated behavior on the OS version the fix targets; Liquid Glass handling of a raw UITabBar view backgroundColor can differ between released iOS 26.x and a later beta.",
+      "failure_scenario": "The patch ships with the changeset's iOS 26 claim, but on devices running released iOS 26.x the raw view backgroundColor renders differently than on the iOS 27 beta (e.g., clipped by the glass container or not composited as an opaque strip), leaving the originally reported transparent-vs-opaque bug unfixed or introducing a new artifact for the exact user population that filed issue #532.",
+      "severity": "medium"
+    },
+    {
+      "file": "artifacts/issue-532/README.md",
+      "line": 65,
+      "defect": "The branch commits ~32 MB of binary evidence (six .mp4 recordings, ten .png screenshots; 23 MB in verification/videos alone) into the library repository under artifacts/issue-532/, a directory with no precedent in the repo, permanently bloating git history for every consumer clone; this evidence belongs on the PR/issue, not in the package repository. Additionally, this line promises that 'final automated checks and adversarial-review disposition are recorded alongside this evidence', but no such record exists in the tree, leaving the evidence document self-referentially incomplete.",
+      "failure_scenario": "Every future clone, CI checkout, and fork of react-native-bottom-tabs downloads 32 MB of one-off issue videos forever (git history retains them even if later deleted), and reviewers relying on the README's promised checks/disposition record find it missing, undermining the evidentiary value the artifacts were committed to provide.",
+      "severity": "low"
+    }
+  ]
+}
