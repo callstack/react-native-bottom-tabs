@@ -1,5 +1,11 @@
 # react-native-bottom-tabs
 
+## 1.5.1
+
+### Patch Changes
+
+- [#604](https://github.com/callstack/react-native-bottom-tabs/pull/604) [`89089e3`](https://github.com/callstack/react-native-bottom-tabs/commit/89089e3544334af60bc48d19334dfb31694c0aab) Thanks [@teddyxfire1992](https://github.com/teddyxfire1992)! - Fix toggling `tabBarHidden` on iOS rebuilding the tab content, which dismissed sheets presented from the tab and dropped text input focus
+
 ## 1.5.0
 
 ### Minor Changes
