@@ -661,9 +661,6 @@ extension View {
   func hideTabBar(_ flag: Bool) -> some View {
     #if !os(macOS)
       if #available(iOS 16.0, tvOS 16.0, *) {
-        // Branch only on availability so toggling `flag` keeps the tab content's
-        // SwiftUI identity. Branching on `flag` swaps `_ConditionalContent` cases,
-        // which rebuilds the subtree and drops focus and anchored presentations.
         self.toolbar(flag ? .hidden : .automatic, for: .tabBar)
       } else {
         // We fallback to isHidden on UITabBar
