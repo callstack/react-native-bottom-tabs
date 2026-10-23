@@ -1,9 +1,6 @@
 import Foundation
 import React
 import SwiftUI
-#if SWIFT_PACKAGE && RN_BOTTOM_TABS_ENABLE_SVG
-  import BottomTabsSVG
-#endif
 
 @objcMembers
 public final class TabInfo: NSObject {
@@ -269,15 +266,13 @@ public final class TabInfo: NSObject {
         guard let imageSource else { continue }
 
         #if RN_BOTTOM_TABS_ENABLE_SVG
-          if isSVGRequest(imageSource.request) {
-            loadSVGIcon(with: imageSource.request) { [weak self] image in
-              guard let self else { return }
-              if let image {
-                updateIcon(image, at: index, focused: focused)
-              } else {
-                print("[TabView] Error loading SVG icon")
-              }
-            }
+          if SVGIconLoader.isSVGRequest(imageSource.request) {
+            loadSVGIcon(
+              with: imageSource.request,
+              at: index,
+              focused: focused,
+              failureMessage: "Error loading SVG icon"
+            )
             continue
           }
         #endif
@@ -291,30 +286,46 @@ public final class TabInfo: NSObject {
           progressBlock: { _, _ in },
           partialLoad: { _ in },
           completionBlock: { [weak self] error, image in
-            guard let self else { return }
-            if let error {
-              #if RN_BOTTOM_TABS_ENABLE_SVG
-                loadSVGIcon(with: imageSource.request) { [weak self] svgImage in
-                  guard let self else { return }
-                  if let svgImage {
-                    updateIcon(svgImage, at: index, focused: focused)
-                  } else {
-                    print("[TabView] Error loading image: \(error.localizedDescription)")
-                  }
-                }
-              #else
-                print("[TabView] Error loading image: \(error.localizedDescription)")
-              #endif
-              return
-            }
-            guard let image else { return }
-            updateIcon(image, at: index, focused: focused)
-          })
+            self?.handleLoadedIcon(
+              image,
+              error: error,
+              request: imageSource.request,
+              at: index,
+              focused: focused
+            )
+          }
+        )
       }
     }
   }
+}
 
-  private func updateIcon(_ image: PlatformImage, at index: Int, focused: Bool) {
+private extension TabViewProvider {
+  func handleLoadedIcon(
+    _ image: PlatformImage?,
+    error: Error?,
+    request: URLRequest,
+    at index: Int,
+    focused: Bool
+  ) {
+    if let error {
+      #if RN_BOTTOM_TABS_ENABLE_SVG
+        loadSVGIcon(
+          with: request,
+          at: index,
+          focused: focused,
+          failureMessage: "Error loading image: \(error.localizedDescription)"
+        )
+      #else
+        print("[TabView] Error loading image: \(error.localizedDescription)")
+      #endif
+      return
+    }
+    guard let image else { return }
+    updateIcon(image, at: index, focused: focused)
+  }
+
+  func updateIcon(_ image: PlatformImage, at index: Int, focused: Bool) {
     DispatchQueue.main.async { [weak self] in
       guard let self else { return }
       let icon = image.resizeImageTo(size: iconSize)
@@ -345,36 +356,18 @@ public final class TabInfo: NSObject {
   }
 
   #if RN_BOTTOM_TABS_ENABLE_SVG
-    private func isSVGRequest(_ request: URLRequest) -> Bool {
-      guard let url = request.url else { return false }
-      return url.pathExtension.lowercased() == "svg"
-        || url.absoluteString.lowercased().hasPrefix("data:image/svg+xml")
-    }
-
-    private func loadSVGIcon(
+    func loadSVGIcon(
       with request: URLRequest,
-      completion: @escaping (PlatformImage?) -> Void
+      at index: Int,
+      focused: Bool,
+      failureMessage: String
     ) {
-      guard let url = request.url else {
-        completion(nil)
-        return
-      }
-
-      let decode: (Data?) -> Void = { data in
-        guard let data else {
-          completion(nil)
-          return
-        }
-        completion(RNBottomTabsDecodeSVGData(data))
-      }
-
-      if url.scheme == "http" || url.scheme == "https" {
-        URLSession.shared.dataTask(with: request) { data, _, _ in
-          decode(data)
-        }.resume()
-      } else {
-        DispatchQueue.global(qos: .userInitiated).async {
-          decode(try? Data(contentsOf: url))
+      SVGIconLoader.decode(with: request) { [weak self] image in
+        guard let self else { return }
+        if let image {
+          updateIcon(image, at: index, focused: focused)
+        } else {
+          print("[TabView] \(failureMessage)")
         }
       }
     }
