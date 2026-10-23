@@ -2,11 +2,23 @@
 
 import PackageDescription
 
+// Apple-platform SVG tab icons use private CoreSVG APIs, so they are opt-in.
+// Set RN_BOTTOM_TABS_ENABLE_SVG=1 when SwiftPM resolves the package to enable them.
+let enableSVG = Context.environment["RN_BOTTOM_TABS_ENABLE_SVG"] == "1"
+
 let reactHeaders: [Target.Dependency] = [
     .product(name: "ReactHeaders", package: "ReactNative"),
     .product(name: "ReactNativeHeaders", package: "ReactNative"),
     .product(name: "ReactNativeDependenciesHeaders", package: "ReactNative"),
 ]
+
+let svgTargets: [Target] = enableSVG ? [
+    .target(
+        name: "BottomTabsSVG",
+        path: "ios/SVG",
+        publicHeadersPath: "."
+    ),
+] : []
 
 let package = Package(
     name: "react_native_bottom_tabs",
@@ -30,7 +42,7 @@ let package = Package(
             name: "BottomTabsSwift",
             dependencies: reactHeaders + [
                 .product(name: "SwiftUIIntrospect", package: "swiftui-introspect"),
-            ],
+            ] + (enableSVG ? ["BottomTabsSVG"] : []),
             path: "ios",
             exclude: [
                 "RCTTabViewComponentView.h",
@@ -41,7 +53,8 @@ let package = Package(
                 "SVG",
                 "include",
                 "Bridge",
-            ]
+            ],
+            swiftSettings: enableSVG ? [.define("RN_BOTTOM_TABS_ENABLE_SVG")] : []
         ),
         .target(
             name: "BottomTabsBridge",
@@ -60,7 +73,6 @@ let package = Package(
             sources: [
                 "ios/RCTTabViewComponentView.mm",
                 "ios/RCTBottomAccessoryComponentView.mm",
-                "ios/SVG",
                 "common/cpp",
             ],
             publicHeadersPath: "ios/include",
@@ -72,7 +84,7 @@ let package = Package(
                 .define("NDEBUG", .when(configuration: .release)),
             ]
         ),
-    ],
+    ] + svgTargets,
     swiftLanguageModes: [.v5],
     cxxLanguageStandard: .cxx20
 )

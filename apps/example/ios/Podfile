@@ -1,4 +1,5 @@
 ENV['RCT_NEW_ARCH_ENABLED'] = '1'
+$RNBottomTabsEnableSVG = ENV['RN_BOTTOM_TABS_ENABLE_SVG'] == '1'
 
 ws_dir = Pathname.new(__dir__)
 ws_dir = ws_dir.parent until
