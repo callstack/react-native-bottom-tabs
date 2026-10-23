@@ -302,7 +302,17 @@ With the decoder enabled, local and remote SVG sources can be used like other im
 tabBarIcon: () => require('person.svg')
 ```
 
-Enabling this flag compiles the optional CoreSVG implementation into the Apple-platform pod. The decoder is scoped to bottom-tab icons and is not registered with React Native's app-wide image loader.
+If your app uses Swift Package Manager instead of CocoaPods, set the `RN_BOTTOM_TABS_ENABLE_SVG` environment variable to `1` when SwiftPM resolves packages. For example, run the sync and the build from the same shell:
+
+```sh
+export RN_BOTTOM_TABS_ENABLE_SVG=1
+npx react-native spm
+npx react-native run-ios
+```
+
+Xcode reads this variable only when it is set in Xcode's own environment. If you open the project from the Dock or Finder, the variable from your shell does not reach it.
+
+Enabling this flag compiles the optional CoreSVG implementation into the Apple-platform library. The decoder is scoped to bottom-tab icons and is not registered with React Native's app-wide image loader.
 
 If you are upgrading from a version where Apple-platform SVG support was enabled automatically, add this flag before upgrading to preserve your existing SVG tab icons. Expo prebuild projects can use the package's `enableSVG` plugin option instead:
 

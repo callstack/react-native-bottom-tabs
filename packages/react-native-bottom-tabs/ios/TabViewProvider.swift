@@ -1,6 +1,9 @@
 import Foundation
 import React
 import SwiftUI
+#if SWIFT_PACKAGE && RN_BOTTOM_TABS_ENABLE_SVG
+  import BottomTabsSVG
+#endif
 
 @objcMembers
 public final class TabInfo: NSObject {
