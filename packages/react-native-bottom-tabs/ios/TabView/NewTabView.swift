@@ -52,6 +52,7 @@ struct NewTabView: AnyTabView {
                 title: tabData.title,
                 icon: labelImage ?? props.icons[index],
                 sfSymbol: tabData.sfSymbol,
+                sfSymbolOptions: tabData.sfSymbolOptions,
                 labeled: props.labeled,
                 // Rendered label images already have their final rendering mode.
                 iconRenderingMode: labelImage == nil ? tabData.iconRenderingMode : nil

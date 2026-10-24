@@ -43,11 +43,31 @@ typedef UIView PlatformView;
 
 namespace facebook::react {
 
+// The two SF Symbol option structs are generated separately, one per field,
+// even though they are structurally identical. A template keeps the comparison
+// and the conversion below written once.
+template <typename SymbolOptions>
+bool sfSymbolOptionsEqual(const SymbolOptions& lhs, const SymbolOptions& rhs) {
+  return lhs.size == rhs.size &&
+  lhs.weight == rhs.weight &&
+  lhs.scale == rhs.scale &&
+  lhs.color == rhs.color &&
+  lhs.primaryColor == rhs.primaryColor &&
+  lhs.secondaryColor == rhs.secondaryColor &&
+  lhs.tertiaryColor == rhs.tertiaryColor &&
+  lhs.renderingMode == rhs.renderingMode &&
+  lhs.variableValue == rhs.variableValue &&
+  lhs.variableValueMode == rhs.variableValueMode &&
+  lhs.colorRenderingMode == rhs.colorRenderingMode;
+}
+
 bool operator==(const RNCTabViewItemsStruct& lhs, const RNCTabViewItemsStruct& rhs) {
   return lhs.key == rhs.key &&
   lhs.title == rhs.title &&
   lhs.sfSymbol == rhs.sfSymbol &&
+  sfSymbolOptionsEqual(lhs.sfSymbolOptions, rhs.sfSymbolOptions) &&
   lhs.focusedSfSymbol == rhs.focusedSfSymbol &&
+  sfSymbolOptionsEqual(lhs.focusedSfSymbolOptions, rhs.focusedSfSymbolOptions) &&
   lhs.badge == rhs.badge &&
   lhs.activeTintColor == rhs.activeTintColor &&
   lhs.iconRenderingMode == rhs.iconRenderingMode &&
@@ -223,10 +243,73 @@ typedef NSObject TabInfo;
   [super updateProps:props oldProps:oldProps];
 }
 
+// Converts the flattened SF Symbol options into a dictionary the Swift side
+// parses. Sentinel values (`0` for size and weight, `-1` for variableValue,
+// empty strings) mean "not configured" and are dropped, so Swift sees `nil` and
+// leaves the corresponding platform default alone.
+template <typename SymbolOptions>
+static NSDictionary* convertSymbolOptions(const SymbolOptions& options) {
+  NSMutableDictionary *result = [NSMutableDictionary dictionary];
+
+  if (options.size > 0) {
+    result[@"size"] = @(options.size);
+  }
+
+  if (options.weight > 0) {
+    result[@"weight"] = @(options.weight);
+  }
+
+  if (!options.scale.empty()) {
+    result[@"scale"] = RCTNSStringFromString(options.scale);
+  }
+
+  if (UIColor *color = RCTUIColorFromSharedColor(options.color)) {
+    result[@"color"] = color;
+  }
+
+  if (UIColor *color = RCTUIColorFromSharedColor(options.primaryColor)) {
+    result[@"primaryColor"] = color;
+  }
+
+  if (UIColor *color = RCTUIColorFromSharedColor(options.secondaryColor)) {
+    result[@"secondaryColor"] = color;
+  }
+
+  if (UIColor *color = RCTUIColorFromSharedColor(options.tertiaryColor)) {
+    result[@"tertiaryColor"] = color;
+  }
+
+  if (!options.renderingMode.empty()) {
+    result[@"renderingMode"] = RCTNSStringFromString(options.renderingMode);
+  }
+
+  if (options.variableValue >= 0) {
+    result[@"variableValue"] = @(options.variableValue);
+  }
+
+  if (!options.variableValueMode.empty()) {
+    result[@"variableValueMode"] = RCTNSStringFromString(options.variableValueMode);
+  }
+
+  if (!options.colorRenderingMode.empty()) {
+    result[@"colorRenderingMode"] = RCTNSStringFromString(options.colorRenderingMode);
+  }
+
+  return result.count > 0 ? result : nil;
+}
+
 NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
   NSMutableArray<TabInfo *> *result = [NSMutableArray array];
 
   for (const auto& item : items) {
+    // Options only ever apply alongside a symbol name, and the generated struct
+    // cannot be null, so an item without a symbol carries default values that
+    // must not be mistaken for configuration.
+    NSDictionary *symbolOptions =
+      item.sfSymbol.empty() ? nil : convertSymbolOptions(item.sfSymbolOptions);
+    NSDictionary *focusedSymbolOptions =
+      item.focusedSfSymbol.empty() ? nil : convertSymbolOptions(item.focusedSfSymbolOptions);
+
 #if SWIFT_PACKAGE
     auto tabInfo = [RNCTabInfo createWithKey:RCTNSStringFromString(item.key)
 #else
@@ -235,7 +318,9 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
                                           title:RCTNSStringFromString(item.title)
                                           badge:RCTNSStringFromStringNilIfEmpty(item.badge)
                                        sfSymbol:RCTNSStringFromStringNilIfEmpty(item.sfSymbol)
+                                sfSymbolOptions:symbolOptions
                                  focusedSfSymbol:RCTNSStringFromStringNilIfEmpty(item.focusedSfSymbol)
+                         focusedSfSymbolOptions:focusedSymbolOptions
                                 activeTintColor:RCTUIColorFromSharedColor(item.activeTintColor)
                              iconRenderingMode:RCTNSStringFromStringNilIfEmpty(item.iconRenderingMode)
                                          hidden:item.hidden

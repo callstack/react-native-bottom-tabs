@@ -309,12 +309,14 @@ struct TabViewImpl: View {
         hasEffectiveRole = false
       }
       let inputs = Inputs(
-        icon: assetIcon.map(IconSource.image) ?? .sfSymbol(tabData.sfSymbol),
-        focusedIcon: focusedAssetIcon.map(IconSource.image) ?? tabData.focusedSfSymbol.map(IconSource.sfSymbol),
+        icon: assetIcon.map(IconSource.image)
+          ?? .sfSymbol(tabData.sfSymbol, tabData.sfSymbolOptions),
+        focusedIcon: focusedAssetIcon.map(IconSource.image)
+          ?? tabData.focusedSfSymbol.map { .sfSymbol($0, tabData.focusedSfSymbolOptions) },
         title: tabData.title,
         inactiveTintColor: props.inactiveTintColor,
         activeTintColor: tabData.activeTintColor ?? props.activeTintColor,
-        preservesOriginalIconColors: tabData.iconRenderingMode == "original",
+        preservesOriginalIconColors: preservesOriginalIconColors(tabData: tabData),
         useBakedTintColors: useBakedTintColors,
         rendersLabelIntoImage: useBakedTintColors && props.hasCustomTintColors && props.labeled && !hasEffectiveRole,
         fontSize: props.fontSize,
@@ -327,8 +329,13 @@ struct TabViewImpl: View {
       }
 
       let images = render(
-        icon: assetIcon ?? makeSFSymbolImage(named: tabData.sfSymbol),
-        focusedIcon: focusedAssetIcon ?? makeSFSymbolImage(named: tabData.focusedSfSymbol),
+        icon: assetIcon
+          ?? makeSFSymbolImage(named: tabData.sfSymbol, options: tabData.sfSymbolOptions),
+        focusedIcon: focusedAssetIcon
+          ?? makeSFSymbolImage(
+            named: tabData.focusedSfSymbol,
+            options: tabData.focusedSfSymbolOptions
+          ),
         inputs: inputs,
         props: props
       )
@@ -387,14 +394,16 @@ struct TabViewImpl: View {
 
     private enum IconSource: Equatable {
       case image(UIImage)
-      case sfSymbol(String)
+      case sfSymbol(String, SFSymbolOptions?)
 
       static func == (lhs: IconSource, rhs: IconSource) -> Bool {
         switch (lhs, rhs) {
         case let (.image(lhs), .image(rhs)):
           return lhs === rhs
-        case let (.sfSymbol(lhs), .sfSymbol(rhs)):
-          return lhs == rhs
+        case let (.sfSymbol(lhsName, lhsOptions), .sfSymbol(rhsName, rhsOptions)):
+          // A new `SFSymbolOptions` instance is built on every items update, so
+          // this compares by value to keep the cache from missing every time.
+          return lhsName == rhsName && lhsOptions == rhsOptions
         default:
           return false
         }
@@ -416,6 +425,18 @@ struct TabViewImpl: View {
     }
   }
 
+  private func preservesOriginalIconColors(tabData: TabInfo) -> Bool {
+    if tabData.iconRenderingMode == "original" {
+      return true
+    }
+
+    // A symbol configured with its own colors, or with a non-monochrome
+    // rendering mode, would be flattened by the tab bar tint. Treat it the
+    // same way as an image icon that opts out of tinting.
+    return tabData.sfSymbolOptions?.preservesOwnColors == true
+      || tabData.focusedSfSymbolOptions?.preservesOwnColors == true
+  }
+
   private func renderTabBarIcon(
     _ icon: UIImage,
     color: UIColor?,
@@ -433,10 +454,10 @@ struct TabViewImpl: View {
     return icon.withTintColor(color, renderingMode: .alwaysOriginal)
   }
 
-  private func makeSFSymbolImage(named sfSymbol: String?) -> UIImage? {
+  private func makeSFSymbolImage(named sfSymbol: String?, options: SFSymbolOptions?) -> UIImage? {
     guard let sfSymbol, !sfSymbol.isEmpty else { return nil }
 
-    return UIImage(systemName: sfSymbol)
+    return SFSymbolOptions.makeImage(named: sfSymbol, options: options)
   }
 
   private func selectedAttributes(props: TabViewProps) -> [NSAttributedString.Key: Any] {

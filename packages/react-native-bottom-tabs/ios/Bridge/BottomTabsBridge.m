@@ -15,7 +15,9 @@ NSObject *RNCCreateBottomAccessoryProvider(id<RNCBottomAccessoryProviderDelegate
                      title:(NSString *)title
                      badge:(NSString *)badge
                   sfSymbol:(NSString *)sfSymbol
+           sfSymbolOptions:(NSDictionary *)sfSymbolOptions
            focusedSfSymbol:(NSString *)focusedSfSymbol
+    focusedSfSymbolOptions:(NSDictionary *)focusedSfSymbolOptions
            activeTintColor:(UIColor *)activeTintColor
          iconRenderingMode:(NSString *)iconRenderingMode
                     hidden:(BOOL)hidden
@@ -23,7 +25,10 @@ NSObject *RNCCreateBottomAccessoryProvider(id<RNCBottomAccessoryProviderDelegate
                       role:(NSString *)role
            preventsDefault:(BOOL)preventsDefault {
   return [[TabInfo alloc] initWithKey:key title:title badge:badge sfSymbol:sfSymbol
-                    focusedSfSymbol:focusedSfSymbol activeTintColor:activeTintColor
+                    sfSymbolOptions:sfSymbolOptions
+                    focusedSfSymbol:focusedSfSymbol
+             focusedSfSymbolOptions:focusedSfSymbolOptions
+                    activeTintColor:activeTintColor
                   iconRenderingMode:iconRenderingMode hidden:hidden testID:testID
                                role:role preventsDefault:preventsDefault];
 }

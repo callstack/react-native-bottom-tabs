@@ -282,6 +282,19 @@ Function that given `{ focused: boolean }` returns `ImageSource` or `AppleIcon` 
 />
 ```
 
+SF Symbols accept further configuration, such as `weight`, `scale`, `renderingMode` and per-layer `colors`:
+
+```tsx
+tabBarIcon: () => ({
+  sfSymbol: 'person',
+  weight: 'semibold',
+  renderingMode: 'hierarchical',
+  color: '#AF52DE',
+}),
+```
+
+See the [SF Symbols guide](/docs/guides/sf-symbols) for every supported option.
+
 :::note
 SF Symbols are only supported on Apple platforms.
 :::
