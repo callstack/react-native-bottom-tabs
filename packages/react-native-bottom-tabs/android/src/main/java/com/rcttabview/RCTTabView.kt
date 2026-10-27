@@ -263,10 +263,9 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
       menuItem.isVisible = !item.hidden
       updateIconTintMode(menuItem, item)
       if (iconSources.containsKey(index)) {
-        getDrawable(iconSources[index]!!, getIconSize(item)) {
-          menuItem.icon = it
-          updateIconTintMode(menuItem, item)
-          updateIconSize(menuItem, item)
+        val iconSizePx = getIconSize(item)
+        getDrawable(iconSources[index]!!, iconSizePx) {
+          applyIcon(menuItem, index, iconSizePx, it)
         }
       }
 
@@ -360,13 +359,9 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
       // Update existing item if exists.
       bottomNavigation.menu.findItem(idx)?.let { menuItem ->
-        val item = items.getOrNull(idx)
-        getDrawable(imageSource, getIconSize(item)) {
-          menuItem.icon = it
-          item?.let {
-            updateIconTintMode(menuItem, item)
-            updateIconSize(menuItem, item)
-          }
+        val iconSizePx = getIconSize(items.getOrNull(idx))
+        getDrawable(imageSource, iconSizePx) {
+          applyIcon(menuItem, idx, iconSizePx, it)
         }
       }
     }
@@ -431,6 +426,19 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
       iconSize.toFloat(),
       resources.displayMetrics
     ).roundToInt()
+  }
+
+  private fun applyIcon(menuItem: MenuItem, index: Int, iconSizePx: Int, drawable: Drawable?) {
+    // Icons load asynchronously, so read the latest item instead of the one captured at request time.
+    val item = items.getOrNull(index)
+    // The icon size changed while loading, a request for the new size is already in flight.
+    if (getIconSize(item) != iconSizePx) return
+
+    menuItem.icon = drawable
+    item?.let {
+      updateIconTintMode(menuItem, it)
+      updateIconSize(menuItem, it)
+    }
   }
 
   private fun updateIconSize(menuItem: MenuItem, item: TabInfo) {
