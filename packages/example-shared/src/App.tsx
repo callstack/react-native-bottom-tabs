@@ -45,6 +45,7 @@ import TabBarHidden from './Examples/TabBarHidden';
 import CustomTabBar from './Examples/CustomTabBar';
 import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
 import OriginalIconColors from './Examples/OriginalIconColors';
+import IconSizes from './Examples/IconSizes';
 import NativeBottomTabsOriginalIcons from './Examples/NativeBottomTabsOriginalIcons';
 import { useLogger } from '@react-navigation/devtools';
 import LazyTabs from './Examples/LazyTabs';
@@ -125,6 +126,10 @@ const examples = [
   {
     component: OriginalIconColors,
     name: 'Original icon colors',
+  },
+  {
+    component: IconSizes,
+    name: 'Icon sizes',
   },
   {
     component: FourTabsRippleColor,
