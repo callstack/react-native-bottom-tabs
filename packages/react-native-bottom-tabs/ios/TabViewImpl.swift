@@ -312,6 +312,7 @@ struct TabViewImpl: View {
         icon: assetIcon.map(IconSource.image) ?? .sfSymbol(tabData.sfSymbol),
         focusedIcon: focusedAssetIcon.map(IconSource.image) ?? tabData.focusedSfSymbol.map(IconSource.sfSymbol),
         title: tabData.title,
+        iconSize: iconSize(for: tabData),
         inactiveTintColor: props.inactiveTintColor,
         activeTintColor: tabData.activeTintColor ?? props.activeTintColor,
         preservesOriginalIconColors: tabData.iconRenderingMode == "original",
@@ -351,6 +352,7 @@ struct TabViewImpl: View {
             icon: icon,
             title: inputs.title,
             color: inputs.inactiveTintColor,
+            iconSize: inputs.iconSize,
             preservesOriginalIconColors: inputs.preservesOriginalIconColors,
             props: props
           ),
@@ -358,6 +360,7 @@ struct TabViewImpl: View {
             icon: selectedIcon,
             title: inputs.title,
             color: inputs.activeTintColor,
+            iconSize: inputs.iconSize,
             preservesOriginalIconColors: inputs.preservesOriginalIconColors,
             props: props
           ),
@@ -405,6 +408,7 @@ struct TabViewImpl: View {
       let icon: IconSource
       let focusedIcon: IconSource?
       let title: String
+      let iconSize: CGSize
       let inactiveTintColor: UIColor?
       let activeTintColor: UIColor?
       let preservesOriginalIconColors: Bool
@@ -466,11 +470,11 @@ struct TabViewImpl: View {
     icon: UIImage,
     title: String,
     color: UIColor?,
+    iconSize: CGSize,
     preservesOriginalIconColors: Bool = false,
     props: TabViewProps
   ) -> UIImage {
     let color = color ?? .label
-    let iconSize = CGSize(width: 27, height: 27)
     let font =
       TabBarFontSize.createFontAttributes(
         size: props.fontSize.map(CGFloat.init) ?? TabBarFontSize.defaultSize,
@@ -523,6 +527,14 @@ struct TabViewImpl: View {
     }
 
     return image.withRenderingMode(.alwaysOriginal)
+  }
+
+  private func iconSize(for tabData: TabInfo) -> CGSize {
+    guard let value = tabData.iconSize?.doubleValue, value > 0 else {
+      return CGSize(width: 27, height: 27)
+    }
+
+    return CGSize(width: value, height: value)
   }
 
   private func aspectFitRect(size: CGSize, in rect: CGRect) -> CGRect {

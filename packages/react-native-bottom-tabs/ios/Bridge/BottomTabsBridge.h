@@ -38,6 +38,7 @@
 @property(nonatomic, strong) NSNumber *fontSize;
 @property(nonatomic) BOOL tabBarHidden;
 @property(nonatomic, copy) NSArray *itemsData;
+@property(nonatomic, copy) NSArray<NSNumber *> *iconSizes;
 - (void)setImageLoader:(RCTImageLoader *)imageLoader;
 - (void)insertChild:(UIView *)child atIndex:(NSInteger)index;
 - (void)removeChildAtIndex:(NSInteger)index;
@@ -53,6 +54,7 @@ FOUNDATION_EXPORT NSObject *RNCCreateBottomAccessoryProvider(id<RNCBottomAccesso
                   sfSymbol:(NSString *)sfSymbol
            focusedSfSymbol:(NSString *)focusedSfSymbol
            activeTintColor:(UIColor *)activeTintColor
+                  iconSize:(NSNumber *)iconSize
          iconRenderingMode:(NSString *)iconRenderingMode
                     hidden:(BOOL)hidden
                     testID:(NSString *)testID

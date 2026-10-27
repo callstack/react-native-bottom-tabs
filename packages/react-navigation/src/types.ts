@@ -72,6 +72,11 @@ export type NativeBottomTabNavigationOptions = {
   tabBarIcon?: (props: { focused: boolean }) => ImageSourcePropType | AppleIcon;
 
   /**
+   * Width and height of the tab image icon in logical pixels.
+   */
+  tabBarIconSize?: number;
+
+  /**
    * Rendering mode for the tab icon. Use `original` to preserve multicolor image icons.
    */
   tabBarIconRenderingMode?: IconRenderingMode;
@@ -159,6 +164,7 @@ export type NativeBottomTabNavigationConfig = Partial<
     | 'renderScene'
     | 'getLazy'
     | 'getIcon'
+    | 'getIconSize'
     | 'getIconRenderingMode'
     | 'getLabelText'
     | 'getBadge'
