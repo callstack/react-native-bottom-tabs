@@ -44,7 +44,9 @@ export default function TintColorsExample() {
     },
     {
       key: 'chat',
-      focusedIcon: require('../../assets/icons/chat_dark.png'),
+      focusedIcon: {
+        uri: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+      },
       title: 'Chat',
     },
   ]);

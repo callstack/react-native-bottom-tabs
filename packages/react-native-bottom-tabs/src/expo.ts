@@ -1,15 +1,13 @@
 import { type ConfigPlugin } from '@expo/config-plugins';
 import { createRequire } from 'node:module';
+import { setPodfileSVGFlag } from './expoPodfile';
 
 const require = createRequire(import.meta.url);
 
 const ConfigPlugins = require('@expo/config-plugins');
-const GenerateCode = require('@expo/config-plugins/build/utils/generateCode');
 
 const { createRunOncePlugin, withAndroidStyles, withPodfile } =
   ConfigPlugins as typeof import('@expo/config-plugins');
-const { mergeContents, removeContents } =
-  GenerateCode as typeof import('@expo/config-plugins/build/utils/generateCode');
 
 const MATERIAL3_THEME_DYNAMIC =
   'Theme.Material3.DynamicColors.DayNight.NoActionBar';
@@ -29,14 +27,13 @@ type ConfigProps = {
     | 'material3-dynamic'
     | 'material3-expressive';
   /**
-   * Enable SVG tab icons on Apple platforms.
-   * @default false
+   * Controls the SVG image decoder on Apple platforms, which uses private
+   * CoreSVG APIs. `true` keeps it, `false` removes it from the build.
+   * When unset, it stays enabled with a deprecation warning during
+   * `pod install`, because the next major version disables it by default.
    */
   enableSVG?: boolean;
 };
-
-const SVG_PODFILE_TAG = 'react-native-bottom-tabs-svg';
-const SVG_PODFILE_FLAG = '$RNBottomTabsEnableSVG = true';
 
 const withMaterial3Theme: ConfigPlugin<ConfigProps> = (config, options) => {
   const theme = options?.theme;
@@ -65,21 +62,10 @@ const withMaterial3Theme: ConfigPlugin<ConfigProps> = (config, options) => {
 
 const withSVGSupport: ConfigPlugin<ConfigProps> = (config, options) => {
   return withPodfile(config, (podfileConfig) => {
-    const contents = podfileConfig.modResults.contents;
-
-    podfileConfig.modResults.contents = options?.enableSVG
-      ? mergeContents({
-          src: contents,
-          newSrc: SVG_PODFILE_FLAG,
-          tag: SVG_PODFILE_TAG,
-          anchor: /^platform :ios/,
-          offset: 1,
-          comment: '#',
-        }).contents
-      : removeContents({
-          src: contents,
-          tag: SVG_PODFILE_TAG,
-        }).contents;
+    podfileConfig.modResults.contents = setPodfileSVGFlag(
+      podfileConfig.modResults.contents,
+      options?.enableSVG
+    );
 
     return podfileConfig;
   });

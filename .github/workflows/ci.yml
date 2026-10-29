@@ -157,8 +157,19 @@ jobs:
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
   build-ios-swiftpm:
+    name: build-ios-swiftpm (svg ${{ matrix.svg.name }})
     runs-on: macos-26
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        svg:
+          - name: default
+            value: ''
+          - name: disabled
+            value: '0'
+    env:
+      RN_BOTTOM_TABS_ENABLE_SVG: ${{ matrix.svg.value }}
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -181,3 +192,57 @@ jobs:
             ARCHS=arm64 \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+      - name: Check that no private CoreSVG code is linked
+        if: matrix.svg.name == 'disabled'
+        run: |
+          app="$RUNNER_TEMP/example-swiftpm-build/Build/Products/Release-iphonesimulator/ExampleSwiftPM.app"
+          if find "$app" -type f -perm +111 -exec strings -a {} + | grep -E 'CoreSVGWrapper|Q0dTVkdEb2N1bWVud'; then
+            echo "::error::The SVG-disabled build still contains private CoreSVG code."
+            exit 1
+          fi
+
+  build-ios-svg-disabled:
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      RN_BOTTOM_TABS_ENABLE_SVG: '0'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build package
+        run: yarn build
+
+      - name: Install cocoapods and plugins
+        run: |
+          gem install cocoapods-swift-modular-headers
+          cd apps/example
+          pod install --project-directory=ios
+        env:
+          RCT_NEW_ARCH_ENABLED: 1
+          NO_FLIPPER: 1
+
+      - name: Build example for iOS with SVG disabled
+        run: |
+          xcodebuild \
+            -workspace apps/example/ios/ReactNativeBottomTabsExample.xcworkspace \
+            -scheme ReactTestApp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/example-svg-disabled-build" \
+            ARCHS=arm64 \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Check that no private CoreSVG code is linked
+        run: |
+          app="$RUNNER_TEMP/example-svg-disabled-build/Build/Products/Debug-iphonesimulator/ReactTestApp.app"
+          if find "$app" -type f -perm +111 -exec strings -a {} + | grep -E 'CoreSVGWrapper|Q0dTVkdEb2N1bWVud'; then
+            echo "::error::The SVG-disabled build still contains private CoreSVG code."
+            exit 1
+          fi

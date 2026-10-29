@@ -112,7 +112,7 @@
   },
   "codegenConfig": {
     "name": "RNCTabView",
-    "type": "components",
+    "type": "all",
     "jsSrcsDir": "./src",
     "android": {
       "javaPackageName": "com.rcttabview"
@@ -121,6 +121,11 @@
       "componentProvider": {
         "RNCTabView": "RCTTabViewComponentView",
         "BottomAccessoryView": "RCTBottomAccessoryComponentView"
+      },
+      "modulesConformingToProtocol": {
+        "RCTImageDataDecoder": [
+          "SvgDecoder"
+        ]
       }
     }
   }

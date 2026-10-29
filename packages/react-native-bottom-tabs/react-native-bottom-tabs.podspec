@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
 
   s.dependency "SwiftUIIntrospect", '~> 1.0'
 
-  s.exclude_files = RNBottomTabs::SVGConfiguration::SVG_SOURCES unless RNBottomTabs::SVGConfiguration.enabled?
+  RNBottomTabs::SVGConfiguration.warn_if_unset
 
   s.pod_target_xcconfig = RNBottomTabs::SVGConfiguration.xcconfig(
     { 'DEFINES_MODULE' => 'YES' }

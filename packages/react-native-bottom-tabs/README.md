@@ -19,7 +19,7 @@
 
 The full documentation can be found on our [website](https://oss.callstack.com/react-native-bottom-tabs/).
 
-SVG tab icons on Apple platforms are disabled by default. See the [icon configuration guide](https://oss.callstack.com/react-native-bottom-tabs/docs/guides/usage-with-react-navigation#svg-icons-on-apple-platforms) for the Podfile and Expo opt-ins.
+On Apple platforms, the SVG image decoder will be disabled by default in the next major version. See [SVG images on Apple platforms](https://oss.callstack.com/react-native-bottom-tabs/docs/guides/usage-with-react-navigation#svg-images-on-apple-platforms) to keep it or to remove it now.
 
 ## Contributing
 

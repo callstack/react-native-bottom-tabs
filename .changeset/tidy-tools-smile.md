@@ -1,5 +1,5 @@
 ---
-"react-native-bottom-tabs": major
+"react-native-bottom-tabs": minor
 ---
 
-Disable Apple-platform SVG tab icon support by default and add the `$RNBottomTabsEnableSVG` Podfile opt-in and the `RN_BOTTOM_TABS_ENABLE_SVG=1` Swift Package Manager opt-in. The optional CoreSVG decoder is now scoped to bottom-tab icons instead of being registered app-wide with React Native's image loader.
+Add the `$RNBottomTabsEnableSVG` Podfile flag, the `enableSVG` Expo plugin option, and the `RN_BOTTOM_TABS_ENABLE_SVG` environment variable for Swift Package Manager. Set the flag to `false` to remove the private CoreSVG code from Apple builds. When the flag is not set, SVG decoding stays enabled and `pod install` shows a deprecation warning. The next major version disables SVG decoding by default.
