@@ -6,10 +6,6 @@ It can be used as a standalone library or as a drop-in replacement for the botto
 
 It is designed to be a drop-in replacement for JavaScript-based bottom tabs.
 
-## GitHub account
-
-Use the GitHub account `thiagobrez` for this repository. Scope every `gh` command with `GH_TOKEN="$(gh auth token --hostname github.com --user thiagobrez)"` so another repository's active account cannot affect it. Before GitHub mutations, verify that the same prefix with `gh api user --jq .login` returns `thiagobrez`. If that account's token is unavailable, stop and report it; keep tokens out of output and files.
-
 ## agent-device usage
 
 Use agent-device only for app/device automation tasks. Before planning commands, run `agent-device --version` and read `agent-device help workflow`. For exploratory QA, read `agent-device help dogfood`. For logs, network, traces, or runtime failures, read `agent-device help debugging`. For React Native component trees, props/state/hooks, slow renders, or rerenders, read `agent-device help react-devtools`. For React Native apps, overlays, Metro/Fast Refresh blockers, and routing to React DevTools or debugging evidence, read `agent-device help react-native`.
