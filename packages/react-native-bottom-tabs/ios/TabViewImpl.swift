@@ -531,7 +531,7 @@ struct TabViewImpl: View {
 
   private func iconSize(for tabData: TabInfo) -> CGSize {
     guard let value = tabData.iconSize?.doubleValue, value > 0 else {
-      return CGSize(width: 27, height: 27)
+      return defaultIconSize
     }
 
     return CGSize(width: value, height: value)

@@ -245,8 +245,8 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     }
   }
 
-  fun updateItems(items: MutableList<TabInfo>) {
-    val items = items.mapIndexed { index, item ->
+  fun updateItems(newItems: MutableList<TabInfo>) {
+    val items = newItems.mapIndexed { index, item ->
       item.copy(iconSize = iconSizes.getOrNull(index)?.takeIf { it > 0 })
     }.toMutableList()
     // If an item got removed, let's re-add all items

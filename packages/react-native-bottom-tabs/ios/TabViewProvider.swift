@@ -54,13 +54,14 @@ public final class TabInfo: NSObject {
   func onLayout(size: CGSize, reactTag: NSNumber?)
 }
 
+let defaultIconSize = CGSize(width: 27, height: 27)
+
 @objc public class TabViewProvider: PlatformView {
   private var imageLoader: RCTImageLoaderProtocol?
   private weak var delegate: TabViewProviderDelegate?
   private var props = TabViewProps()
   private var hostingController: PlatformHostingController<TabViewImpl>?
   private var coalescingKey: UInt16 = 0
-  private let defaultIconSize = CGSize(width: 27, height: 27)
 
   @objc var onPageSelected: RCTDirectEventBlock?
 
