@@ -9,8 +9,12 @@ module.exports = function (api) {
 
   const alias = Object.fromEntries(
     fs
-      .readdirSync(packages)
-      .filter((name) => !name.startsWith('.'))
+      .readdirSync(packages, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
+      .map((entry) => entry.name)
+      .filter((name) =>
+        fs.existsSync(path.join(packages, name, 'package.json'))
+      )
       .map((name) => {
         const pak = require(`../../packages/${name}/package.json`);
 
