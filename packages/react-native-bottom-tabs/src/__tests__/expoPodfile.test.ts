@@ -33,6 +33,17 @@ describe('setPodfileSVGFlag', () => {
     expect(twice).toContain('$RNBottomTabsEnableSVG = false');
   });
 
+  it('replaces a block that lost its end marker', () => {
+    const broken = setPodfileSVGFlag(podfile, false)
+      .split('\n')
+      .filter((line) => !line.startsWith('# @generated end'))
+      .join('\n');
+    const result = setPodfileSVGFlag(broken, true);
+
+    expect(result.match(/\$RNBottomTabsEnableSVG/g)).toHaveLength(1);
+    expect(result).toContain('$RNBottomTabsEnableSVG = true');
+  });
+
   it('removes the flag when the option is unset', () => {
     expect(setPodfileSVGFlag(setPodfileSVGFlag(podfile, true), undefined)).toBe(
       podfile

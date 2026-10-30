@@ -17,8 +17,9 @@ export function setPodfileSVGFlag(
     (line, index) => index > start && line.startsWith(BLOCK_END)
   );
 
-  if (start !== -1 && end !== -1) {
-    lines.splice(start, end - start + 1);
+  // A block without its end marker is removed up to the end of the file.
+  if (start !== -1) {
+    lines.splice(start, (end === -1 ? lines.length : end + 1) - start);
   }
 
   if (enableSVG !== undefined) {
