@@ -1,5 +1,5 @@
-appId: bottomtabs.example
-name: Interact with a Unicode tab key
+appId: ${APP_ID}
+name: Press and long-press a tab with a Unicode key
 ---
 - launchApp
 - scrollUntilVisible:
@@ -11,8 +11,9 @@ name: Interact with a Unicode tab key
     text: ^Native Bottom Tabs$
 - assertVisible: Press me
 - tapOn:
-    text: ^메시지$
-- assertVisible: 메시지
+    text: ^Albums$
 - longPressOn:
-    text: ^메시지$
-- assertVisible: 메시지
+    text: ^Albums$
+- tapOn:
+    text: ^Chat$
+- assertVisible: Press me
