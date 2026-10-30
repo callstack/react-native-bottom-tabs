@@ -1,5 +1,15 @@
 # react-native-bottom-tabs
 
+## 1.5.1
+
+### Patch Changes
+
+- [#612](https://github.com/callstack/react-native-bottom-tabs/pull/612) [`229e659`](https://github.com/callstack/react-native-bottom-tabs/commit/229e65939ba5863b5ab069fdfb8f34f8e51321ab) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Fix `scrollEdgeAppearance` on iOS 26 and newer.
+
+- [#604](https://github.com/callstack/react-native-bottom-tabs/pull/604) [`89089e3`](https://github.com/callstack/react-native-bottom-tabs/commit/89089e3544334af60bc48d19334dfb31694c0aab) Thanks [@teddyxfire1992](https://github.com/teddyxfire1992)! - Fix toggling `tabBarHidden` on iOS rebuilding the tab content, which dismissed sheets presented from the tab and dropped text input focus
+
+- [#558](https://github.com/callstack/react-native-bottom-tabs/pull/558) [`31b3a5a`](https://github.com/callstack/react-native-bottom-tabs/commit/31b3a5afe0f9e92a13cb5221609bc12daa5bdc92) Thanks [@JJalit](https://github.com/JJalit)! - Fix Android content not resizing when the tab bar visibility changes (`tabBarHidden`). The layout listener compared the container bounds, which stay the same when only the tab bar is hidden or shown, so the new `layoutHolder` size was never reported to JS and the content kept its stale height.
+
 ## 1.5.0
 
 ### Minor Changes
