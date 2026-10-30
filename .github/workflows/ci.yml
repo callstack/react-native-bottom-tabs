@@ -30,6 +30,9 @@ jobs:
       - name: Typecheck files
         run: yarn typecheck
 
+      - name: Test SVG configuration
+        run: yarn workspace react-native-bottom-tabs test:ruby
+
   swift-lint:
     runs-on: ubuntu-latest
     steps:

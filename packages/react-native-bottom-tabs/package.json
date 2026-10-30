@@ -38,7 +38,8 @@
     "!**/.*"
   ],
   "scripts": {
-    "test": "ruby ios/__tests__/svg_configuration_test.rb && jest",
+    "test": "jest",
+    "test:ruby": "ruby ios/__tests__/svg_configuration_test.rb",
     "typecheck": "tsc -b",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "build": "bob build"
