@@ -1,6 +1,6 @@
 {
   "name": "react-native-bottom-tabs",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Native Bottom Tabs for React Native",
   "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
@@ -22,6 +22,7 @@
     "ios",
     "cpp",
     "common",
+    "Package.swift",
     "react-native.config.js",
     "app.plugin.js",
     "*.podspec",
@@ -41,6 +42,12 @@
     "typecheck": "tsc -b",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "build": "bob build"
+  },
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ]
   },
   "keywords": [
     "react-native",

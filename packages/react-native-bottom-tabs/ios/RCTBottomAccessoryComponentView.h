@@ -1,4 +1,4 @@
-#ifdef RCT_NEW_ARCH_ENABLED
+#if defined(RCT_NEW_ARCH_ENABLED) || defined(SWIFT_PACKAGE)
 #import <React/RCTViewComponentView.h>
 #if TARGET_OS_OSX
 #import <AppKit/AppKit.h>

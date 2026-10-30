@@ -88,6 +88,18 @@ We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint]
 
 Our pre-commit hooks verify that the linter and tests pass when committing.
 
+`yarn lint` and `yarn typecheck` deliberately skip `@bottom-tabs/expo-template`. The template has
+its own `lint` and `typecheck` scripts.
+
+Check the template the way people actually consume it - pack it, scaffold an app, and run its scripts there:
+
+```sh
+yarn workspace @bottom-tabs/expo-template pack --out /tmp/expo-template.tgz
+npx create-expo-app@latest /tmp/tpl --template /tmp/expo-template.tgz
+cd /tmp/tpl && npm install && npx expo start # generates .expo/types, then stop it
+npm run lint && npm run typecheck && npm test
+```
+
 ### Changesets
 
 We use [changesets](https://github.com/changesets/changesets) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
