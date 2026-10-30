@@ -6,6 +6,7 @@ import SwiftUI
 /// SwiftUI implementation of TabView used to render React Native views.
 struct TabViewImpl: View {
   @ObservedObject var props: TabViewProps
+  @Environment(\.colorScheme) private var colorScheme
   #if os(macOS)
     @Weak var tabBar: NSTabView?
   #else
@@ -81,6 +82,9 @@ struct TabViewImpl: View {
       }
       #if !os(macOS)
         .configureAppearance(props: props, tabBar: tabBar)
+        .onChange(of: colorScheme) { _ in
+          updateTabBarAppearance(props: props, tabBar: tabBar)
+        }
       #endif
       .tintColor(props.selectedActiveTintColor)
       .getSidebarAdaptable(enabled: props.sidebarAdaptable ?? false)
@@ -148,13 +152,14 @@ struct TabViewImpl: View {
 
     #if os(iOS)
       if #available(iOS 26.0, *) {
+        let traits = tabBar.window?.traitCollection ?? tabBar.traitCollection
         if props.scrollEdgeAppearance == "transparent" {
           tabBar.backgroundColor = nil
         } else if let barTintColor = props.barTintColor {
-          tabBar.backgroundColor = barTintColor
+          tabBar.backgroundColor = barTintColor.resolvedColor(with: traits)
         } else {
           let isOpaque = props.scrollEdgeAppearance == "opaque" || !props.translucent
-          tabBar.backgroundColor = isOpaque ? .systemBackground : nil
+          tabBar.backgroundColor = isOpaque ? UIColor.systemBackground.resolvedColor(with: traits) : nil
         }
       }
     #endif
