@@ -310,7 +310,7 @@ $RNBottomTabsEnableSVG = false
 | `true` | Enabled | Enabled |
 | `false` | Disabled. No private CoreSVG code is compiled. | Disabled |
 
-When the decoder is disabled, SVG sources do not show, and development builds log a warning. PNG, JPEG, and SF Symbol icons do not need the decoder.
+When the decoder is disabled, SVG sources do not show, and development builds log a warning to the JavaScript console. React Native DevTools shows the full message, and LogBox shows that a warning exists. PNG, JPEG, and SF Symbol icons do not need the decoder.
 
 You can also set the `RN_BOTTOM_TABS_ENABLE_SVG` environment variable to `1` or `0`. If the `Podfile` also sets `$RNBottomTabsEnableSVG`, the `Podfile` value is used.
 
@@ -334,7 +334,7 @@ npx react-native run-ios
 
 Xcode reads this variable only when it is set in Xcode's own environment. If you open the project from the Dock or Finder, the variable from your shell does not reach it.
 
-When the flag is not set, development builds also log the deprecation warning the first time that the app decodes an SVG image. With Swift Package Manager, this is the only place where the warning shows, because there is no `pod install` step.
+When the flag is not set, development builds also log the deprecation warning to the JavaScript console the first time that the app decodes an SVG image. With Swift Package Manager, this is the only place where the warning shows, because there is no `pod install` step.
 
 #### `tabBarIconRenderingMode`
 
