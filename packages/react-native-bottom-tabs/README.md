@@ -19,6 +19,8 @@
 
 The full documentation can be found on our [website](https://oss.callstack.com/react-native-bottom-tabs/).
 
+On Apple platforms, the SVG image decoder will be disabled by default in the next major version. See [SVG images on Apple platforms](https://oss.callstack.com/react-native-bottom-tabs/docs/guides/usage-with-react-navigation#svg-images-on-apple-platforms) to keep it or to remove it now.
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.

@@ -1,4 +1,5 @@
 require "json"
+require_relative "ios/svg_configuration"
 
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
@@ -27,9 +28,11 @@ Pod::Spec.new do |s|
 
   s.dependency "SwiftUIIntrospect", '~> 1.0'
 
-  s.pod_target_xcconfig = {
-    'DEFINES_MODULE' => 'YES'
-  }
+  RNBottomTabs::SVGConfiguration.warn_if_unset
+
+  s.pod_target_xcconfig = RNBottomTabs::SVGConfiguration.xcconfig(
+    { 'DEFINES_MODULE' => 'YES' }
+  )
 
   install_modules_dependencies(s)
 end
