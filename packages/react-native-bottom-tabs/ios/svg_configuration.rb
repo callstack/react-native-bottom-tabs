@@ -4,9 +4,9 @@ module RNBottomTabs
   # The app sets `$RNBottomTabsEnableSVG` in its Podfile, or the
   # `RN_BOTTOM_TABS_ENABLE_SVG` environment variable. The Podfile value wins.
   #
-  #   unset          -> enabled, with a deprecation notice
-  #   true / "1"     -> enabled
-  #   false / "0"    -> disabled, no private CoreSVG code is compiled
+  #   unset                  -> enabled, with a deprecation notice
+  #   true / "1" / "yes"     -> enabled
+  #   false / "0" / "no"     -> disabled, no private CoreSVG code is compiled
   module SVGConfiguration
     COMPILATION_CONDITION = "RN_BOTTOM_TABS_ENABLE_SVG"
     DEFAULTED_CONDITION = "RN_BOTTOM_TABS_SVG_DEFAULTED"

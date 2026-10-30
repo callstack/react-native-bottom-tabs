@@ -4,19 +4,32 @@ import PackageDescription
 
 // The SVG image decoder uses private CoreSVG APIs. RN_BOTTOM_TABS_ENABLE_SVG controls it
 // when SwiftPM resolves the package:
-//   unset        -> enabled, with a deprecation notice in dev builds
-//   1 / true     -> enabled
-//   0 / false    -> disabled, no private CoreSVG code is compiled
-let svgSetting = Context.environment["RN_BOTTOM_TABS_ENABLE_SVG"]?
-    .filter { !$0.isWhitespace }
-    .lowercased()
-let svgSettingIsUnset = svgSetting?.isEmpty ?? true
+//   unset            -> enabled, with a deprecation notice in dev builds
+//   1 / true / yes   -> enabled
+//   0 / false / no   -> disabled, no private CoreSVG code is compiled
+let svgRawSetting = Context.environment["RN_BOTTOM_TABS_ENABLE_SVG"] ?? ""
+let svgSetting = String(
+    svgRawSetting.drop(while: \.isWhitespace).reversed().drop(while: \.isWhitespace).reversed()
+).lowercased()
+let svgSettingIsUnset = svgSetting.isEmpty
 // TODO(next major): disable SVG when RN_BOTTOM_TABS_ENABLE_SVG is unset.
-let enableSVG = !["0", "false", "no"].contains(svgSetting ?? "")
-let svgDefines: [(name: String, enabled: Bool)] = [
+let enableSVG: Bool
+switch svgSetting {
+case "", "1", "true", "yes":
+    enableSVG = true
+case "0", "false", "no":
+    enableSVG = false
+default:
+    fatalError(
+        "[react-native-bottom-tabs] Unsupported value \"\(svgRawSetting)\" for RN_BOTTOM_TABS_ENABLE_SVG. "
+            + "Use true or false (or 1 or 0)."
+    )
+}
+// CSetting and CXXSetting are different types, so both lists map these names.
+let svgDefines = [
     ("RN_BOTTOM_TABS_ENABLE_SVG", enableSVG),
     ("RN_BOTTOM_TABS_SVG_DEFAULTED", enableSVG && svgSettingIsUnset),
-]
+].filter(\.1).map(\.0)
 
 let reactHeaders: [Target.Dependency] = [
     .product(name: "ReactHeaders", package: "ReactNative"),
@@ -80,8 +93,8 @@ let package = Package(
                 "common/cpp",
             ],
             publicHeadersPath: "ios/include",
-            cSettings: svgDefines.filter(\.enabled).map { .define($0.name, to: "1") },
-            cxxSettings: svgDefines.filter(\.enabled).map { .define($0.name, to: "1") } + [
+            cSettings: svgDefines.map { .define($0, to: "1") },
+            cxxSettings: svgDefines.map { .define($0, to: "1") } + [
                 .headerSearchPath("common/cpp"),
                 .define("RCT_NEW_ARCH_ENABLED", to: "1"),
                 // Fabric's C++ layout must match the selected React framework.
