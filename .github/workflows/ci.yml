@@ -157,7 +157,7 @@ jobs:
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
   build-ios-swiftpm:
-    name: build-ios-swiftpm (svg ${{ matrix.svg.name }})
+    name: ${{ matrix.svg.name == 'default' && 'build-ios-swiftpm' || 'build-ios-swiftpm-svg-disabled' }}
     runs-on: macos-26
     timeout-minutes: 45
     strategy:
