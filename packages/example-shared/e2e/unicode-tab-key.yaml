@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+name: Press and long-press a tab with a Unicode key
+---
+- launchApp
+- scrollUntilVisible:
+    element:
+      text: ^Native Bottom Tabs$
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: ^Native Bottom Tabs$
+- assertVisible: Press me
+- tapOn:
+    text: ^Albums$
+- longPressOn:
+    text: ^Albums$
+- tapOn:
+    text: ^Chat$
+- assertVisible: Press me
