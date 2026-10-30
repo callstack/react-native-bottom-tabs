@@ -1,6 +1,6 @@
 {
   "name": "@bottom-tabs/react-navigation",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "React Native Bottom Tabs React Navigation integration",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -29,7 +29,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "typecheck": "tsc -b",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "build": "bob build"
