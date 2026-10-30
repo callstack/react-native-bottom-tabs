@@ -6,8 +6,36 @@ import UIKit
 
 #if !os(macOS) && !os(visionOS)
 
+private final class ImmediateTabTransition: NSObject, UIViewControllerAnimatedTransitioning {
+  func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    0
+  }
+
+  func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    guard let destination = transitionContext.viewController(forKey: .to),
+      let destinationView = transitionContext.view(forKey: .to)
+    else {
+      transitionContext.completeTransition(false)
+      return
+    }
+
+    destinationView.frame = transitionContext.finalFrame(for: destination)
+    transitionContext.containerView.addSubview(destinationView)
+    transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+  }
+}
+
 private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
   var onClick: ((_ index: Int?, _ identifier: String?) -> Bool)?
+  var disablePageAnimations = false
+
+  func tabBarController(
+    _ tabBarController: UITabBarController,
+    animationControllerForTransitionFrom fromVC: UIViewController,
+    to toVC: UIViewController
+  ) -> UIViewControllerAnimatedTransitioning? {
+    disablePageAnimations ? ImmediateTabTransition() : nil
+  }
 
   func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
     if #available(iOS 27.0, *) {
@@ -74,6 +102,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
 }
 
 struct TabItemEventModifier: ViewModifier {
+  let disablePageAnimations: Bool
   let onTabEvent: (_ index: Int?, _ identifier: String?, _ isLongPress: Bool) -> Bool
   private let delegate = TabBarDelegate()
 
@@ -85,6 +114,7 @@ struct TabItemEventModifier: ViewModifier {
   }
 
   func handle(tabController: UITabBarController) {
+    delegate.disablePageAnimations = disablePageAnimations
     delegate.onClick = { index, identifier in
       onTabEvent(index, identifier, false)
     }
@@ -155,8 +185,11 @@ extension View {
   /**
    Event for tab items. Returns true if should prevent default (switching tabs).
    */
-  func onTabItemEvent(_ handler: @escaping (Int?, String?, Bool) -> Bool) -> some View {
-    modifier(TabItemEventModifier(onTabEvent: handler))
+  func onTabItemEvent(
+    disablePageAnimations: Bool,
+    _ handler: @escaping (Int?, String?, Bool) -> Bool
+  ) -> some View {
+    modifier(TabItemEventModifier(disablePageAnimations: disablePageAnimations, onTabEvent: handler))
   }
 }
 
