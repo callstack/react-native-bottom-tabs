@@ -57,11 +57,10 @@ function NativeBottomTabs() {
         }}
       />
       <Tab.Screen
-        name="앨범"
+        name="Albums"
         component={Albums}
         options={{
           tabBarButtonTestID: 'albumsTestID',
-          tabBarLabel: 'Albums',
           tabBarIcon: () => require('../../assets/icons/grid_dark.png'),
         }}
       />
