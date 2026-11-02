@@ -51,7 +51,9 @@ FOUNDATION_EXPORT NSObject *RNCCreateBottomAccessoryProvider(id<RNCBottomAccesso
                      title:(NSString *)title
                      badge:(NSString *)badge
                   sfSymbol:(NSString *)sfSymbol
+           sfSymbolOptions:(NSDictionary *)sfSymbolOptions
            focusedSfSymbol:(NSString *)focusedSfSymbol
+    focusedSfSymbolOptions:(NSDictionary *)focusedSfSymbolOptions
            activeTintColor:(UIColor *)activeTintColor
          iconRenderingMode:(NSString *)iconRenderingMode
                     hidden:(BOOL)hidden

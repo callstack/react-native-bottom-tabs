@@ -8,7 +8,9 @@ public final class TabInfo: NSObject {
   public let title: String
   public let badge: String?
   public let sfSymbol: String
+  public let sfSymbolOptions: SFSymbolOptions?
   public let focusedSfSymbol: String?
+  public let focusedSfSymbolOptions: SFSymbolOptions?
   public let activeTintColor: PlatformColor?
   public let iconRenderingMode: String?
   public let hidden: Bool
@@ -21,7 +23,9 @@ public final class TabInfo: NSObject {
     title: String,
     badge: String?,
     sfSymbol: String,
+    sfSymbolOptions: NSDictionary?,
     focusedSfSymbol: String?,
+    focusedSfSymbolOptions: NSDictionary?,
     activeTintColor: PlatformColor?,
     iconRenderingMode: String?,
     hidden: Bool,
@@ -33,7 +37,9 @@ public final class TabInfo: NSObject {
     self.title = title
     self.badge = badge
     self.sfSymbol = sfSymbol
+    self.sfSymbolOptions = SFSymbolOptions(dictionary: sfSymbolOptions)
     self.focusedSfSymbol = focusedSfSymbol
+    self.focusedSfSymbolOptions = SFSymbolOptions(dictionary: focusedSfSymbolOptions)
     self.activeTintColor = activeTintColor
     self.iconRenderingMode = iconRenderingMode
     self.hidden = hidden

@@ -1,0 +1,173 @@
+import { Badge } from '@theme';
+
+# SF Symbols
+
+Tab icons on Apple platforms can be [SF Symbols](https://developer.apple.com/sf-symbols/) instead of images. Pass an object with an `sfSymbol` key wherever an icon is accepted, and add any of the configuration options below alongside it.
+
+```tsx
+focusedIcon: { sfSymbol: 'house.fill' }
+```
+
+:::note
+SF Symbols are only available on Apple platforms. On Android and web, pass an image with `require()` or a `{ uri }` object instead.
+:::
+
+The options mirror the ones [React Navigation exposes for SF Symbols](https://reactnavigation.org/docs/8.x/icons/#sf-symbols), so an icon configured for one works the same here.
+
+## Options
+
+Only `sfSymbol` is required. Leave the rest out to keep the system defaults, which is what you want for most tabs.
+
+### `sfSymbol`
+
+Name of the symbol to display, for example `house` or `house.fill`. Browse the full set in Apple's [SF Symbols app](https://developer.apple.com/sf-symbols/).
+
+- Type: `SFSymbol`
+
+### `size`
+
+Point size of the symbol.
+
+- Type: `number`
+- Default: the size the tab bar picks for the current platform
+
+### `color`
+
+Color of the symbol. Used as the tint in `monochrome` mode, and as the fallback for `colors.primary` in `hierarchical` and `palette` modes.
+
+Setting it opts the icon out of `tabBarActiveTintColor` and `tabBarInactiveTintColor`, since the symbol then carries a color of its own.
+
+- Type: `ColorValue`
+
+### `weight`
+
+Stroke weight of the symbol. Accepts a name or its numeric equivalent.
+
+- Type: `'thin' | 'ultralight' | 'light' | 'regular' | 'medium' | 'semibold' | 'bold' | 'extrabold' | 'black' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900`
+- Default: `'regular'`
+
+```tsx
+focusedIcon: { sfSymbol: 'star.fill', weight: 'semibold' }
+```
+
+### `scale`
+
+Scale variant of the symbol, relative to the surrounding text.
+
+- Type: `'small' | 'medium' | 'large'`
+- Default: `'medium'`
+
+### `variableValue`
+
+Value between `0` and `1` used to customize variable symbols.
+
+Variable symbols such as `wifi` or `speaker.wave.3` have layers that activate progressively to represent a magnitude. `0` renders the fewest layers, `1` the full symbol. It has no effect on symbols that are not variable.
+
+- Type: `number`
+- Requires iOS 16 or later
+
+```tsx
+focusedIcon: { sfSymbol: 'wifi', variableValue: 0.6 }
+```
+
+### `variableValueMode` <Badge text="iOS 26+" type="info" />
+
+How the partial state described by `variableValue` is rendered.
+
+- `automatic`: the system chooses based on the symbol.
+- `color`: fades inactive layers using opacity.
+- `draw`: partially draws layers instead of fading them.
+
+- Type: `'automatic' | 'color' | 'draw'`
+- Default: `'automatic'`
+
+Ignored on earlier versions.
+
+### `renderingMode`
+
+How the symbol's layers are colored.
+
+- `monochrome`: single color tint.
+- `hierarchical`: a hierarchy derived from a single color.
+- `palette`: explicit colors per layer, taken from `colors`.
+- `multicolor`: the symbol's built-in multicolor scheme.
+
+- Type: `'monochrome' | 'hierarchical' | 'palette' | 'multicolor'`
+- Default: `'monochrome'`
+
+Anything other than `monochrome` opts the icon out of `tabBarActiveTintColor` and `tabBarInactiveTintColor`, since the symbol then carries colors of its own.
+
+```tsx
+focusedIcon: {
+  sfSymbol: 'person.crop.circle.badge.plus',
+  renderingMode: 'hierarchical',
+  color: '#AF52DE',
+}
+```
+
+### `colors`
+
+Colors used by the non-monochrome rendering modes.
+
+- `hierarchical` uses `primary` as the base color.
+- `palette` uses `primary`, `secondary` and `tertiary` for each layer.
+- `multicolor` ignores them.
+
+Falls back to `color` for `primary` when unset.
+
+- Type: `{ primary?: ColorValue; secondary?: ColorValue; tertiary?: ColorValue }`
+
+```tsx
+focusedIcon: {
+  sfSymbol: 'square.grid.3x2.fill',
+  renderingMode: 'palette',
+  colors: { primary: '#FF3B30', secondary: '#34C759' },
+}
+```
+
+### `colorRenderingMode` <Badge text="iOS 26+" type="info" />
+
+How color is applied across the symbol's layers.
+
+- `automatic`: the system chooses based on the symbol.
+- `flat`: a solid color per layer.
+- `gradient`: a gradient derived from each layer's color.
+
+- Type: `'automatic' | 'flat' | 'gradient'`
+- Default: `'automatic'`
+
+Ignored on earlier versions.
+
+## Configuring focused and unfocused states separately
+
+Each state takes its own icon object, so the options can differ between them.
+
+```tsx
+{
+  key: 'home',
+  title: 'Home',
+  focusedIcon: { sfSymbol: 'house.fill', weight: 'bold' },
+  unfocusedIcon: { sfSymbol: 'house', weight: 'light' },
+}
+```
+
+With React Navigation, return a different object per state from `tabBarIcon`:
+
+```tsx
+<Tab.Screen
+  name="Home"
+  component={HomeScreen}
+  options={{
+    tabBarIcon: ({ focused }) =>
+      focused
+        ? { sfSymbol: 'house.fill', weight: 'bold' }
+        : { sfSymbol: 'house', weight: 'light' },
+  }}
+/>
+```
+
+## Unsupported options
+
+React Navigation's `SFSymbol` component also accepts `effect` and `contentTransition`, which animate a symbol as it changes. Neither applies here: a tab bar item renders a still image, and the system never runs symbol animations on one. Both are omitted rather than silently ignored.
+
+`style` is likewise absent, since a tab item is laid out by the tab bar rather than by your styles.
