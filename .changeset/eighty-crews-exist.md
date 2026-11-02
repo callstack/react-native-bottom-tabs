@@ -2,4 +2,4 @@
 'react-native-bottom-tabs': patch
 ---
 
-fix(ios): respect disablePageAnimations during tab switches
+fix(ios): respect `disablePageAnimations` when switching tabs on iOS.
