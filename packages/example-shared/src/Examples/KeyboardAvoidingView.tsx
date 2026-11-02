@@ -13,11 +13,8 @@ const Tab = createNativeBottomTabNavigator();
 
 function HomeScreen() {
   const tabBarHeight = useBottomTabBarHeight();
-  const hasLiquidGlassBottomTabBar =
-    Platform.OS === 'ios' &&
-    !Platform.isPad &&
-    !Platform.isTV &&
-    parseFloat(String(Platform.Version)) >= 26;
+  const hasNativeBottomTabBar =
+    Platform.OS === 'ios' && !Platform.isPad && !Platform.isTV;
 
   return (
     <View style={styles.container}>
@@ -25,7 +22,7 @@ function HomeScreen() {
         behavior="padding"
         style={[
           styles.keyboardAvoidingView,
-          hasLiquidGlassBottomTabBar && { marginBottom: tabBarHeight },
+          hasNativeBottomTabBar && { marginBottom: tabBarHeight },
         ]}
       >
         <View style={styles.content}>

@@ -8,14 +8,14 @@ If you expirence issues with ScrollView content being below the tab bar, add `co
 </ScrollView>
 ```
 
-## Keyboard-avoiding fixed content on iOS 26+
+## Keyboard-avoiding fixed content on iOS
 
-The iPhone Liquid Glass tab bar floats over full-bleed scene content. A
-bottom-aligned control inside `KeyboardAvoidingView` therefore needs to reserve
-the tab bar height while the keyboard is closed. Keep the full-screen background
-on an outer view and apply the offset only to the keyboard-avoiding content. The
-following pattern is for a visible native bottom bar without a bottom accessory
-or `minimizeBehavior`:
+On iPhone, tab scenes extend behind the tab bar, including the Liquid Glass tab
+bar on iOS 26+. A bottom-aligned control inside `KeyboardAvoidingView` therefore
+needs to reserve the tab bar height while the keyboard is closed. Keep the
+full-screen background on an outer view and apply the offset only to the
+keyboard-avoiding content. The following pattern is for a visible native bottom
+bar without a bottom accessory or `minimizeBehavior`:
 
 ```tsx
 import { useBottomTabBarHeight } from 'react-native-bottom-tabs';
@@ -23,11 +23,8 @@ import { KeyboardAvoidingView, Platform, View } from 'react-native';
 
 function Screen() {
   const tabBarHeight = useBottomTabBarHeight();
-  const hasLiquidGlassBottomTabBar =
-    Platform.OS === 'ios' &&
-    !Platform.isPad &&
-    !Platform.isTV &&
-    parseFloat(String(Platform.Version)) >= 26;
+  const hasNativeBottomTabBar =
+    Platform.OS === 'ios' && !Platform.isPad && !Platform.isTV;
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -35,7 +32,7 @@ function Screen() {
         behavior="padding"
         style={{
           flex: 1,
-          marginBottom: hasLiquidGlassBottomTabBar ? tabBarHeight : 0,
+          marginBottom: hasNativeBottomTabBar ? tabBarHeight : 0,
         }}
       >
         {/* Bottom-aligned content */}
