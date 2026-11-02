@@ -25,5 +25,20 @@ const extraConfig = {
 };
 
 const metroConfig = makeMetroConfig(extraConfig);
+const rewriteRequestUrl = metroConfig.server.rewriteRequestUrl;
+
+metroConfig.server.rewriteRequestUrl = (requestUrl) => {
+  const rewrittenUrl = rewriteRequestUrl(requestUrl);
+  if (!rewrittenUrl.startsWith('/assets/')) return rewrittenUrl;
+
+  // rnx-kit restores @@ to ../ for assets outside this app. Keep those paths
+  // in Metro's asset query so URL normalization cannot escape /assets/.
+  const [assetPath, query = ''] = rewrittenUrl.slice('/assets/'.length).split('?');
+  if (!assetPath.split('/').includes('..')) return rewrittenUrl;
+
+  const params = new URLSearchParams(query);
+  params.set('unstable_path', assetPath);
+  return `/assets?${params}`;
+};
 
 module.exports = metroConfig;

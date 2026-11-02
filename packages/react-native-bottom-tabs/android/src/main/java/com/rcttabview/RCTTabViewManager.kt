@@ -147,13 +147,11 @@ class RCTTabViewManager(context: ReactApplicationContext) :
   }
 
   override fun setActiveTintColor(view: ReactBottomNavigationView?, value: Int?) {
-    if (view != null && value != null)
-      view.setActiveTintColor(value)
+    view?.setActiveTintColor(value)
   }
 
   override fun setInactiveTintColor(view: ReactBottomNavigationView?, value: Int?) {
-    if (view != null && value != null)
-      view.setInactiveTintColor(value)
+    view?.setInactiveTintColor(value)
   }
 
   override fun setExperimentalBakedTintColors(view: ReactBottomNavigationView?, value: Boolean) {

@@ -8,7 +8,7 @@ const ConfigPlugins = require('@expo/config-plugins');
 const { createRunOncePlugin, withAndroidStyles } =
   ConfigPlugins as typeof import('@expo/config-plugins');
 
-const MATERIAL3_THEME_DYANMIC =
+const MATERIAL3_THEME_DYNAMIC =
   'Theme.Material3.DynamicColors.DayNight.NoActionBar';
 const MATERIAL3_THEME = 'Theme.Material3.DayNight.NoActionBar';
 const MATERIAL2_THEME = 'Theme.MaterialComponents.DayNight.NoActionBar';
@@ -35,7 +35,7 @@ const withMaterial3Theme: ConfigPlugin<ConfigProps> = (config, options) => {
       stylesConfig.modResults.resources.style?.map((style) => {
         if (style.$.name === 'AppTheme') {
           if (theme === 'material3-dynamic') {
-            style.$.parent = MATERIAL3_THEME_DYANMIC;
+            style.$.parent = MATERIAL3_THEME_DYNAMIC;
           } else if (theme === 'material2') {
             style.$.parent = MATERIAL2_THEME;
           } else if (theme === 'material3-expressive') {

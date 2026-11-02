@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig",
+  "references": [
+    { "path": "../../packages/react-native-bottom-tabs" },
+    { "path": "../../packages/react-navigation" }
+  ],
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {},
+    "composite": false,
+    "moduleResolution": "bundler",
+    "customConditions": ["react-native"],
+    "noEmit": true
+  }
+}

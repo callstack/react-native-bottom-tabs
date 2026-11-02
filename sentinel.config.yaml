@@ -1,0 +1,4 @@
+# sentinel.config.yaml, at the root of the default branch
+version: 1.0
+user_settings:
+  reviewers: [thiagobrez]
