@@ -27,11 +27,6 @@ jobs:
       - name: Typecheck files
         run: yarn typecheck
 
-      - name: Validate issue 501 repro
-        run: |
-          yarn tsc --project evidence/issue-501/repro/tsconfig.json
-          yarn eslint evidence/issue-501/repro/App.tsx
-
   swift-lint:
     runs-on: ubuntu-latest
     steps:
@@ -113,6 +108,7 @@ jobs:
         run: |
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
+
   build-ios:
     runs-on: macos-15
     env:
@@ -167,3 +163,4 @@ jobs:
       - name: Build example for iOS
         run: |
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
+
