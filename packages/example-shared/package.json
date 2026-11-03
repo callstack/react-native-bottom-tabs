@@ -1,0 +1,40 @@
+{
+  "name": "@bottom-tabs/example-shared",
+  "version": "0.0.0",
+  "private": true,
+  "source": "./src/App.tsx",
+  "main": "./src/App.tsx",
+  "exports": {
+    ".": "./src/App.tsx",
+    "./babel": "./babel.config.js"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bottom-tabs/react-navigation": "*",
+    "@react-navigation/bottom-tabs": "^7.15.9",
+    "@react-navigation/devtools": "^7.0.44",
+    "@react-navigation/native": "^7.3.0",
+    "@react-navigation/native-stack": "^7.14.11",
+    "@react-navigation/stack": "^7.8.10",
+    "color": "^5.0.0",
+    "react": "^19.2.3",
+    "react-native": "^0.87.1",
+    "react-native-bottom-tabs": "*",
+    "react-native-edge-to-edge": "^1.7.0",
+    "react-native-gesture-handler": "^3.2.1",
+    "react-native-paper": "^5.14.5",
+    "react-native-safe-area-context": "^5.9.1",
+    "react-native-screens": "^4.27.0",
+    "react-native-vector-icons": "^10.2.0",
+    "react-native-worklets": "^0.12.1"
+  },
+  "devDependencies": {
+    "@react-native/babel-preset": "0.87.1",
+    "@react-native/metro-config": "0.87.1",
+    "@types/react-native-vector-icons": "^6.4.18",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "typescript": "^5.9.2"
+  }
+}

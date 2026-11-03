@@ -55,6 +55,19 @@ Edit `android/app/src/main/res/values/styles.xml` to inherit from provided theme
 Here you can read more about [Android Native Styling](/docs/guides/android-native-styling).
 
 
+### iOS with Swift Package Manager
+
+The library ships a `Package.swift` for React Native's SwiftPM autolinking flow.
+
+After installing the npm package, run this from an app already using SwiftPM:
+
+```sh
+npx react-native spm
+```
+
+To migrate an existing CocoaPods app, follow the
+[React Native SwiftPM setup guide](https://github.com/react/react-native/blob/main/packages/react-native/scripts/spm/__docs__/spm-scripts.md).
+
 ## Example usage
 
 Please follow the guides below to integrate the library with your navigation library:

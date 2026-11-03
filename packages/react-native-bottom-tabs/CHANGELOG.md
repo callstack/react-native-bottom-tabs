@@ -1,5 +1,25 @@
 # react-native-bottom-tabs
 
+## 1.5.0
+
+### Minor Changes
+
+- [#585](https://github.com/callstack/react-native-bottom-tabs/pull/585) [`b044dbd`](https://github.com/callstack/react-native-bottom-tabs/commit/b044dbd5beff4696c4ed19fd2915009b31e6f03a) Thanks [@retyui](https://github.com/retyui)! - Add the `prominent` tab role (iOS 27+), and fix iOS 27 tabs keeping their selected tint after switching tabs or minimizing the tab bar
+
+- [#575](https://github.com/callstack/react-native-bottom-tabs/pull/575) [`85e14d7`](https://github.com/callstack/react-native-bottom-tabs/commit/85e14d797905a483628cea7668a63fabafe4c78f) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add iOS Swift Package Manager support
+
+### Patch Changes
+
+- [#568](https://github.com/callstack/react-native-bottom-tabs/pull/568) [`251bc1e`](https://github.com/callstack/react-native-bottom-tabs/commit/251bc1e362d0814a742c45cc6fb4f2e3169fea9c) Thanks [@gabrieldonadel](https://github.com/gabrieldonadel)! - Fix Android build with AGP 9 built-in Kotlin: skip applying the `kotlin-android` plugin when AGP has already registered the `kotlin` extension
+
+- [#600](https://github.com/callstack/react-native-bottom-tabs/pull/600) [`eeccc13`](https://github.com/callstack/react-native-bottom-tabs/commit/eeccc13ba24ffd3c543b7692b7bb8f08af98217f) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Fix Android build with AGP 9 built-in Kotlin: remove the unused `kotlin-kapt` plugin, which is incompatible with built-in Kotlin
+
+- [#599](https://github.com/callstack/react-native-bottom-tabs/pull/599) [`a96669e`](https://github.com/callstack/react-native-bottom-tabs/commit/a96669ebdcb2481366497894a827213adbfe9b26) Thanks [@rjmreis](https://github.com/rjmreis)! - fix(android): apply per-route `activeTintColor` when switching tabs
+
+- [#602](https://github.com/callstack/react-native-bottom-tabs/pull/602) [`a0b4dfe`](https://github.com/callstack/react-native-bottom-tabs/commit/a0b4dfe06ca839f4508d4ef273b45377fb9ac157) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Fix shifted tab titles, selected icons and accessibility labels on iOS when built with the iOS 27 SDK and a tab uses the `search` role
+
+- [#571](https://github.com/callstack/react-native-bottom-tabs/pull/571) [`6b8e865`](https://github.com/callstack/react-native-bottom-tabs/commit/6b8e865af0b795eeeb11265fa103c818013bcd6e) Thanks [@thiagobrez](https://github.com/thiagobrez)! - Add support for React Native 0.87
+
 ## 1.4.0
 
 ### Minor Changes

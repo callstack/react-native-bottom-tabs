@@ -1,6 +1,6 @@
 # Welcome to your Expo + Native Tabs app 📱👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). It uses [`react-native-bottom-tabs`](https://github.com/callstack/react-native-bottom-tabs) to render a real native tab bar.
 
 ## Get started
 
@@ -10,18 +10,19 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Build and run the app
 
    ```bash
-   npx expo start
+   npm run android
+   # or
+   npm run ios
    ```
 
-In the output, you'll find options to open the app in a
+   This creates a [development build](https://docs.expo.dev/develop/development-builds/introduction/), installs it on an [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/) or [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/), and starts the dev server. Once the app is installed, `npm start` is enough on its own.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+> **Note:** This project requires a development build. It cannot run in [Expo Go](https://expo.dev/go), which only bundles Expo's own native modules - and the native tab bar is not one of them.
+
+Before you build for a real device or a store, change `ios.bundleIdentifier` and `android.package` in **app.json** from `com.example.nativetabs` to your own identifiers.
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
@@ -39,6 +40,7 @@ This command will move the starter code to the **app-example** directory and cre
 
 To learn more about developing your project with Expo, look at the following resources:
 
+- [React Native Bottom Tabs documentation](https://oss.callstack.com/react-native-bottom-tabs/): Configure the native tab bar used in **app/(tabs)/\_layout.tsx**.
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 

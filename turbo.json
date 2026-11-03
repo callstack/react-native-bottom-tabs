@@ -7,7 +7,12 @@
     },
     "typecheck": {
       "dependsOn": ["build"],
-      "inputs": ["**/*.ts", "**/*.tsx"]
+      "inputs": [
+        "**/*.ts",
+        "**/*.tsx",
+        "tsconfig.json",
+        "$TURBO_ROOT$/tsconfig.json"
+      ]
     },
     "test": {},
     "build": {
