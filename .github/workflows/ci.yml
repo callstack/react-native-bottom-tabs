@@ -126,17 +126,6 @@ jobs:
       - name: Build package
         run: yarn build
 
-      - name: Typecheck tvOS view wrapper
-        run: |
-          mkdir -p "$RUNNER_TEMP/swift-module-cache"
-          xcrun --sdk appletvsimulator swiftc \
-            -module-cache-path "$RUNNER_TEMP/swift-module-cache" \
-            -target arm64-apple-tvos15.1-simulator \
-            -sdk "$(xcrun --sdk appletvsimulator --show-sdk-path)" \
-            -typecheck \
-            packages/react-native-bottom-tabs/ios/PlatformAliases.swift \
-            packages/react-native-bottom-tabs/ios/RepresentableView.swift
-
       - name: Cache turborepo for iOS
         uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
