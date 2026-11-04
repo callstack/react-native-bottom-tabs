@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+name: Press and long-press tabs with Unicode keys
+---
+- launchApp
+- scrollUntilVisible:
+    element:
+      text: ^Native Bottom Tabs with Unicode keys$
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: ^Native Bottom Tabs with Unicode keys$
+- assertVisible: Press me
+- tapOn:
+    text: ^アルバム$
+- longPressOn:
+    text: ^기사$
+- tapOn:
+    text: ^Чат$
+- assertVisible: Press me
