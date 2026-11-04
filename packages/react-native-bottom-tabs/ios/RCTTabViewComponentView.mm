@@ -123,6 +123,14 @@ typedef NSObject TabInfo;
   const auto &oldViewProps = *std::static_pointer_cast<RNCTabViewProps const>(_props);
   const auto &newViewProps = *std::static_pointer_cast<RNCTabViewProps const>(props);
 
+  if (oldViewProps.iconSizes != newViewProps.iconSizes) {
+    NSMutableArray<NSNumber *> *iconSizes = [NSMutableArray arrayWithCapacity:newViewProps.iconSizes.size()];
+    for (const auto iconSize : newViewProps.iconSizes) {
+      [iconSizes addObject:@(iconSize)];
+    }
+    _tabViewProvider.iconSizes = iconSizes;
+  }
+
   if (oldViewProps.items != newViewProps.items) {
     _tabViewProvider.itemsData = convertItemsToArray(newViewProps.items);
   }
@@ -237,6 +245,7 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
                                        sfSymbol:RCTNSStringFromStringNilIfEmpty(item.sfSymbol)
                                  focusedSfSymbol:RCTNSStringFromStringNilIfEmpty(item.focusedSfSymbol)
                                 activeTintColor:RCTUIColorFromSharedColor(item.activeTintColor)
+                                        iconSize:nil
                              iconRenderingMode:RCTNSStringFromStringNilIfEmpty(item.iconRenderingMode)
                                          hidden:item.hidden
                                          testID:RCTNSStringFromStringNilIfEmpty(item.testID)

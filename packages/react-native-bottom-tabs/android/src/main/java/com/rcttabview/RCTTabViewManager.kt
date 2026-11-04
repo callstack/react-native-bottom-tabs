@@ -24,6 +24,7 @@ data class TabInfo(
   val badgeBackgroundColor: Int?,
   val badgeTextColor: Int?,
   val activeTintColor: Int?,
+  val iconSize: Double?,
   val iconRenderingMode: String?,
   val hidden: Boolean,
   val testID: String?
@@ -105,6 +106,7 @@ class RCTTabViewManager(context: ReactApplicationContext) :
                 badgeBackgroundColor = if (item.hasKey("badgeBackgroundColor")) item.getInt("badgeBackgroundColor") else null,
                 badgeTextColor = if (item.hasKey("badgeTextColor")) item.getInt("badgeTextColor") else null,
                 activeTintColor = if (item.hasKey("activeTintColor")) item.getInt("activeTintColor") else null,
+                iconSize = null,
                 iconRenderingMode = if (item.hasKey("iconRenderingMode")) item.getString("iconRenderingMode") else null,
                 hidden = if (item.hasKey("hidden")) item.getBoolean("hidden") else false,
                 testID = item.getString("testID")
@@ -124,6 +126,16 @@ class RCTTabViewManager(context: ReactApplicationContext) :
   override fun setIcons(view: ReactBottomNavigationView?, value: ReadableArray?) {
     if (view != null)
       view.setIcons(value)
+  }
+
+  override fun setIconSizes(view: ReactBottomNavigationView?, value: ReadableArray?) {
+    view?.setIconSizes(
+      if (value == null) {
+        emptyList()
+      } else {
+        (0 until value.size()).map { value.getDouble(it) }
+      }
+    )
   }
 
   override fun setFocusedIcons(view: ReactBottomNavigationView?, value: ReadableArray?) {

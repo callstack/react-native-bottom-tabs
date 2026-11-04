@@ -30,6 +30,9 @@ export default function NativeBottomTabView({
       {...rest}
       navigationState={state}
       renderScene={({ route }) => descriptors[route.key]?.render()}
+      getIconSize={({ route }) =>
+        descriptors[route.key]?.options.tabBarIconSize
+      }
       getActiveTintColor={({ route }) => {
         return descriptors[route.key]?.options.tabBarActiveTintColor;
       }}
