@@ -31,6 +31,7 @@ import SFSymbols from './Examples/SFSymbols';
 import Roles from './Examples/Roles';
 import LabeledTabs from './Examples/Labeled';
 import NativeBottomTabs from './Examples/NativeBottomTabs';
+import NativeBottomTabsUnicode from './Examples/NativeBottomTabsUnicode';
 import TintColorsExample from './Examples/TintColors';
 import NativeBottomTabsEmbeddedStacks from './Examples/NativeBottomTabsEmbeddedStacks';
 import NativeBottomTabsSVGs from './Examples/NativeBottomTabsSVGs';
@@ -199,6 +200,10 @@ const examples = [
     name: 'Native Bottom Tabs with original icons',
   },
   { component: NativeBottomTabs, name: 'Native Bottom Tabs' },
+  {
+    component: NativeBottomTabsUnicode,
+    name: 'Native Bottom Tabs with Unicode keys',
+  },
   { component: JSBottomTabs, name: 'JS Bottom Tabs' },
   {
     component: JSBottomTabs,

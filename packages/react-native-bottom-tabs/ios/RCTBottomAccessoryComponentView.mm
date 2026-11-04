@@ -40,6 +40,7 @@ typedef NSObject BottomAccessoryProvider;
 {
   if (self = [super initWithFrame:frame]) {
     static const auto defaultProps = std::make_shared<const BottomAccessoryViewProps>();
+    _props = defaultProps;
     if (@available(iOS 26.0, *)) {
 #if SWIFT_PACKAGE
       bottomAccessoryProvider = RNCCreateBottomAccessoryProvider(self);
