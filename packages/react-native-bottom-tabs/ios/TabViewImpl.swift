@@ -134,14 +134,19 @@ struct TabViewImpl: View {
 
   /// Maps a tab bar item to its index in `filteredItems`. When linked against the iOS 27 SDK,
   /// `UITabBar.items` follows display order (a `search` role tab moves to the end), while `tabs`
-  /// keeps declaration order.
-  private func declarationIndex(of item: UITabBarItem, at tabBarIndex: Int, in tabBar: UITabBar) -> Int {
+  /// keeps declaration order. Returns `nil` for the system "More" item, which belongs to no tab.
+  private func declarationIndex(of item: UITabBarItem, at tabBarIndex: Int, in tabBar: UITabBar) -> Int? {
+    guard let tabController = tabBar.delegate as? UITabBarController else { return tabBarIndex }
     if #available(iOS 18.0, tvOS 18.0, visionOS 2.0, *),
-      let tabController = tabBar.delegate as? UITabBarController,
       let index = tabController.tabs.firstIndex(where: { $0.viewController?.tabBarItem === item })
     {
       return index
     }
+    #if os(iOS)
+      if item === tabController.moreNavigationController.tabBarItem {
+        return nil
+      }
+    #endif
     return tabBarIndex
   }
 
@@ -258,8 +263,9 @@ struct TabViewImpl: View {
   /// changes, and SwiftUI updates its images only when a label changes.
   private func configureTabBarItemImages(items: [UITabBarItem], tabBar: UITabBar, props: TabViewProps) {
     for (tabBarIndex, item) in items.enumerated() {
-      let tabIndex = declarationIndex(of: item, at: tabBarIndex, in: tabBar)
-      guard let tabData = props.filteredItems[safe: tabIndex] else { continue }
+      guard let tabIndex = declarationIndex(of: item, at: tabBarIndex, in: tabBar),
+        let tabData = props.filteredItems[safe: tabIndex]
+      else { continue }
 
       let tabActiveColor = tabData.activeTintColor ?? props.activeTintColor
       let images = props.itemImages.images(for: tabData, props: props)
