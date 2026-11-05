@@ -169,9 +169,13 @@ A tab bar style that adapts to each platform.
 Tab views using the sidebar adaptable style have an appearance
 
 - iPadOS displays a top tab bar that can adapt into a sidebar.
-- iOS displays a bottom tab bar.
+- iOS displays a bottom tab bar. On iOS 27+ (built with Xcode 27 or later), large enough screens such as an unfolded iPhone Duo display a sidebar instead.
 - macOS and tvOS always show a sidebar.
 - visionOS shows an ornament and also shows a sidebar for secondary tabs within a `TabSection`.
+
+Set `sidebarAdaptable` on `Tab.Navigator` to opt in. Defaults to `false`.
+
+On iOS 27+, the placement follows the window size: the sidebar appears once the window is at least 920pt wide with a regular vertical size class (for example an unfolded iPhone Duo, or Resize Mode in Xcode's Device Hub), and the bottom tab bar returns when the window shrinks. Regular phones, including landscape, keep the bottom tab bar.
 
 #### `hapticFeedbackEnabled`
 
