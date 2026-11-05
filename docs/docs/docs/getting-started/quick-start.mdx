@@ -6,7 +6,6 @@ import { PackageManagerTabs } from '@theme';
 
 If you don't have an existing project, you can create a new [Expo](https://expo.dev) app using the following command:
 
-
 ```sh
 npx create-expo-app@latest NativeTabs --template @bottom-tabs/expo-template
 ```
@@ -15,15 +14,17 @@ npx create-expo-app@latest NativeTabs --template @bottom-tabs/expo-template
 
 <PackageManagerTabs command="install react-native-bottom-tabs" />
 
-If you are going to use [React Navigation / Expo Router Integration](/docs/guides/usage-with-react-navigation) make sure to install `@bottom-tabs/react-navigation`.
+If you are going to use the [React Navigation integration](/docs/guides/usage-with-react-navigation), or [Expo Router](/docs/guides/usage-with-expo-router) on SDK 52 to 55, also install `@bottom-tabs/react-navigation`.
 
 <PackageManagerTabs command="install @bottom-tabs/react-navigation" />
 
+For [Expo Router](/docs/guides/usage-with-expo-router) on SDK 56 or newer, install `@bottom-tabs/standard-navigation` instead.
+
+<PackageManagerTabs command="install @bottom-tabs/standard-navigation" />
 
 ### Expo
 
 Add the library plugin in your `app.json` config file and [create a new build](https://docs.expo.dev/develop/development-builds/create-a-build/).
-
 
 ```diff
   "expo": {
@@ -42,7 +43,6 @@ This library is not supported in [Expo Go](https://expo.dev/go).
 
 Edit `android/app/src/main/res/values/styles.xml` to inherit from provided theme in order to customize the appearance of the native bottom tabs.
 
-
 ```diff
 <resources>
 - <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
@@ -53,7 +53,6 @@ Edit `android/app/src/main/res/values/styles.xml` to inherit from provided theme
 ```
 
 Here you can read more about [Android Native Styling](/docs/guides/android-native-styling).
-
 
 ### iOS with Swift Package Manager
 
