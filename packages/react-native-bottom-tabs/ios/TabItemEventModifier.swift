@@ -96,10 +96,14 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
       return false
     }
 
+#if os(iOS)
     // iOS 27 immediately displays the selected tab before React can mount a
     // lazy scene. Keep the current scene visible until the first render
     // updates the controlled selection, then use native selection as usual.
     return result?.isLoaded ?? true
+#else
+    return true
+#endif
   }
 
   @available(iOS 18.0, tvOS 18.0, visionOS 2.0, *)
@@ -192,7 +196,7 @@ private class LongPressGestureHandler: NSObject {
 
 extension View {
   /**
-   Event for tab items. Returns true if should prevent default (switching tabs).
+   Event for tab items. The handler returns whether the tab prevents default (switching tabs) and whether its screen is loaded.
    */
   func onTabItemEvent(
     disablePageAnimations: Bool,

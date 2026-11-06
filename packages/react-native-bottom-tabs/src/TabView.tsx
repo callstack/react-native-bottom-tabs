@@ -307,7 +307,6 @@ const TabView = <Route extends BaseRoute>({
   const [loaded, setLoaded] = React.useState<string[]>([focusedKey]);
 
   if (!loaded.includes(focusedKey)) {
-    // Set the current tab to be loaded if it was not loaded before
     setLoaded((loadedRoutes) => [...loadedRoutes, focusedKey]);
   }
 
@@ -485,7 +484,6 @@ const TabView = <Route extends BaseRoute>({
       >
         {trimmedRoutes.map((route) => {
           if (!isRouteLoaded(route, focusedKey, loaded, getLazy)) {
-            // Don't render a screen if we've never navigated to it
             return (
               <View
                 key={route.key}

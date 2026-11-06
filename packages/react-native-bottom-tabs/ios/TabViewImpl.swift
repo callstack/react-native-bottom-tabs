@@ -53,13 +53,12 @@ struct TabViewImpl: View {
           guard let item else {
             return TabItemEventResult(preventsDefault: false, isLoaded: true)
           }
-          let key = item.key
 
           if isLongPress {
-            onLongPress(key)
+            onLongPress(item.key)
             emitHapticFeedback(longPress: true)
           } else {
-            onSelect(key)
+            onSelect(item.key)
             emitHapticFeedback()
           }
           return TabItemEventResult(

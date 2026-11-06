@@ -21,11 +21,13 @@ NSObject *RNCCreateBottomAccessoryProvider(id<RNCBottomAccessoryProviderDelegate
                     hidden:(BOOL)hidden
                     testID:(NSString *)testID
                       role:(NSString *)role
-           preventsDefault:(BOOL)preventsDefault {
+           preventsDefault:(BOOL)preventsDefault
+                    loaded:(BOOL)loaded {
   return [[TabInfo alloc] initWithKey:key title:title badge:badge sfSymbol:sfSymbol
                     focusedSfSymbol:focusedSfSymbol activeTintColor:activeTintColor
                   iconRenderingMode:iconRenderingMode hidden:hidden testID:testID
-                               role:role preventsDefault:preventsDefault];
+                               role:role preventsDefault:preventsDefault
+                             loaded:loaded];
 }
 @end
 #endif

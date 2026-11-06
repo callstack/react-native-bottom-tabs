@@ -29,7 +29,7 @@ public final class TabInfo: NSObject {
     testID: String?,
     role: String?,
     preventsDefault: Bool = false,
-    loaded: Bool
+    loaded: Bool = true
   ) {
     self.key = key
     self.title = title
