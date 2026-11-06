@@ -50,16 +50,21 @@ struct TabViewImpl: View {
         .onTabItemEvent(disablePageAnimations: props.disablePageAnimations) { index, identifier, isLongPress in
           let item = identifier.flatMap { props.filteredItems.findByKey($0) }
             ?? index.flatMap { props.filteredItems[safe: $0] }
-          guard let key = item?.key else { return false }
+          guard let item else {
+            return TabItemEventResult(preventsDefault: false, isLoaded: true)
+          }
 
           if isLongPress {
-            onLongPress(key)
+            onLongPress(item.key)
             emitHapticFeedback(longPress: true)
           } else {
-            onSelect(key)
+            onSelect(item.key)
             emitHapticFeedback()
           }
-          return item?.preventsDefault ?? false
+          return TabItemEventResult(
+            preventsDefault: item.preventsDefault,
+            isLoaded: props.hasMountedContent(forKey: item.key)
+          )
         }
       #endif
       .introspectTabView { tabController in

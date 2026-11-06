@@ -6,6 +6,11 @@ import UIKit
 
 #if !os(macOS) && !os(visionOS)
 
+struct TabItemEventResult {
+  let preventsDefault: Bool
+  let isLoaded: Bool
+}
+
 private final class ImmediateTabTransition: NSObject, UIViewControllerAnimatedTransitioning {
   func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
     0
@@ -26,7 +31,7 @@ private final class ImmediateTabTransition: NSObject, UIViewControllerAnimatedTr
 }
 
 private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
-  var onClick: ((_ index: Int?, _ identifier: String?) -> Bool)?
+  var onClick: ((_ index: Int?, _ identifier: String?) -> TabItemEventResult)?
   var disablePageAnimations = false
 
   func tabBarController(
@@ -64,7 +69,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
     // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
     // Due to this, whether the tab prevents default has to be defined statically.
     if let index = tabBarController.viewControllers?.firstIndex(of: viewController) {
-      let defaultPrevented = onClick?(index, nil) ?? false
+      let defaultPrevented = onClick?(index, nil).preventsDefault ?? false
 
       return !defaultPrevented
     }
@@ -82,15 +87,19 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
       tabBarController.selectedTab === tab ||
       tabBarController.selectedTab?.identifier == tab.identifier
 
-    // Unfortunately, due to iOS 26 new tab switching animations, controlling state from JavaScript is causing significant delays when switching tabs.
-    // See: https://github.com/callstackincubator/react-native-bottom-tabs/issues/383
-    // Due to this, whether the tab prevents default has to be defined statically.
-    let defaultPrevented = onClick?(
+    let result = onClick?(
       tabIndex(for: tab, in: tabBarController),
       tab.identifier
-    ) ?? false
+    )
 
-    return isReselectingSameTab ? false : !defaultPrevented
+    if isReselectingSameTab || result?.preventsDefault == true {
+      return false
+    }
+
+    // iOS 27 immediately displays the selected tab before React can mount a
+    // lazy scene. Keep the current scene visible until the first render
+    // updates the controlled selection, then use native selection as usual.
+    return result?.isLoaded ?? true
   }
 
   @available(iOS 18.0, tvOS 18.0, visionOS 2.0, *)
@@ -103,7 +112,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
 
 struct TabItemEventModifier: ViewModifier {
   let disablePageAnimations: Bool
-  let onTabEvent: (_ index: Int?, _ identifier: String?, _ isLongPress: Bool) -> Bool
+  let onTabEvent: (_ index: Int?, _ identifier: String?, _ isLongPress: Bool) -> TabItemEventResult
   private let delegate = TabBarDelegate()
 
   func body(content: Content) -> some View {
@@ -183,11 +192,11 @@ private class LongPressGestureHandler: NSObject {
 
 extension View {
   /**
-   Event for tab items. Returns true if should prevent default (switching tabs).
+   Event for tab items. The handler returns whether the tab prevents default (switching tabs) and whether React mounted its screen.
    */
   func onTabItemEvent(
     disablePageAnimations: Bool,
-    _ handler: @escaping (Int?, String?, Bool) -> Bool
+    _ handler: @escaping (Int?, String?, Bool) -> TabItemEventResult
   ) -> some View {
     modifier(TabItemEventModifier(disablePageAnimations: disablePageAnimations, onTabEvent: handler))
   }
