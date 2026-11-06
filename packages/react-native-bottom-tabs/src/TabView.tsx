@@ -35,7 +35,6 @@ import {
   BottomAccessoryView,
   type BottomAccessoryViewProps,
 } from './BottomAccessoryView';
-import { isRouteLoaded } from './isRouteLoaded';
 
 const isAppleSymbol = (icon: any): icon is { sfSymbol: string } =>
   icon?.sfSymbol;
@@ -307,7 +306,8 @@ const TabView = <Route extends BaseRoute>({
   const [loaded, setLoaded] = React.useState<string[]>([focusedKey]);
 
   if (!loaded.includes(focusedKey)) {
-    setLoaded((loadedRoutes) => [...loadedRoutes, focusedKey]);
+    // Set the current tab to be loaded if it was not loaded before
+    setLoaded((loaded) => [...loaded, focusedKey]);
   }
 
   const icons = React.useMemo(
@@ -364,7 +364,6 @@ const TabView = <Route extends BaseRoute>({
           testID: getTestID?.({ route }),
           role: getRole?.({ route }),
           preventsDefault: getPreventsDefault?.({ route }),
-          loaded: isRouteLoaded(route, focusedKey, loaded, getLazy),
         };
       }),
     [
@@ -381,9 +380,6 @@ const TabView = <Route extends BaseRoute>({
       getTestID,
       getRole,
       getPreventsDefault,
-      getLazy,
-      focusedKey,
-      loaded,
     ]
   );
 
@@ -483,7 +479,8 @@ const TabView = <Route extends BaseRoute>({
         labeled={labeled}
       >
         {trimmedRoutes.map((route) => {
-          if (!isRouteLoaded(route, focusedKey, loaded, getLazy)) {
+          if (getLazy({ route }) !== false && !loaded.includes(route.key)) {
+            // Don't render a screen if we've never navigated to it
             return (
               <View
                 key={route.key}

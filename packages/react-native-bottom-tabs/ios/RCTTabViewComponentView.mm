@@ -54,8 +54,7 @@ bool operator==(const RNCTabViewItemsStruct& lhs, const RNCTabViewItemsStruct& r
   lhs.hidden == rhs.hidden &&
   lhs.testID == rhs.testID &&
   lhs.role == rhs.role &&
-  lhs.preventsDefault == rhs.preventsDefault &&
-  lhs.loaded == rhs.loaded;
+  lhs.preventsDefault == rhs.preventsDefault;
 }
 
 bool operator!=(const RNCTabViewItemsStruct& lhs, const RNCTabViewItemsStruct& rhs) {
@@ -241,9 +240,8 @@ NSArray* convertItemsToArray(const std::vector<RNCTabViewItemsStruct>& items) {
                              iconRenderingMode:RCTNSStringFromStringNilIfEmpty(item.iconRenderingMode)
                                          hidden:item.hidden
                                          testID:RCTNSStringFromStringNilIfEmpty(item.testID)
-                                           role:RCTNSStringFromStringNilIfEmpty(item.role)
+                                         role:RCTNSStringFromStringNilIfEmpty(item.role)
                               preventsDefault:item.preventsDefault
-                                       loaded:item.loaded
     ];
 
     [result addObject:tabInfo];

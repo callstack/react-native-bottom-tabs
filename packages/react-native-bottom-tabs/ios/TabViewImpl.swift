@@ -63,7 +63,7 @@ struct TabViewImpl: View {
           }
           return TabItemEventResult(
             preventsDefault: item.preventsDefault,
-            isLoaded: item.loaded
+            isLoaded: props.hasMountedContent(forKey: item.key)
           )
         }
       #endif

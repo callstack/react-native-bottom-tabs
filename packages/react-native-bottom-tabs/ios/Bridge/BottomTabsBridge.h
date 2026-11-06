@@ -57,7 +57,6 @@ FOUNDATION_EXPORT NSObject *RNCCreateBottomAccessoryProvider(id<RNCBottomAccesso
                     hidden:(BOOL)hidden
                     testID:(NSString *)testID
                       role:(NSString *)role
-           preventsDefault:(BOOL)preventsDefault
-                    loaded:(BOOL)loaded;
+           preventsDefault:(BOOL)preventsDefault;
 @end
 #endif
