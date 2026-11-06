@@ -1,18 +1,10 @@
 import { Article } from '../Screens/Article';
 import { Albums } from '../Screens/Albums';
 import { Contacts } from '../Screens/Contacts';
+import { Chat } from '../Screens/Chat';
 import { createNativeBottomTabNavigator } from '@bottom-tabs/react-navigation';
-import { StyleSheet, Text, View } from 'react-native';
 
 const Tab = createNativeBottomTabNavigator();
-
-function DarkScreen() {
-  return (
-    <View testID="lazyDarkScreen" style={styles.darkScreen}>
-      <Text style={styles.darkScreenText}>Lazy screen with dark content</Text>
-    </View>
-  );
-}
 
 export default function NativeBottomTabsLazy() {
   return (
@@ -40,26 +32,12 @@ export default function NativeBottomTabsLazy() {
         }}
       />
       <Tab.Screen
-        name="Dark"
-        component={DarkScreen}
+        name="Chat"
+        component={Chat}
         options={{
-          tabBarButtonTestID: 'lazyDarkTab',
           tabBarIcon: () => require('../../assets/icons/chat_dark.png'),
         }}
       />
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  darkScreen: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1E2D2F',
-  },
-  darkScreenText: {
-    color: '#F7DBA7',
-    fontSize: 24,
-  },
-});
