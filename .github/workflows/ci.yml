@@ -11,6 +11,10 @@ on:
     types:
       - checks_requested
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -26,6 +30,9 @@ jobs:
 
       - name: Lint files
         run: yarn lint
+
+      - name: Test files
+        run: yarn test
 
       - name: Typecheck files
         run: yarn typecheck
@@ -51,6 +58,23 @@ jobs:
 
       - name: Build package
         run: yarn build
+
+      # npm pack matches the file list that changeset publish (npm publish) ships.
+      - name: Pack packages
+        run: |
+          mkdir -p "$RUNNER_TEMP/packages"
+          npm pack --pack-destination "$RUNNER_TEMP/packages" \
+            ./packages/react-native-bottom-tabs \
+            ./packages/react-navigation \
+            ./packages/expo-template
+
+      - name: Upload packages
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: packages
+          path: ${{ runner.temp }}/packages
+          if-no-files-found: error
+          retention-days: 7
 
   build-android:
     runs-on: ubuntu-latest
@@ -181,3 +205,206 @@ jobs:
             ARCHS=arm64 \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+  # Creates an app from the packed Expo template and installs the packed
+  # packages into it, as `create-expo-app --template @bottom-tabs/expo-template`
+  # users do, so nothing resolves through the workspace or src/.
+  consumer-expo:
+    name: consumer-expo (${{ matrix.platform }})
+    needs: build-library
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ios
+            runner: macos-26
+          - platform: android
+            runner: ubuntu-latest
+
+    env:
+      APP_DIR: ${{ github.workspace }}/../consumer
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Download packages
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: packages
+          path: ${{ runner.temp }}/packages
+
+      - name: Create app from the Expo template
+        run: |
+          npx --yes create-expo-app@latest "$APP_DIR" --template "$RUNNER_TEMP"/packages/bottom-tabs-expo-template-*.tgz --no-install
+
+      # The template pins the published versions; the tarballs replace them.
+      - name: Install packages from tarballs
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          npm install "$RUNNER_TEMP"/packages/react-native-bottom-tabs-*.tgz "$RUNNER_TEMP"/packages/bottom-tabs-react-navigation-*.tgz
+
+      - name: Typecheck
+        working-directory: ${{ env.APP_DIR }}
+        run: npx tsc --noEmit
+
+      - name: Bundle JavaScript
+        working-directory: ${{ env.APP_DIR }}
+        run: npx expo export --platform ${{ matrix.platform }}
+
+      - name: Install JDK
+        if: matrix.platform == 'android'
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        if: matrix.platform == 'android'
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Finalize Android SDK
+        if: matrix.platform == 'android'
+        run: |
+          /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
+
+      # Runs the library's config plugin from the tarball's app.plugin.js.
+      - name: Prebuild
+        working-directory: ${{ env.APP_DIR }}
+        run: npx expo prebuild --platform ${{ matrix.platform }}
+
+      # BottomNavigationView crashes on launch without a Material theme.
+      - name: Check the config plugin set the Material 3 theme
+        if: matrix.platform == 'android'
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          grep 'parent="Theme.Material3.DayNight.NoActionBar"' android/app/src/main/res/values/styles.xml
+
+      - name: Build for iOS
+        if: matrix.platform == 'ios'
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          xcodebuild -workspace ios/consumer.xcworkspace -scheme consumer -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build ARCHS=arm64 CODE_SIGNING_ALLOWED=NO -quiet
+
+      - name: Build for Android
+        if: matrix.platform == 'android'
+        working-directory: ${{ env.APP_DIR }}/android
+        env:
+          JAVA_OPTS: '-XX:MaxHeapSize=6g'
+        run: |
+          ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon --console=plain
+
+  # Installs the packed library into a fresh React Native Community CLI app on
+  # the example's React Native version, as bare React Native users do.
+  consumer-cli:
+    name: consumer-cli (${{ matrix.platform }})
+    needs: build-library
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Only Xcode 27 compiles the `#if compiler(>=6.4)` iOS 27 SDK code;
+          # consumer-expo builds with Xcode 26.
+          - platform: ios
+            runner: xcode-27
+          - platform: android
+            runner: ubuntu-latest
+
+    env:
+      APP_DIR: ${{ github.workspace }}/../consumer
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Download packages
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: packages
+          path: ${{ runner.temp }}/packages
+
+      - name: Create app on the example's React Native version
+        run: |
+          version=$(node -p "require('./apps/example/package.json').dependencies['react-native'].replace(/^\D+/, '')")
+          npx --yes @react-native-community/cli@latest init Consumer --version "$version" --directory "$APP_DIR" --skip-install --skip-git-init
+
+      - name: Install library from tarball
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          cp "$GITHUB_WORKSPACE/.github/consumer/App.tsx" App.tsx
+          npm install "$RUNNER_TEMP"/packages/react-native-bottom-tabs-*.tgz
+
+      - name: Typecheck
+        working-directory: ${{ env.APP_DIR }}
+        run: npx tsc --noEmit
+
+      - name: Bundle JavaScript
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          npx react-native bundle --entry-file index.js --platform ${{ matrix.platform }} --dev false --bundle-output "$RUNNER_TEMP/index.bundle"
+
+      - name: Install pods
+        if: matrix.platform == 'ios'
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          bundle install
+          cd ios && bundle exec pod install
+
+      - name: Build for iOS
+        if: matrix.platform == 'ios'
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          xcodebuild -workspace ios/Consumer.xcworkspace -scheme Consumer -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build ARCHS=arm64 CODE_SIGNING_ALLOWED=NO -quiet
+
+      - name: Install JDK
+        if: matrix.platform == 'android'
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        if: matrix.platform == 'android'
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Finalize Android SDK
+        if: matrix.platform == 'android'
+        run: |
+          /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
+
+      # Inherits the Material 3 theme as the Quick Start tells CLI users to, and
+      # turns on AGP 9's built-in Kotlin, which the template still opts out of
+      # and AGP 10 makes mandatory. consumer-expo (AGP 8) covers the library
+      # applying kotlin-android itself.
+      - name: Configure Android app
+        if: matrix.platform == 'android'
+        working-directory: ${{ env.APP_DIR }}/android
+        run: |
+          sed -i 's/Theme.AppCompat.DayNight.NoActionBar/Theme.Material3.DayNight.NoActionBar/' app/src/main/res/values/styles.xml
+          grep 'parent="Theme.Material3.DayNight.NoActionBar"' app/src/main/res/values/styles.xml
+          sed -i '/^android.builtInKotlin=false/d; /^android.newDsl=false/d' gradle.properties
+          sed -i '/apply plugin: "org.jetbrains.kotlin.android"/d' app/build.gradle
+
+      - name: Build for Android
+        if: matrix.platform == 'android'
+        working-directory: ${{ env.APP_DIR }}/android
+        env:
+          JAVA_OPTS: '-XX:MaxHeapSize=6g'
+        run: |
+          ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon --console=plain
