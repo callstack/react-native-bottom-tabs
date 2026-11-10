@@ -44,21 +44,9 @@ function NativeBottomTabNavigator({
   screenOptions,
   screenLayout,
   UNSTABLE_router,
-  tabBarActiveTintColor: customActiveTintColor,
-  tabBarInactiveTintColor: customInactiveTintColor,
-  layoutDirection = 'locale',
   ...rest
 }: NativeBottomTabNavigatorProps) {
   const { colors } = useTheme();
-  const activeTintColor =
-    customActiveTintColor === undefined
-      ? colors.primary
-      : customActiveTintColor;
-
-  const inactiveTintColor =
-    customInactiveTintColor === undefined
-      ? Color(colors.text).mix(Color(colors.card), 0.5).hex()
-      : customInactiveTintColor;
 
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
@@ -84,9 +72,10 @@ function NativeBottomTabNavigator({
     <NavigationContent>
       <NativeBottomTabView
         {...rest}
-        layoutDirection={layoutDirection}
-        tabBarActiveTintColor={activeTintColor}
-        tabBarInactiveTintColor={inactiveTintColor}
+        defaultTintColors={{
+          active: colors.primary,
+          inactive: Color(colors.text).mix(Color(colors.card), 0.5).hex(),
+        }}
         state={state}
         navigation={navigation}
         descriptors={descriptors}

@@ -2,9 +2,11 @@
   "extends": "../../tsconfig",
   "references": [
     { "path": "../react-native-bottom-tabs" },
+    { "path": "../standard-navigation" }
   ],
   "compilerOptions": {
+    "types": ["jest"],
     "rootDir": ".",
-    "outDir": "./lib/typescript",
+    "outDir": "./lib/typescript"
   }
 }
