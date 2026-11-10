@@ -166,7 +166,6 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
   fun setSelectedItem(value: String) {
     selectedItem = value
-    // If the key is not in items yet, updateItems selects it when the new items arrive.
     val index = items.indexOfFirst { it.key == value }
     if (index >= 0) {
       setSelectedIndex(index)
@@ -185,8 +184,6 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     container.addView(child, params)
     layoutHolder.addView(container, index)
 
-    // When tabs are added, the child arrives before the new items, so items can be outdated here.
-    // updateItems selects the tab again after the new items arrive.
     val itemKey = items.getOrNull(index)?.key
     if (itemKey != null && itemKey == selectedItem) {
       setSelectedIndex(index)
@@ -194,8 +191,6 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     }
   }
 
-  // Each screen is wrapped in a container. React Native must get the screen itself,
-  // or it does not find the view and skips its removal.
   fun getScreenAt(index: Int): View? {
     return (layoutHolder.getChildAt(index) as? ViewGroup)?.getChildAt(0)
   }
@@ -347,7 +342,6 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
         }
       }
     }
-    // An added or removed tab moves the index of the selected tab.
     syncSelectedIndex()
     // Update tint colors and text appearance after updating all items.
     post {
