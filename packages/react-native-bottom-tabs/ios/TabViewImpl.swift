@@ -47,7 +47,7 @@ struct TabViewImpl: View {
     tabContent
       .tabBarMinimizeBehavior(props.minimizeBehavior)
       #if !os(tvOS) && !os(macOS) && !os(visionOS)
-        .onTabItemEvent { index, identifier, isLongPress in
+        .onTabItemEvent(disablePageAnimations: props.disablePageAnimations) { index, identifier, isLongPress in
           let item = identifier.flatMap { props.filteredItems.findByKey($0) }
             ?? index.flatMap { props.filteredItems[safe: $0] }
           guard let key = item?.key else { return false }
@@ -89,7 +89,7 @@ struct TabViewImpl: View {
       .tintColor(props.selectedActiveTintColor)
       .getSidebarAdaptable(enabled: props.sidebarAdaptable ?? false)
       .onChange(of: props.selectedPage ?? "") { newValue in
-        #if !os(macOS)
+        #if os(tvOS) || os(visionOS)
           if props.disablePageAnimations {
             UIView.setAnimationsEnabled(false)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -257,7 +257,16 @@ struct TabViewImpl: View {
   /// switching tabs) breaks its selection styling on iOS 27, so `selectedImage` is only assigned when it
   /// changes, and SwiftUI updates its images only when a label changes.
   private func configureTabBarItemImages(items: [UITabBarItem], tabBar: UITabBar, props: TabViewProps) {
+    #if os(iOS)
+      // UIKit adds its "More" item only when the bar shows fewer items than there are tabs.
+      let moreItem = items.count < props.filteredItems.count
+        ? (tabBar.delegate as? UITabBarController)?.moreNavigationController.tabBarItem
+        : nil
+    #endif
     for (tabBarIndex, item) in items.enumerated() {
+      #if os(iOS)
+        if item === moreItem { continue }
+      #endif
       let tabIndex = declarationIndex(of: item, at: tabBarIndex, in: tabBar)
       guard let tabData = props.filteredItems[safe: tabIndex] else { continue }
 
