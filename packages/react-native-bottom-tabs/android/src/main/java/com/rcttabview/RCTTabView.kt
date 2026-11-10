@@ -166,7 +166,10 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
   fun setSelectedItem(value: String) {
     selectedItem = value
-    setSelectedIndex(items.indexOfFirst { it.key == value })
+    val index = items.indexOfFirst { it.key == value }
+    if (index >= 0) {
+      setSelectedIndex(index)
+    }
     // Per-tab active tint color depends on the selected item.
     updateTintColors()
   }
@@ -181,11 +184,48 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     container.addView(child, params)
     layoutHolder.addView(container, index)
 
-    val itemKey = items[index].key
-    if (selectedItem == itemKey) {
+    val itemKey = items.getOrNull(index)?.key
+    if (itemKey != null && itemKey == selectedItem) {
       setSelectedIndex(index)
       refreshLayout()
     }
+  }
+
+  fun getScreenAt(index: Int): View? {
+    return (layoutHolder.getChildAt(index) as? ViewGroup)?.getChildAt(0)
+  }
+
+  fun removeScreenAt(index: Int) {
+    layoutHolder.removeViewAt(index)
+    syncSelectedIndex()
+  }
+
+  fun removeScreen(view: View) {
+    val container = view.parent as? View ?: return
+    if (container.parent === layoutHolder) {
+      layoutHolder.removeView(container)
+      syncSelectedIndex()
+    }
+  }
+
+  private fun syncSelectedIndex() {
+    val index = items.indexOfFirst { it.key == selectedItem }
+    if (index < 0 || isSelectedIndex(index)) {
+      return
+    }
+    setSelectedIndex(index)
+  }
+
+  private fun isSelectedIndex(index: Int): Boolean {
+    if (bottomNavigation.selectedItemId != index) {
+      return false
+    }
+    layoutHolder.forEachIndexed { childIndex, view ->
+      if ((view.visibility == VISIBLE) != (childIndex == index)) {
+        return false
+      }
+    }
+    return true
   }
 
   private fun createContainer(): FrameLayout {
@@ -302,6 +342,7 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
         }
       }
     }
+    syncSelectedIndex()
     // Update tint colors and text appearance after updating all items.
     post {
       updateTextAppearance()
