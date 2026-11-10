@@ -151,8 +151,14 @@ struct TabViewImpl: View {
     tabBar.isHidden = props.tabBarHidden
 
     #if os(iOS)
+      let colorScheme = tabBarUserInterfaceStyle(props: props)
+      applyTabBarColorScheme(colorScheme, to: tabBar)
+
       if #available(iOS 26.0, *) {
-        let traits = tabBar.window?.traitCollection ?? tabBar.traitCollection
+        var traits = tabBar.window?.traitCollection ?? tabBar.traitCollection
+        if colorScheme != .unspecified {
+          traits = traits.modifyingTraits { $0.userInterfaceStyle = colorScheme }
+        }
         if props.scrollEdgeAppearance == "transparent" {
           tabBar.backgroundColor = nil
         } else if let barTintColor = props.barTintColor {
@@ -171,6 +177,79 @@ struct TabViewImpl: View {
 
     configureStandardAppearance(tabBar: tabBar, props: props)
   }
+
+  #if os(iOS)
+    private func tabBarUserInterfaceStyle(props: TabViewProps) -> UIUserInterfaceStyle {
+      switch props.tabBarColorScheme {
+      case "light":
+        return .light
+      case "dark":
+        return .dark
+      default:
+        return .unspecified
+      }
+    }
+
+    private func applyTabBarColorScheme(_ style: UIUserInterfaceStyle, to tabBar: UITabBar) {
+      let hasOverride = objc_getAssociatedObject(tabBar, &TabBarColorSchemeState.overrideKey) != nil
+      if style == .unspecified && !hasOverride { return }
+
+      if style == .unspecified {
+        resetTabBarColorScheme(on: tabBar)
+        return
+      }
+      objc_setAssociatedObject(tabBar, &TabBarColorSchemeState.overrideKey, true, .OBJC_ASSOCIATION_RETAIN)
+
+      if #available(iOS 26.0, *) {
+        if let container = outermostTabBarContainer(of: tabBar) {
+          container.overrideUserInterfaceStyle = style
+          return
+        }
+      }
+
+      tabBar.overrideUserInterfaceStyle = style
+      if #available(iOS 17.0, *) {
+        // SwiftUI resets the override on the tab bar, so set it again on each style change.
+        TabBarColorSchemeKeeper.keep(style, on: tabBar)
+      } else {
+        // Before iOS 17 there are no trait change registrations, so set it again after the SwiftUI update.
+        DispatchQueue.main.async { [weak tabBar] in
+          guard let tabBar, tabBar.overrideUserInterfaceStyle != style else { return }
+          tabBar.overrideUserInterfaceStyle = style
+        }
+      }
+    }
+
+    private func resetTabBarColorScheme(on tabBar: UITabBar) {
+      objc_setAssociatedObject(tabBar, &TabBarColorSchemeState.overrideKey, nil, .OBJC_ASSOCIATION_RETAIN)
+      if #available(iOS 17.0, *) {
+        TabBarColorSchemeKeeper.release(on: tabBar)
+      }
+      if #available(iOS 26.0, *) {
+        outermostTabBarContainer(of: tabBar)?.overrideUserInterfaceStyle = .unspecified
+      }
+      tabBar.overrideUserInterfaceStyle = .unspecified
+    }
+
+    @available(iOS 26.0, *)
+    private func outermostTabBarContainer(of tabBar: UITabBar) -> UIView? {
+      // On iOS 26 and later, the views around the tab bar take the system style, so the override goes on
+      // the outermost one: the child of the tab bar controller view, next to the view of the screens.
+      guard let root = (tabBar.delegate as? UITabBarController)?.view else { return nil }
+      var view: UIView = tabBar
+      while let parent = view.superview {
+        if parent === root {
+          return view === tabBar ? nil : view
+        }
+        view = parent
+      }
+      return nil
+    }
+
+    private enum TabBarColorSchemeState {
+      static var overrideKey: UInt8 = 0
+    }
+  #endif
 #endif
 
 #if !os(macOS)
@@ -346,7 +425,8 @@ struct TabViewImpl: View {
         rendersLabelIntoImage: useBakedTintColors && props.hasCustomTintColors && props.labeled && !hasEffectiveRole,
         fontSize: props.fontSize,
         fontFamily: props.fontFamily,
-        fontWeight: props.fontWeight
+        fontWeight: props.fontWeight,
+        colorScheme: props.tabBarColorScheme
       )
 
       if let entry = entries[tabData.key], entry.inputs == inputs {
@@ -371,20 +451,22 @@ struct TabViewImpl: View {
     ) -> TabBarItemImages? {
       guard let icon else { return nil }
       let selectedIcon = focusedIcon ?? icon
+      let inactiveTintColor = resolvedForTabBar(inputs.inactiveTintColor, props: props)
+      let activeTintColor = resolvedForTabBar(inputs.activeTintColor, props: props)
 
       if inputs.rendersLabelIntoImage {
         return TabBarItemImages(
           labelImage: makeTabBarItemImage(
             icon: icon,
             title: inputs.title,
-            color: inputs.inactiveTintColor,
+            color: inactiveTintColor ?? resolvedForTabBar(.label, props: props),
             preservesOriginalIconColors: inputs.preservesOriginalIconColors,
             props: props
           ),
           selectedImage: makeTabBarItemImage(
             icon: selectedIcon,
             title: inputs.title,
-            color: inputs.activeTintColor,
+            color: activeTintColor ?? resolvedForTabBar(.label, props: props),
             preservesOriginalIconColors: inputs.preservesOriginalIconColors,
             props: props
           ),
@@ -397,14 +479,14 @@ struct TabViewImpl: View {
         labelImage: inputs.useBakedTintColors
           ? renderTabBarIcon(
             icon,
-            color: inputs.inactiveTintColor,
+            color: inactiveTintColor,
             preservesOriginalIconColors: inputs.preservesOriginalIconColors,
             forceTintColor: true
           )
           : nil,
         selectedImage: renderTabBarIcon(
           selectedIcon,
-          color: inputs.activeTintColor,
+          color: activeTintColor,
           preservesOriginalIconColors: inputs.preservesOriginalIconColors,
           forceTintColor: inputs.useBakedTintColors
         ),
@@ -440,7 +522,18 @@ struct TabViewImpl: View {
       let fontSize: Int?
       let fontFamily: String?
       let fontWeight: String?
+      let colorScheme: String?
     }
+  }
+
+  private func resolvedForTabBar(_ color: UIColor?, props: TabViewProps) -> UIColor? {
+    #if os(iOS)
+      let style = tabBarUserInterfaceStyle(props: props)
+      if let color, style != .unspecified {
+        return color.resolvedColor(with: UITraitCollection(userInterfaceStyle: style))
+      }
+    #endif
+    return color
   }
 
   private func renderTabBarIcon(
@@ -617,6 +710,10 @@ extension View {
         .onChange(of: props.translucent) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
         }
+        .onChange(of: props.tabBarColorScheme) { _ in
+          updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
+        }
         .onChange(of: props.inactiveTintColor) { _ in
           updateTabBarAppearance(props: props, tabBar: tabBar)
           updateTabBarItemImages(props: props, tabBar: tabBar)
@@ -710,3 +807,37 @@ extension View {
     }
   }
 }
+
+#if os(iOS)
+  @available(iOS 17.0, *)
+  private enum TabBarColorSchemeKeeper {
+    private static var styleKey: UInt8 = 0
+    private static var registrationKey: UInt8 = 0
+
+    static func keep(_ style: UIUserInterfaceStyle, on tabBar: UITabBar) {
+      objc_setAssociatedObject(tabBar, &styleKey, NSNumber(value: style.rawValue), .OBJC_ASSOCIATION_RETAIN)
+      guard objc_getAssociatedObject(tabBar, &registrationKey) == nil else { return }
+
+      let registration = MainActor.assumeIsolated {
+        tabBar.registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (bar: UITabBar, _: UITraitCollection) in
+          guard let rawValue = objc_getAssociatedObject(bar, &styleKey) as? NSNumber,
+                let style = UIUserInterfaceStyle(rawValue: rawValue.intValue),
+                bar.overrideUserInterfaceStyle != style
+          else { return }
+          bar.overrideUserInterfaceStyle = style
+        }
+      }
+      objc_setAssociatedObject(tabBar, &registrationKey, registration, .OBJC_ASSOCIATION_RETAIN)
+    }
+
+    static func release(on tabBar: UITabBar) {
+      if let registration = objc_getAssociatedObject(tabBar, &registrationKey) as? UITraitChangeRegistration {
+        MainActor.assumeIsolated {
+          tabBar.unregisterForTraitChanges(registration)
+        }
+      }
+      objc_setAssociatedObject(tabBar, &registrationKey, nil, .OBJC_ASSOCIATION_RETAIN)
+      objc_setAssociatedObject(tabBar, &styleKey, nil, .OBJC_ASSOCIATION_RETAIN)
+    }
+  }
+#endif

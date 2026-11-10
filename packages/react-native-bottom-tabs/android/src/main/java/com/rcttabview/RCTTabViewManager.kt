@@ -173,6 +173,9 @@ class RCTTabViewManager(context: ReactApplicationContext) :
       view.isHapticFeedbackEnabled = value
   }
 
+  override fun setTabBarColorScheme(view: ReactBottomNavigationView, value: String?) {
+  }
+
   override fun setLayoutDirection(view: ReactBottomNavigationView, value: String?) {
       val direction = when (value) {
           "rtl" -> View.LAYOUT_DIRECTION_RTL
