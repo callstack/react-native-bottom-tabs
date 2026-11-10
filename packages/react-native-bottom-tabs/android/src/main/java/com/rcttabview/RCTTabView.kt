@@ -187,9 +187,29 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
     // When tabs are added, the child arrives before the new items, so items can be outdated here.
     // updateItems selects the tab again after the new items arrive.
-    if (items.getOrNull(index)?.key == selectedItem) {
+    val itemKey = items.getOrNull(index)?.key
+    if (itemKey != null && itemKey == selectedItem) {
       setSelectedIndex(index)
       refreshLayout()
+    }
+  }
+
+  // Each screen is wrapped in a container. React Native must get the screen itself,
+  // or it does not find the view and skips its removal.
+  fun getScreenAt(index: Int): View? {
+    return (layoutHolder.getChildAt(index) as? ViewGroup)?.getChildAt(0)
+  }
+
+  fun removeScreenAt(index: Int) {
+    layoutHolder.removeViewAt(index)
+    syncSelectedIndex()
+  }
+
+  fun removeScreen(view: View) {
+    val container = view.parent as? View ?: return
+    if (container.parent === layoutHolder) {
+      layoutHolder.removeView(container)
+      syncSelectedIndex()
     }
   }
 
