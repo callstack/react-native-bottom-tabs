@@ -274,6 +274,7 @@ struct TabViewImpl: View {
       let images = props.itemImages.images(for: tabData, props: props)
 
       item.accessibilityLabel = tabData.title
+      item.accessibilityIdentifier = tabData.testID
 
       if let images {
         assignSelectedImage(images.selectedImage, to: item)
@@ -298,7 +299,27 @@ struct TabViewImpl: View {
         for: .selected
       )
     }
+
+    #if os(iOS)
+      if #available(iOS 26.0, *) {
+        assignTabButtonIdentifiers(in: tabBar)
+      }
+    #endif
   }
+
+  #if os(iOS)
+    private func assignTabButtonIdentifiers(in view: UIView) {
+      for subview in view.subviews {
+        if NSStringFromClass(type(of: subview)) == "_UITabButton",
+          let ivar = class_getInstanceVariable(type(of: subview), "item"),
+          let item = object_getIvar(subview, ivar) as? UITabBarItem
+        {
+          subview.accessibilityIdentifier = item.accessibilityIdentifier
+        }
+        assignTabButtonIdentifiers(in: subview)
+      }
+    }
+  #endif
 
   private func assignSelectedImage(_ image: UIImage, to item: UITabBarItem) {
     // `UITabBarItem.selectedImage` returns a copy, so compare against the last assigned instance instead.
