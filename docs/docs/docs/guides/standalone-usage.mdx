@@ -137,6 +137,17 @@ Whether to enable haptic feedback on tab press.
 - Type: `boolean`
 - Default: `false`
 
+#### `tabBarColorScheme` <Badge text="iOS" type="info" />
+
+The light or dark style of the tab bar. If your app theme does not follow the system, set this prop. For example, a light app theme with the system in dark mode needs `'light'`.
+
+- Type: `'inherit' | 'light' | 'dark'`
+- Default: `'inherit'` (follows the app window, which follows the system unless you call `Appearance.setColorScheme`)
+
+Only the tab bar uses this value. The screens and the keyboard keep the system style.
+
+On iOS 26, the glass tab bar also adapts to the content behind it. Over a very light or a very dark screen, the tab bar follows the screen and this prop has no visible effect.
+
 #### `tabLabelStyle`
 
 Object containing styles for the tab label.

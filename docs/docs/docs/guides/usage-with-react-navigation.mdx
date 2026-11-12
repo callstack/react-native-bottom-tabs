@@ -177,6 +177,17 @@ Tab views using the sidebar adaptable style have an appearance
 
 Whether to enable haptic feedback on tab press. Defaults to false.
 
+#### `tabBarColorScheme` <Badge text="iOS" type="info" />
+
+The light or dark style of the tab bar.
+
+- Type: `'inherit' | 'light' | 'dark'`
+- Default: `'inherit'` (follows the system)
+
+If your navigation theme does not follow the system, set this prop to match the theme. For example, pass `tabBarColorScheme={theme.dark ? 'dark' : 'light'}`. Only the tab bar uses this value. The screens and the keyboard keep the system style.
+
+On iOS 26, the glass tab bar also adapts to the content behind it. Over a very light or a very dark screen, the tab bar follows the screen and this prop has no visible effect.
+
 #### `minimizeBehavior` <Badge text="iOS 26+" type="info" />
 
 Controls how the tab bar behaves when content is scrolled.
