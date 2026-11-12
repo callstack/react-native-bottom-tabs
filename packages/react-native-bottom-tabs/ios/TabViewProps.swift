@@ -85,6 +85,8 @@ class TabViewProps: ObservableObject {
   @Published var tabBarHidden: Bool = false
   #if !os(macOS)
     let itemImages = TabBarItemImageCache()
+    @Published var systemColorScheme: ColorScheme =
+      UIScreen.main.traitCollection.userInterfaceStyle == .dark ? .dark : .light
   #endif
 
   var selectedActiveTintColor: PlatformColor? {

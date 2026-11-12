@@ -82,8 +82,15 @@ struct TabViewImpl: View {
       }
       #if !os(macOS)
         .configureAppearance(props: props, tabBar: tabBar)
-        .onChange(of: colorScheme) { _ in
+        .onAppear {
+          if props.systemColorScheme != colorScheme {
+            props.systemColorScheme = colorScheme
+          }
+        }
+        .onChange(of: colorScheme) { newValue in
+          props.systemColorScheme = newValue
           updateTabBarAppearance(props: props, tabBar: tabBar)
+          updateTabBarItemImages(props: props, tabBar: tabBar)
         }
       #endif
       .tintColor(props.selectedActiveTintColor)
@@ -346,7 +353,8 @@ struct TabViewImpl: View {
         rendersLabelIntoImage: useBakedTintColors && props.hasCustomTintColors && props.labeled && !hasEffectiveRole,
         fontSize: props.fontSize,
         fontFamily: props.fontFamily,
-        fontWeight: props.fontWeight
+        fontWeight: props.fontWeight,
+        userInterfaceStyle: useBakedTintColors ? UIUserInterfaceStyle(props.systemColorScheme) : .unspecified
       )
 
       if let entry = entries[tabData.key], entry.inputs == inputs {
@@ -371,20 +379,22 @@ struct TabViewImpl: View {
     ) -> TabBarItemImages? {
       guard let icon else { return nil }
       let selectedIcon = focusedIcon ?? icon
+      let inactiveTintColor = resolved(inputs.inactiveTintColor, for: inputs.userInterfaceStyle)
+      let activeTintColor = resolved(inputs.activeTintColor, for: inputs.userInterfaceStyle)
 
       if inputs.rendersLabelIntoImage {
         return TabBarItemImages(
           labelImage: makeTabBarItemImage(
             icon: icon,
             title: inputs.title,
-            color: inputs.inactiveTintColor,
+            color: inactiveTintColor ?? resolved(.label, for: inputs.userInterfaceStyle),
             preservesOriginalIconColors: inputs.preservesOriginalIconColors,
             props: props
           ),
           selectedImage: makeTabBarItemImage(
             icon: selectedIcon,
             title: inputs.title,
-            color: inputs.activeTintColor,
+            color: activeTintColor ?? resolved(.label, for: inputs.userInterfaceStyle),
             preservesOriginalIconColors: inputs.preservesOriginalIconColors,
             props: props
           ),
@@ -397,14 +407,14 @@ struct TabViewImpl: View {
         labelImage: inputs.useBakedTintColors
           ? renderTabBarIcon(
             icon,
-            color: inputs.inactiveTintColor,
+            color: inactiveTintColor,
             preservesOriginalIconColors: inputs.preservesOriginalIconColors,
             forceTintColor: true
           )
           : nil,
         selectedImage: renderTabBarIcon(
           selectedIcon,
-          color: inputs.activeTintColor,
+          color: activeTintColor,
           preservesOriginalIconColors: inputs.preservesOriginalIconColors,
           forceTintColor: inputs.useBakedTintColors
         ),
@@ -440,6 +450,13 @@ struct TabViewImpl: View {
       let fontSize: Int?
       let fontFamily: String?
       let fontWeight: String?
+      let userInterfaceStyle: UIUserInterfaceStyle
+    }
+
+    /// Baked images do not follow trait changes, so their colors are resolved before they are drawn.
+    private func resolved(_ color: UIColor?, for style: UIUserInterfaceStyle) -> UIColor? {
+      guard style != .unspecified else { return color }
+      return color?.resolvedColor(with: UITraitCollection(userInterfaceStyle: style))
     }
   }
 
