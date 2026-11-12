@@ -20,6 +20,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.OnConfigurationChangedProvider
+import androidx.core.util.Consumer
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
@@ -32,6 +34,7 @@ import coil3.svg.SvgDecoder
 import coil3.size.Precision
 import coil3.size.Size as CoilSize
 import coil3.size.Scale
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.common.assets.ReactFontManager
 import com.facebook.react.modules.core.ReactChoreographer
@@ -75,6 +78,8 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
   private var lastReportedSize: Size? = null
   private var hasCustomAppearance = false
   private var uiModeConfiguration: Int = Configuration.UI_MODE_NIGHT_UNDEFINED
+  private var configurationProvider: OnConfigurationChangedProvider? = null
+  private val configurationListener = Consumer<Configuration> { handleUiModeChange(it) }
 
   private val imageLoader = ImageLoader.Builder(context)
     .components {
@@ -562,8 +567,26 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     }
   }
 
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    configurationProvider =
+      (context as? ReactContext)?.currentActivity as? OnConfigurationChangedProvider
+    configurationProvider?.addOnConfigurationChangedListener(configurationListener)
+    handleUiModeChange(resources.configuration)
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    configurationProvider?.removeOnConfigurationChangedListener(configurationListener)
+    configurationProvider = null
+  }
+
   override fun onConfigurationChanged(newConfig: Configuration?) {
     super.onConfigurationChanged(newConfig)
+    handleUiModeChange(newConfig)
+  }
+
+  private fun handleUiModeChange(newConfig: Configuration?) {
     if (uiModeConfiguration == newConfig?.uiMode || hasCustomAppearance) {
       return
     }
