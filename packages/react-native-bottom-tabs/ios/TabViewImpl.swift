@@ -6,6 +6,9 @@ import SwiftUI
 /// SwiftUI implementation of TabView used to render React Native views.
 struct TabViewImpl: View {
   @ObservedObject var props: TabViewProps
+  #if os(iOS)
+    @State private var moreNavigationBarHider = MoreNavigationBarHider()
+  #endif
   @Environment(\.colorScheme) private var colorScheme
   #if os(macOS)
     @Weak var tabBar: NSTabView?
@@ -74,7 +77,7 @@ struct TabViewImpl: View {
           updateTabBarAppearance(props: props, tabBar: tabController.tabBar)
           updateTabBarItemImages(props: props, tabBar: tabController.tabBar)
           #if os(iOS)
-            MoreNavigationBarHider.update(tabController, props: props)
+            moreNavigationBarHider.update(tabController, props: props)
           #endif
           if !props.tabBarHidden {
             onTabBarMeasured(
@@ -716,29 +719,18 @@ extension View {
 
 #if os(iOS)
   final class MoreNavigationBarHider: NSObject, UINavigationControllerDelegate {
-    private static var key: UInt8 = 0
     private weak var tabController: UITabBarController?
-    private weak var previousDelegate: UINavigationControllerDelegate?
     private var props: TabViewProps?
 
-    static func update(_ tabController: UITabBarController, props: TabViewProps) {
+    func update(_ tabController: UITabBarController, props: TabViewProps) {
       guard props.items.contains(where: { $0.hidden }), props.filteredItems.count > 5 else { return }
+      self.tabController = tabController
+      self.props = props
 
       let moreController = tabController.moreNavigationController
-      let hider: MoreNavigationBarHider
-      if let existing = moreController.delegate as? MoreNavigationBarHider {
-        hider = existing
-      } else {
-        hider = MoreNavigationBarHider()
-        hider.tabController = tabController
-        hider.previousDelegate = moreController.delegate
-        moreController.delegate = hider
-        objc_setAssociatedObject(moreController, &key, hider, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-      }
-      hider.props = props
-
+      moreController.delegate = self
       if let top = moreController.topViewController {
-        moreController.setNavigationBarHidden(hider.isHiddenTab(top), animated: false)
+        setBarHidden(isHiddenTab(top), in: moreController, animated: false)
       }
     }
 
@@ -747,16 +739,17 @@ extension View {
       willShow viewController: UIViewController,
       animated: Bool
     ) {
-      navigationController.setNavigationBarHidden(isHiddenTab(viewController), animated: animated)
-      previousDelegate?.navigationController?(navigationController, willShow: viewController, animated: animated)
+      setBarHidden(isHiddenTab(viewController), in: navigationController, animated: animated)
     }
 
-    func navigationController(
-      _ navigationController: UINavigationController,
-      didShow viewController: UIViewController,
-      animated: Bool
-    ) {
-      previousDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+    private func setBarHidden(_ hidden: Bool, in navigationController: UINavigationController, animated: Bool) {
+      navigationController.setNavigationBarHidden(hidden, animated: animated)
+      navigationController.interactivePopGestureRecognizer?.isEnabled = !hidden
+      #if compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+          navigationController.interactiveContentPopGestureRecognizer?.isEnabled = !hidden
+        }
+      #endif
     }
 
     private func isHiddenTab(_ viewController: UIViewController) -> Bool {
