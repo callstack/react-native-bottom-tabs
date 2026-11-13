@@ -73,6 +73,9 @@ struct TabViewImpl: View {
           tabBar = tabController.tabBar
           updateTabBarAppearance(props: props, tabBar: tabController.tabBar)
           updateTabBarItemImages(props: props, tabBar: tabController.tabBar)
+          #if os(iOS)
+            MoreNavigationBarHider.update(tabController, props: props)
+          #endif
           if !props.tabBarHidden {
             onTabBarMeasured(
               Int(tabController.tabBar.frame.size.height)
@@ -710,3 +713,61 @@ extension View {
     }
   }
 }
+
+#if os(iOS)
+  final class MoreNavigationBarHider: NSObject, UINavigationControllerDelegate {
+    private static var key: UInt8 = 0
+    private weak var tabController: UITabBarController?
+    private weak var previousDelegate: UINavigationControllerDelegate?
+    private var props: TabViewProps?
+
+    static func update(_ tabController: UITabBarController, props: TabViewProps) {
+      guard props.items.contains(where: { $0.hidden }), props.filteredItems.count > 5 else { return }
+
+      let moreController = tabController.moreNavigationController
+      let hider: MoreNavigationBarHider
+      if let existing = moreController.delegate as? MoreNavigationBarHider {
+        hider = existing
+      } else {
+        hider = MoreNavigationBarHider()
+        hider.tabController = tabController
+        hider.previousDelegate = moreController.delegate
+        moreController.delegate = hider
+        objc_setAssociatedObject(moreController, &key, hider, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+      }
+      hider.props = props
+
+      if let top = moreController.topViewController {
+        moreController.setNavigationBarHidden(hider.isHiddenTab(top), animated: false)
+      }
+    }
+
+    func navigationController(
+      _ navigationController: UINavigationController,
+      willShow viewController: UIViewController,
+      animated: Bool
+    ) {
+      navigationController.setNavigationBarHidden(isHiddenTab(viewController), animated: animated)
+      previousDelegate?.navigationController?(navigationController, willShow: viewController, animated: animated)
+    }
+
+    func navigationController(
+      _ navigationController: UINavigationController,
+      didShow viewController: UIViewController,
+      animated: Bool
+    ) {
+      previousDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+    }
+
+    private func isHiddenTab(_ viewController: UIViewController) -> Bool {
+      guard let tabController, let props else { return false }
+      var index: Int?
+      if #available(iOS 18.0, *) {
+        index = tabController.tabs.firstIndex { $0.viewController === viewController }
+      }
+      index = index ?? tabController.viewControllers?.firstIndex(of: viewController)
+      guard let index, let tabData = props.filteredItems[safe: index] else { return false }
+      return tabData.hidden
+    }
+  }
+#endif
