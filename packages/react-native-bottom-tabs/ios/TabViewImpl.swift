@@ -6,6 +6,9 @@ import SwiftUI
 /// SwiftUI implementation of TabView used to render React Native views.
 struct TabViewImpl: View {
   @ObservedObject var props: TabViewProps
+  #if os(iOS)
+    @State private var moreNavigationBarHider = MoreNavigationBarHider()
+  #endif
   @Environment(\.colorScheme) private var colorScheme
   #if os(macOS)
     @Weak var tabBar: NSTabView?
@@ -73,6 +76,9 @@ struct TabViewImpl: View {
           tabBar = tabController.tabBar
           updateTabBarAppearance(props: props, tabBar: tabController.tabBar)
           updateTabBarItemImages(props: props, tabBar: tabController.tabBar)
+          #if os(iOS)
+            moreNavigationBarHider.update(tabController, props: props)
+          #endif
           if !props.tabBarHidden {
             onTabBarMeasured(
               Int(tabController.tabBar.frame.size.height)
@@ -710,3 +716,51 @@ extension View {
     }
   }
 }
+
+#if os(iOS)
+  final class MoreNavigationBarHider: NSObject, UINavigationControllerDelegate {
+    private weak var tabController: UITabBarController?
+    private var props: TabViewProps?
+
+    func update(_ tabController: UITabBarController, props: TabViewProps) {
+      guard props.items.contains(where: { $0.hidden }), props.filteredItems.count > 5 else { return }
+      self.tabController = tabController
+      self.props = props
+
+      let moreController = tabController.moreNavigationController
+      moreController.delegate = self
+      if let top = moreController.topViewController {
+        setBarHidden(isHiddenTab(top), in: moreController, animated: false)
+      }
+    }
+
+    func navigationController(
+      _ navigationController: UINavigationController,
+      willShow viewController: UIViewController,
+      animated: Bool
+    ) {
+      setBarHidden(isHiddenTab(viewController), in: navigationController, animated: animated)
+    }
+
+    private func setBarHidden(_ hidden: Bool, in navigationController: UINavigationController, animated: Bool) {
+      navigationController.setNavigationBarHidden(hidden, animated: animated)
+      navigationController.interactivePopGestureRecognizer?.isEnabled = !hidden
+      #if compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+          navigationController.interactiveContentPopGestureRecognizer?.isEnabled = !hidden
+        }
+      #endif
+    }
+
+    private func isHiddenTab(_ viewController: UIViewController) -> Bool {
+      guard let tabController, let props else { return false }
+      var index: Int?
+      if #available(iOS 18.0, *) {
+        index = tabController.tabs.firstIndex { $0.viewController === viewController }
+      }
+      index = index ?? tabController.viewControllers?.firstIndex(of: viewController)
+      guard let index, let tabData = props.filteredItems[safe: index] else { return false }
+      return tabData.hidden
+    }
+  }
+#endif
