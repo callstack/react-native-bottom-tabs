@@ -21,7 +21,7 @@ concurrency:
 jobs:
   ios:
     runs-on: macos-26
-    timeout-minutes: 60
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -67,8 +67,9 @@ jobs:
           xcrun simctl bootstatus "$udid" -b
           echo "E2E_DEVICE=$udid" >> "$GITHUB_ENV"
 
+      # A broken build fails every test, each after its timeouts. Stop early instead.
       - name: Run e2e tests
-        run: yarn workspace react-native-bottom-tabs-example e2e:ios
+        run: yarn workspace react-native-bottom-tabs-example e2e:ios --max-failures 3
 
       # The runner is built before the first test, so it is saved even when a test fails.
       - name: Save agent-device runner
@@ -90,7 +91,7 @@ jobs:
 
   android:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -143,7 +144,7 @@ jobs:
           profile: pixel_7
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
-          script: yarn workspace react-native-bottom-tabs-example e2e:android
+          script: yarn workspace react-native-bottom-tabs-example e2e:android --max-failures 3
 
       - name: Upload e2e report
         if: ${{ !cancelled() }}
