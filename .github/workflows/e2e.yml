@@ -87,17 +87,20 @@ jobs:
           path: ~/.agent-device/apple-runner/derived
           key: agent-device-runner-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
-      # Booted once nothing else is running: next to the dependency restore, its first boot made
-      # both several minutes slower. A simulator of the runner image is used, since one made with
-      # `simctl create` has more to set up.
-      - name: Boot a simulator
+      # A stock simulator keeps about 270 processes busy for minutes after its first boot. On the
+      # runner's 3 vCPUs the app then takes over a minute to open and the first tests time out.
+      # slim.sh leaves about 75. What it turns off is listed in .github/simulator/disabled-daemons.txt.
+      - name: Boot a slim simulator
         run: |
           runtime=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform == "iOS" and .isAvailable)] | last | .identifier')
-          udid=$(xcrun simctl list devices available -j | jq -r --arg runtime "$runtime" '.devices[$runtime][]? | select(.name == "iPhone 17 Pro") | .udid' | head -n 1)
-          if [ -z "$udid" ]; then
-            udid=$(xcrun simctl create e2e "iPhone 17 Pro" "$runtime")
+          udid=$(xcrun simctl create e2e "iPhone 17 Pro" "$runtime")
+          .github/simulator/slim.sh "$udid"
+          xcrun simctl bootstatus "$udid" -b > /dev/null
+          processes=$(.github/simulator/count-processes.sh "$udid")
+          echo "$udid: $processes processes"
+          if [ "$processes" -gt 150 ]; then
+            echo "::warning::Simulator booted with $processes processes; launchd_sim may no longer read the disable store of .github/simulator/slim.sh"
           fi
-          xcrun simctl bootstatus "$udid" -b
           echo "E2E_DEVICE=$udid" >> "$GITHUB_ENV"
 
       # Built and started before the run, or the first tests time out while they wait for it.
