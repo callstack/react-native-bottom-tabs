@@ -48,7 +48,7 @@ jobs:
       - name: Build example for the iOS simulator
         run: yarn workspace react-native-bottom-tabs-example e2e:build:ios
 
-      # The runner that drives the simulator takes minutes to build.
+      # The XCTest runner that drives the simulator takes minutes to build.
       - name: Restore agent-device runner
         id: agent-device-runner
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
@@ -67,17 +67,20 @@ jobs:
           xcrun simctl bootstatus "$udid" -b
           echo "E2E_DEVICE=$udid" >> "$GITHUB_ENV"
 
-      # A broken build fails every test, each after its timeouts. Stop early instead.
-      - name: Run e2e tests
-        run: yarn workspace react-native-bottom-tabs-example e2e:ios --max-failures 3
+      # Built and started before the run, or the first tests time out while they wait for it.
+      - name: Prepare agent-device runner
+        run: npx --no-install agent-device prepare ios-runner --platform ios --udid "$E2E_DEVICE" --timeout 600000
 
-      # The runner is built before the first test, so it is saved even when a test fails.
       - name: Save agent-device runner
-        if: ${{ !cancelled() && steps.agent-device-runner.outputs.cache-hit != 'true' }}
+        if: ${{ steps.agent-device-runner.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ~/.agent-device/apple-runner/derived
           key: agent-device-runner-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      # A broken build fails every test, each after its timeouts. Stop early instead.
+      - name: Run e2e tests
+        run: yarn workspace react-native-bottom-tabs-example e2e:ios --max-failures 3
 
       - name: Upload e2e report
         if: ${{ !cancelled() }}
