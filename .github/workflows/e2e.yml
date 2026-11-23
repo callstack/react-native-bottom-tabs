@@ -22,9 +22,24 @@ jobs:
   ios:
     runs-on: macos-26
     timeout-minutes: 45
+    env:
+      APP: apps/example/ios/build/e2e/Build/Products/Release-iphonesimulator/ReactTestApp.app
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      # The first boot of a simulator takes minutes, so it runs while the app is built. A simulator
+      # of the runner image is used: one made with `simctl create` has more to set up.
+      - name: Start a simulator
+        run: |
+          runtime=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform == "iOS" and .isAvailable)] | last | .identifier')
+          udid=$(xcrun simctl list devices available -j | jq -r --arg runtime "$runtime" '.devices[$runtime][]? | select(.name == "iPhone 17 Pro") | .udid' | head -n 1)
+          if [ -z "$udid" ]; then
+            udid=$(xcrun simctl create e2e "iPhone 17 Pro" "$runtime")
+          fi
+          xcrun simctl boot "$udid"
+          echo "E2E_DEVICE=$udid" >> "$GITHUB_ENV"
+          echo "XCODE_BUILD=$(xcodebuild -version | awk '/Build version/ { print $3 }')" >> "$GITHUB_ENV"
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -36,7 +51,17 @@ jobs:
       - name: Bundle JavaScript
         run: yarn workspace react-native-bottom-tabs-example build:ios
 
+      # The native build is reused until something it is made from changes. Everything else,
+      # such as the tests and the JavaScript of the examples, only needs a new bundle.
+      - name: Restore example app
+        id: example-app
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ env.APP }}
+          key: e2e-ios-app-${{ runner.os }}-${{ env.XCODE_BUILD }}-${{ hashFiles('.github/workflows/e2e.yml', 'yarn.lock', 'apps/example/app.json', 'apps/example/package.json', 'apps/example/react-native.config.js', 'apps/example/ios/Podfile', 'apps/example/ios/Podfile.lock', 'apps/example/ios/*.swift', 'apps/example/ios/*.h', 'packages/react-native-bottom-tabs/package.json', 'packages/react-native-bottom-tabs/*.podspec', 'packages/react-native-bottom-tabs/ios/**', 'packages/react-native-bottom-tabs/common/**', 'packages/react-native-bottom-tabs/src/**') }}
+
       - name: Install cocoapods
+        if: ${{ steps.example-app.outputs.cache-hit != 'true' }}
         run: |
           gem install cocoapods-swift-modular-headers
           cd apps/example
@@ -46,7 +71,22 @@ jobs:
           NO_FLIPPER: 1
 
       - name: Build example for the iOS simulator
+        if: ${{ steps.example-app.outputs.cache-hit != 'true' }}
         run: yarn workspace react-native-bottom-tabs-example e2e:build:ios
+
+      - name: Save example app
+        if: ${{ steps.example-app.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        with:
+          path: ${{ env.APP }}
+          key: ${{ steps.example-app.outputs.cache-primary-key }}
+
+      - name: Put the new bundle in the restored app
+        if: ${{ steps.example-app.outputs.cache-hit == 'true' }}
+        run: |
+          cp apps/example/dist/main.ios.jsbundle "$APP/main.ios.jsbundle"
+          rm -rf "$APP/assets"
+          cp -R apps/example/dist/assets "$APP/assets"
 
       # The XCTest runner that drives the simulator takes minutes to build.
       - name: Restore agent-device runner
@@ -56,16 +96,8 @@ jobs:
           path: ~/.agent-device/apple-runner/derived
           key: agent-device-runner-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
-      # A simulator of the runner image is used: one made with `simctl create` spends minutes on its first boot.
-      - name: Boot a simulator
-        run: |
-          runtime=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform == "iOS" and .isAvailable)] | last | .identifier')
-          udid=$(xcrun simctl list devices available -j | jq -r --arg runtime "$runtime" '.devices[$runtime][]? | select(.name == "iPhone 17 Pro") | .udid' | head -n 1)
-          if [ -z "$udid" ]; then
-            udid=$(xcrun simctl create e2e "iPhone 17 Pro" "$runtime")
-          fi
-          xcrun simctl bootstatus "$udid" -b
-          echo "E2E_DEVICE=$udid" >> "$GITHUB_ENV"
+      - name: Wait for the simulator
+        run: xcrun simctl bootstatus "$E2E_DEVICE"
 
       # Built and started before the run, or the first tests time out while they wait for it.
       - name: Prepare agent-device runner
