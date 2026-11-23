@@ -15,7 +15,7 @@ The tests in `e2e/` run with [e2e](https://e2e.com) on iOS simulators and Androi
 Build an example app, then run its tests from the repository root. Each run installs that build on the device first.
 
 ```sh
-# apps/example on iOS, after `pod install --project-directory=ios` there
+# apps/example on iOS
 yarn workspace react-native-bottom-tabs-example e2e:build:ios
 yarn workspace react-native-bottom-tabs-example e2e:ios
 
@@ -28,6 +28,7 @@ yarn workspace example-swiftpm e2e:build:ios
 yarn workspace example-swiftpm e2e:ios
 ```
 
+- Before the first iOS build of `apps/example`, run `yarn workspace react-native-bottom-tabs-example build:ios` and then `pod install --project-directory=ios` in `apps/example`. The pods only package a JavaScript bundle that exists when they are installed, and an app without one opens on an error screen.
 - The builds are Release builds with the JavaScript bundled, so Metro is not needed. Build again after a change to the library or to this workspace.
 - The iOS tests expect iOS 26 or newer.
 - The Android build is for an `arm64-v8a` emulator. Set `E2E_ANDROID_ABI=x86_64` for an x86_64 one.
