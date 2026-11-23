@@ -28,19 +28,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
-      # The first boot of a simulator takes minutes, so it runs while the app is built. A simulator
-      # of the runner image is used: one made with `simctl create` has more to set up.
-      - name: Start a simulator
-        run: |
-          runtime=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform == "iOS" and .isAvailable)] | last | .identifier')
-          udid=$(xcrun simctl list devices available -j | jq -r --arg runtime "$runtime" '.devices[$runtime][]? | select(.name == "iPhone 17 Pro") | .udid' | head -n 1)
-          if [ -z "$udid" ]; then
-            udid=$(xcrun simctl create e2e "iPhone 17 Pro" "$runtime")
-          fi
-          xcrun simctl boot "$udid"
-          echo "E2E_DEVICE=$udid" >> "$GITHUB_ENV"
-          echo "XCODE_BUILD=$(xcodebuild -version | awk '/Build version/ { print $3 }')" >> "$GITHUB_ENV"
-
       - name: Setup
         uses: ./.github/actions/setup
 
@@ -51,14 +38,18 @@ jobs:
       - name: Bundle JavaScript
         run: yarn workspace react-native-bottom-tabs-example build:ios
 
+      - name: Read the Xcode build
+        run: echo "XCODE_BUILD=$(xcodebuild -version | awk '/Build version/ { print $3 }')" >> "$GITHUB_ENV"
+
       # The native build is reused until something it is made from changes. Everything else,
       # such as the tests and the JavaScript of the examples, only needs a new bundle.
+      # Bump the version in the key after a change to how the app is built here.
       - name: Restore example app
         id: example-app
         uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ env.APP }}
-          key: e2e-ios-app-${{ runner.os }}-${{ env.XCODE_BUILD }}-${{ hashFiles('.github/workflows/e2e.yml', 'yarn.lock', 'apps/example/app.json', 'apps/example/package.json', 'apps/example/react-native.config.js', 'apps/example/ios/Podfile', 'apps/example/ios/Podfile.lock', 'apps/example/ios/*.swift', 'apps/example/ios/*.h', 'packages/react-native-bottom-tabs/package.json', 'packages/react-native-bottom-tabs/*.podspec', 'packages/react-native-bottom-tabs/ios/**', 'packages/react-native-bottom-tabs/common/**', 'packages/react-native-bottom-tabs/src/**') }}
+          key: e2e-ios-app-v1-${{ runner.os }}-${{ env.XCODE_BUILD }}-${{ hashFiles('yarn.lock', 'apps/example/app.json', 'apps/example/package.json', 'apps/example/react-native.config.js', 'apps/example/ios/Podfile', 'apps/example/ios/Podfile.lock', 'apps/example/ios/*.swift', 'apps/example/ios/*.h', 'packages/react-native-bottom-tabs/package.json', 'packages/react-native-bottom-tabs/*.podspec', 'packages/react-native-bottom-tabs/ios/**', 'packages/react-native-bottom-tabs/common/**', 'packages/react-native-bottom-tabs/src/**') }}
 
       - name: Install cocoapods
         if: ${{ steps.example-app.outputs.cache-hit != 'true' }}
@@ -96,8 +87,18 @@ jobs:
           path: ~/.agent-device/apple-runner/derived
           key: agent-device-runner-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
 
-      - name: Wait for the simulator
-        run: xcrun simctl bootstatus "$E2E_DEVICE"
+      # Booted once nothing else is running: next to the dependency restore, its first boot made
+      # both several minutes slower. A simulator of the runner image is used, since one made with
+      # `simctl create` has more to set up.
+      - name: Boot a simulator
+        run: |
+          runtime=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform == "iOS" and .isAvailable)] | last | .identifier')
+          udid=$(xcrun simctl list devices available -j | jq -r --arg runtime "$runtime" '.devices[$runtime][]? | select(.name == "iPhone 17 Pro") | .udid' | head -n 1)
+          if [ -z "$udid" ]; then
+            udid=$(xcrun simctl create e2e "iPhone 17 Pro" "$runtime")
+          fi
+          xcrun simctl bootstatus "$udid" -b
+          echo "E2E_DEVICE=$udid" >> "$GITHUB_ENV"
 
       # Built and started before the run, or the first tests time out while they wait for it.
       - name: Prepare agent-device runner
