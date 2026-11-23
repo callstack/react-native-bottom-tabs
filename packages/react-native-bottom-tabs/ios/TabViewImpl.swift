@@ -125,10 +125,25 @@ struct TabViewImpl: View {
     else { return }
 
     configureTabBarItemImages(items: items, tabBar: tabBar, props: props)
+    assignTestIDs(items: items, tabBar: tabBar)
 
     DispatchQueue.main.async { [weak tabBar] in
       guard let tabBar, let items = tabBar.items else { return }
       configureTabBarItemImages(items: items, tabBar: tabBar, props: props)
+      assignTestIDs(items: items, tabBar: tabBar)
+    }
+  }
+
+  /// Since iOS 26 neither SwiftUI nor UIKit copies a tab's `accessibilityIdentifier` to its button.
+  /// Buttons are matched by label, since their order on screen depends on the layout direction.
+  private func assignTestIDs(items: [UITabBarItem], tabBar: UITabBar) {
+    var buttons = tabBar.tabButtons()
+
+    for item in items {
+      guard let index = buttons.firstIndex(where: { $0.accessibilityLabel == item.accessibilityLabel }) else {
+        continue
+      }
+      buttons.remove(at: index).accessibilityIdentifier = item.accessibilityIdentifier
     }
   }
 
@@ -274,6 +289,7 @@ struct TabViewImpl: View {
       let images = props.itemImages.images(for: tabData, props: props)
 
       item.accessibilityLabel = tabData.title
+      item.accessibilityIdentifier = tabData.testID
 
       if let images {
         assignSelectedImage(images.selectedImage, to: item)
