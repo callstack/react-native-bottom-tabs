@@ -8,7 +8,8 @@
     "start": "react-native start",
     "typecheck": "tsc --noEmit",
     "spm": "react-native spm",
-    "e2e:ios": "maestro test --platform=ios --env APP_ID=bottomtabs.exampleswiftpm ../../packages/example-shared/e2e"
+    "e2e:build:ios": "xcodebuild -quiet -project ios/ExampleSwiftPM.xcodeproj -scheme ExampleSwiftPM -configuration Release -sdk iphonesimulator -destination \"generic/platform=iOS Simulator\" -derivedDataPath ios/build/e2e ARCHS=$(uname -m) build",
+    "e2e:ios": "yarn workspace @bottom-tabs/example-shared e2e run --target ios-swiftpm"
   },
   "dependencies": {
     "@bottom-tabs/example-shared": "workspace:*",
