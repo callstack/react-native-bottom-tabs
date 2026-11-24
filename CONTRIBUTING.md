@@ -67,6 +67,8 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
+The example apps have end-to-end tests that run on iOS simulators and Android emulators. Add one when you fix a bug or add a feature that shows in the tab bar. See [End-to-end tests](./packages/example-shared/README.md#end-to-end-tests) for how to build the apps and run them.
+
 ### Commit message convention
 
 We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:

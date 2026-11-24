@@ -26,7 +26,8 @@ Running `pod install` is not needed since this app does not use CocoaPods.
 
 ```sh
 yarn workspace @bottom-tabs/example-shared typecheck
+yarn workspace example-swiftpm e2e:build:ios
 yarn workspace example-swiftpm e2e:ios
 ```
 
-The shared Maestro flows use the shell's bundle ID through `APP_ID`.
+The shared [e2e](https://e2e.com) tests run against this app through the `ios-swiftpm` target. See [`packages/example-shared`](../../packages/example-shared/README.md#end-to-end-tests).
