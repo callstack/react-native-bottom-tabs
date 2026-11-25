@@ -25,6 +25,7 @@ import androidx.core.util.Consumer
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.forEachIndexed
 import coil3.ImageLoader
@@ -46,6 +47,29 @@ import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY
 import com.google.android.material.transition.platform.MaterialFadeThrough
 
 class ExtendedBottomNavigationView(context: Context) : BottomNavigationView(context) {
+  init {
+    // Material's BottomNavigationView adds the bottom system-window inset (which includes
+    // the IME inset under edge-to-edge) to its own padding, so the bar rises above the
+    // keyboard. Re-listen with system bars + display cutout only, excluding the IME type,
+    // so the bar stays pinned and the keyboard overlays it, matching iOS.
+    val baseLeft = paddingLeft
+    val baseTop = paddingTop
+    val baseRight = paddingRight
+    val baseBottom = paddingBottom
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+      val bars = insets.getInsets(
+        WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout(),
+      )
+      view.setPadding(
+        baseLeft + bars.left,
+        baseTop,
+        baseRight + bars.right,
+        baseBottom + bars.bottom,
+      )
+      insets
+    }
+  }
+
   override fun getMaxItemCount(): Int {
     return 100
   }
