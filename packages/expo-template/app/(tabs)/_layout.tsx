@@ -1,4 +1,4 @@
-import React from 'react';
+import { Platform } from 'react-native';
 import { withLayoutContext } from 'expo-router';
 import {
   createNativeBottomTabNavigator,
@@ -6,6 +6,9 @@ import {
   NativeBottomTabNavigationEventMap,
 } from '@bottom-tabs/react-navigation';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
+
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 const BottomTabNavigator = createNativeBottomTabNavigator().Navigator;
 
@@ -17,20 +20,32 @@ const Tabs = withLayoutContext<
 >(BottomTabNavigator);
 
 export default function TabLayout() {
+  const colorScheme = useColorScheme() ?? 'light';
+  const colorTheme = Colors[colorScheme];
+
   return (
-    <Tabs>
+    <Tabs
+      tabBarActiveTintColor={colorTheme.tabIconSelected}
+      tabBarInactiveTintColor={colorTheme.tabIconDefault}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: () => ({ sfSymbol: 'house.fill' }),
+          tabBarIcon: () =>
+            Platform.OS === 'ios'
+              ? { sfSymbol: 'house.fill' }
+              : require('@/assets/icons/house.png'),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: () => ({ sfSymbol: 'paperplane.fill' }),
+          tabBarIcon: () =>
+            Platform.OS === 'ios'
+              ? { sfSymbol: 'paperplane.fill' }
+              : require('@/assets/icons/send.png'),
         }}
       />
     </Tabs>

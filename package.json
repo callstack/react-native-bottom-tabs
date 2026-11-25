@@ -9,9 +9,9 @@
     ]
   },
   "scripts": {
-    "lint": "turbo run lint",
+    "lint": "turbo run lint --filter='!@bottom-tabs/expo-template'",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck",
+    "typecheck": "turbo run typecheck --filter='!@bottom-tabs/expo-template'",
     "build": "turbo run build",
     "build:android": "turbo run build:android",
     "build:ios": "turbo run build:ios",
@@ -25,6 +25,7 @@
   "packageManager": "yarn@4.6.0",
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
+    "@react-native/eslint-config": "0.87.1",
     "commitlint": "^17.0.2",
     "devmoji": "^2.3.0",
     "eslint": "^8.51.0",

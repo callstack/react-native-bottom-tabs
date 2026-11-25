@@ -73,11 +73,11 @@ class RCTTabViewManager(context: ReactApplicationContext) :
   }
 
   override fun getChildAt(parent: ReactBottomNavigationView, index: Int): View? {
-    return parent.layoutHolder.getChildAt(index)
+    return parent.getScreenAt(index)
   }
 
   override fun removeView(parent: ReactBottomNavigationView, view: View) {
-    parent.layoutHolder.removeView(view)
+    parent.removeScreen(view)
   }
 
   override fun removeAllViews(parent: ReactBottomNavigationView) {
@@ -85,7 +85,7 @@ class RCTTabViewManager(context: ReactApplicationContext) :
   }
 
   override fun removeViewAt(parent: ReactBottomNavigationView, index: Int) {
-    parent.layoutHolder.removeViewAt(index)
+    parent.removeScreenAt(index)
   }
 
   override fun needsCustomLayoutForChildren(): Boolean {
@@ -147,13 +147,11 @@ class RCTTabViewManager(context: ReactApplicationContext) :
   }
 
   override fun setActiveTintColor(view: ReactBottomNavigationView?, value: Int?) {
-    if (view != null && value != null)
-      view.setActiveTintColor(value)
+    view?.setActiveTintColor(value)
   }
 
   override fun setInactiveTintColor(view: ReactBottomNavigationView?, value: Int?) {
-    if (view != null && value != null)
-      view.setInactiveTintColor(value)
+    view?.setInactiveTintColor(value)
   }
 
   override fun setExperimentalBakedTintColors(view: ReactBottomNavigationView?, value: Boolean) {

@@ -20,9 +20,13 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.OnConfigurationChangedProvider
+import androidx.core.util.Consumer
+import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.forEachIndexed
 import coil3.ImageLoader
 import coil3.asDrawable
@@ -31,6 +35,7 @@ import coil3.svg.SvgDecoder
 import coil3.size.Precision
 import coil3.size.Size as CoilSize
 import coil3.size.Scale
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.common.assets.ReactFontManager
 import com.facebook.react.modules.core.ReactChoreographer
@@ -97,6 +102,8 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
   private var lastReportedSize: Size? = null
   private var hasCustomAppearance = false
   private var uiModeConfiguration: Int = Configuration.UI_MODE_NIGHT_UNDEFINED
+  private var configurationProvider: OnConfigurationChangedProvider? = null
+  private val configurationListener = Consumer<Configuration> { handleUiModeChange(it) }
 
   private val imageLoader = ImageLoader.Builder(context)
     .components {
@@ -122,22 +129,33 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     uiModeConfiguration = resources.configuration.uiMode
 
     post {
-      addOnLayoutChangeListener { _, left, top, right, bottom,
+      addOnLayoutChangeListener { _, _, _, _, _,
                                   _, _, _, _ ->
-        val newWidth = right - left
-        val newHeight = bottom - top
-
         // Notify about tab bar height.
         onTabBarMeasuredListener?.invoke(Utils.convertPixelsToDp(context, bottomNavigation.height).toInt())
 
-        if (newWidth != lastReportedSize?.width || newHeight != lastReportedSize?.height) {
-          val dpWidth = Utils.convertPixelsToDp(context, layoutHolder.width)
-          val dpHeight = Utils.convertPixelsToDp(context, layoutHolder.height)
-
-          onNativeLayoutListener?.invoke(dpWidth, dpHeight)
-          lastReportedSize = Size(newWidth, newHeight)
-        }
+        reportLayoutHolderSizeIfChanged()
       }
+      // When only the tab bar visibility changes (tabBarHidden), the container keeps
+      // its bounds so the listener above never fires — only layoutHolder grows or
+      // shrinks. Observe layoutHolder itself so the new content size reaches JS.
+      layoutHolder.addOnLayoutChangeListener { _, _, _, _, _,
+                                               _, _, _, _ ->
+        reportLayoutHolderSizeIfChanged()
+      }
+    }
+  }
+
+  private fun reportLayoutHolderSizeIfChanged() {
+    val newWidth = layoutHolder.width
+    val newHeight = layoutHolder.height
+
+    if (newWidth != lastReportedSize?.width || newHeight != lastReportedSize?.height) {
+      val dpWidth = Utils.convertPixelsToDp(context, newWidth)
+      val dpHeight = Utils.convertPixelsToDp(context, newHeight)
+
+      onNativeLayoutListener?.invoke(dpWidth, dpHeight)
+      lastReportedSize = Size(newWidth, newHeight)
     }
   }
 
@@ -177,7 +195,12 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
   fun setSelectedItem(value: String) {
     selectedItem = value
-    setSelectedIndex(items.indexOfFirst { it.key == value })
+    val index = items.indexOfFirst { it.key == value }
+    if (index >= 0) {
+      setSelectedIndex(index)
+    }
+    // Per-tab active tint color depends on the selected item.
+    updateTintColors()
   }
 
   override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams?) {
@@ -190,11 +213,48 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     container.addView(child, params)
     layoutHolder.addView(container, index)
 
-    val itemKey = items[index].key
-    if (selectedItem == itemKey) {
+    val itemKey = items.getOrNull(index)?.key
+    if (itemKey != null && itemKey == selectedItem) {
       setSelectedIndex(index)
       refreshLayout()
     }
+  }
+
+  fun getScreenAt(index: Int): View? {
+    return (layoutHolder.getChildAt(index) as? ViewGroup)?.getChildAt(0)
+  }
+
+  fun removeScreenAt(index: Int) {
+    layoutHolder.removeViewAt(index)
+    syncSelectedIndex()
+  }
+
+  fun removeScreen(view: View) {
+    val container = view.parent as? View ?: return
+    if (container.parent === layoutHolder) {
+      layoutHolder.removeView(container)
+      syncSelectedIndex()
+    }
+  }
+
+  private fun syncSelectedIndex() {
+    val index = items.indexOfFirst { it.key == selectedItem }
+    if (index < 0 || isSelectedIndex(index)) {
+      return
+    }
+    setSelectedIndex(index)
+  }
+
+  private fun isSelectedIndex(index: Int): Boolean {
+    if (bottomNavigation.selectedItemId != index) {
+      return false
+    }
+    layoutHolder.forEachIndexed { childIndex, view ->
+      if ((view.visibility == VISIBLE) != (childIndex == index)) {
+        return false
+      }
+    }
+    return true
   }
 
   private fun createContainer(): FrameLayout {
@@ -306,15 +366,12 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
             onTabSelected(menuItem)
           }
 
-          item.testID?.let { testId ->
-            view.findViewById<View>(com.google.android.material.R.id.navigation_bar_item_content_container)
-              ?.apply {
-                tag = testId
-              }
-          }
+          view.findViewById<View>(com.google.android.material.R.id.navigation_bar_item_content_container)
+            ?.setTabTestID(item.testID)
         }
       }
     }
+    syncSelectedIndex()
     // Update tint colors and text appearance after updating all items.
     post {
       updateTextAppearance()
@@ -324,6 +381,24 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
 
   private fun getOrCreateItem(index: Int, title: String): MenuItem {
     return bottomNavigation.menu.findItem(index) ?: bottomNavigation.menu.add(0, index, 0, title)
+  }
+
+  private fun View.setTabTestID(testId: String?) {
+    tag = testId
+    if (testId == null) {
+      ViewCompat.setAccessibilityDelegate(this, null)
+      return
+    }
+
+    ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
+      override fun onInitializeAccessibilityNodeInfo(
+        host: View,
+        info: AccessibilityNodeInfoCompat
+      ) {
+        super.onInitializeAccessibilityNodeInfo(host, info)
+        info.viewIdResourceName = testId
+      }
+    })
   }
 
   private fun updateIconTintMode(menuItem: MenuItem, item: TabInfo) {
@@ -516,8 +591,26 @@ class ReactBottomNavigationView(context: Context) : LinearLayout(context) {
     }
   }
 
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    configurationProvider =
+      (context as? ReactContext)?.currentActivity as? OnConfigurationChangedProvider
+    configurationProvider?.addOnConfigurationChangedListener(configurationListener)
+    handleUiModeChange(resources.configuration)
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    configurationProvider?.removeOnConfigurationChangedListener(configurationListener)
+    configurationProvider = null
+  }
+
   override fun onConfigurationChanged(newConfig: Configuration?) {
     super.onConfigurationChanged(newConfig)
+    handleUiModeChange(newConfig)
+  }
+
+  private fun handleUiModeChange(newConfig: Configuration?) {
     if (uiModeConfiguration == newConfig?.uiMode || hasCustomAppearance) {
       return
     }

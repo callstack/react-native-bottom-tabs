@@ -67,6 +67,8 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
+The example apps have end-to-end tests that run on iOS simulators and Android emulators. Add one when you fix a bug or add a feature that shows in the tab bar. See [End-to-end tests](./packages/example-shared/README.md#end-to-end-tests) for how to build the apps and run them.
+
 ### Commit message convention
 
 We follow the [conventional commits specification](https://www.conventionalcommits.org/en) for our commit messages:
@@ -87,6 +89,18 @@ Our pre-commit hooks verify that your commit message matches this format when co
 We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint](https://eslint.org/) with [Prettier](https://prettier.io/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
 
 Our pre-commit hooks verify that the linter and tests pass when committing.
+
+`yarn lint` and `yarn typecheck` deliberately skip `@bottom-tabs/expo-template`. The template has
+its own `lint` and `typecheck` scripts.
+
+Check the template the way people actually consume it - pack it, scaffold an app, and run its scripts there:
+
+```sh
+yarn workspace @bottom-tabs/expo-template pack --out /tmp/expo-template.tgz
+npx create-expo-app@latest /tmp/tpl --template /tmp/expo-template.tgz
+cd /tmp/tpl && npm install && npx expo start # generates .expo/types, then stop it
+npm run lint && npm run typecheck && npm test
+```
 
 ### Changesets
 

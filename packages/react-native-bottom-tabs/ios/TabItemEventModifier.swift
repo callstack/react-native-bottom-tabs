@@ -6,10 +6,42 @@ import UIKit
 
 #if !os(macOS) && !os(visionOS)
 
+private final class ImmediateTabTransition: NSObject, UIViewControllerAnimatedTransitioning {
+  func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    0
+  }
+
+  func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    guard let destination = transitionContext.viewController(forKey: .to),
+      let destinationView = transitionContext.view(forKey: .to)
+    else {
+      transitionContext.completeTransition(false)
+      return
+    }
+
+    destinationView.frame = transitionContext.finalFrame(for: destination)
+    transitionContext.containerView.addSubview(destinationView)
+    transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+  }
+}
+
 private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
   var onClick: ((_ index: Int?, _ identifier: String?) -> Bool)?
+  var disablePageAnimations = false
+
+  func tabBarController(
+    _ tabBarController: UITabBarController,
+    animationControllerForTransitionFrom fromVC: UIViewController,
+    to toVC: UIViewController
+  ) -> UIViewControllerAnimatedTransitioning? {
+    disablePageAnimations ? ImmediateTabTransition() : nil
+  }
 
   func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+    if LongPressGestureHandler.isLongPressing(tabBarController.tabBar) {
+      return false
+    }
+
     if #available(iOS 27.0, *) {
       // iOS 27 routes SwiftUI TabView selection through shouldSelectTab.
       return true
@@ -50,6 +82,10 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
       return true
     }
 
+    if LongPressGestureHandler.isLongPressing(tabBarController.tabBar) {
+      return false
+    }
+
     let isReselectingSameTab =
       tabBarController.selectedTab === tab ||
       tabBarController.selectedTab?.identifier == tab.identifier
@@ -74,6 +110,7 @@ private final class TabBarDelegate: NSObject, UITabBarControllerDelegate {
 }
 
 struct TabItemEventModifier: ViewModifier {
+  let disablePageAnimations: Bool
   let onTabEvent: (_ index: Int?, _ identifier: String?, _ isLongPress: Bool) -> Bool
   private let delegate = TabBarDelegate()
 
@@ -85,6 +122,7 @@ struct TabItemEventModifier: ViewModifier {
   }
 
   func handle(tabController: UITabBarController) {
+    delegate.disablePageAnimations = disablePageAnimations
     delegate.onClick = { index, identifier in
       onTabEvent(index, identifier, false)
     }
@@ -106,6 +144,7 @@ struct TabItemEventModifier: ViewModifier {
     let handler = LongPressGestureHandler(tabBar: tabController.tabBar) { index, isLongPress in _ = onTabEvent(index, nil, isLongPress) }
     let gesture = UILongPressGestureRecognizer(target: handler, action: #selector(LongPressGestureHandler.handleLongPress(_:)))
     gesture.minimumPressDuration = 0.5
+    gesture.delegate = handler
 
     objc_setAssociatedObject(tabController.tabBar, &AssociatedKeys.gestureHandler, handler, .OBJC_ASSOCIATION_RETAIN)
 
@@ -120,6 +159,7 @@ private struct AssociatedKeys {
 private class LongPressGestureHandler: NSObject {
   private weak var tabBar: UITabBar?
   private let handler: (Int, Bool) -> Void
+  private var isLongPressing = false
 
   init(tabBar: UITabBar, handler: @escaping (Int, Bool) -> Void) {
     self.tabBar = tabBar
@@ -127,20 +167,38 @@ private class LongPressGestureHandler: NSObject {
     super.init()
   }
 
+  /// Since iOS 26 the tab bar selects a tab when a long press on it ends.
+  static func isLongPressing(_ tabBar: UITabBar) -> Bool {
+    let handler = objc_getAssociatedObject(tabBar, &AssociatedKeys.gestureHandler) as? LongPressGestureHandler
+    return handler?.isLongPressing ?? false
+  }
+
   @objc func handleLongPress(_ recognizer: UILongPressGestureRecognizer) {
+    switch recognizer.state {
+    case .began:
+      isLongPressing = true
+    case .ended, .cancelled, .failed:
+      // The tab bar asks its delegate about the selection in the same touch-up, in either order.
+      DispatchQueue.main.async { [weak self] in
+        self?.isLongPressing = false
+      }
+    default:
+      break
+    }
+
     guard recognizer.state == .began,
           let tabBar else { return }
 
     let location = recognizer.location(in: tabBar)
 
-    // Get buttons and sort them by frames
-    let tabBarButtons = tabBar.subviews.filter { String(describing: type(of: $0)).contains("UITabBarButton") }.sorted { $0.frame.minX < $1.frame.minX }
+    // Get buttons and sort them by frames, the first tab being the rightmost one in a right-to-left layout
+    let isRightToLeft = tabBar.effectiveUserInterfaceLayoutDirection == .rightToLeft
+    let buttonFrames = tabBar.tabButtons()
+      .map { $0.convert($0.bounds, to: tabBar) }
+      .sorted { isRightToLeft ? $0.minX > $1.minX : $0.minX < $1.minX }
 
-    for (index, button) in tabBarButtons.enumerated() {
-      if button.frame.contains(location) {
-        handler(index, true)
-        break
-      }
+    if let index = buttonFrames.firstIndex(where: { $0.contains(location) }) {
+      handler(index, true)
     }
   }
 
@@ -151,12 +209,43 @@ private class LongPressGestureHandler: NSObject {
   }
 }
 
+extension LongPressGestureHandler: UIGestureRecognizerDelegate {
+  // The tab bar's own selection gesture starts on touch down since iOS 26 and would fail the long press.
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+  ) -> Bool {
+    true
+  }
+}
+
+extension UIView {
+  /// The buttons of a tab bar: `UITabBarButton` subviews before iOS 26, `_UITabButton` nested in the
+  /// bar's platter since.
+  func tabButtons() -> [UIView] {
+    subviews.flatMap { subview -> [UIView] in
+      let name = String(describing: type(of: subview))
+      if name.contains("UITabBarButton") || name == "_UITabButton" {
+        return [subview]
+      }
+      // Holds a second copy of every button, drawn over the selected one.
+      if name == "SelectedContentView" {
+        return []
+      }
+      return subview.tabButtons()
+    }
+  }
+}
+
 extension View {
   /**
    Event for tab items. Returns true if should prevent default (switching tabs).
    */
-  func onTabItemEvent(_ handler: @escaping (Int?, String?, Bool) -> Bool) -> some View {
-    modifier(TabItemEventModifier(onTabEvent: handler))
+  func onTabItemEvent(
+    disablePageAnimations: Bool,
+    _ handler: @escaping (Int?, String?, Bool) -> Bool
+  ) -> some View {
+    modifier(TabItemEventModifier(disablePageAnimations: disablePageAnimations, onTabEvent: handler))
   }
 }
 

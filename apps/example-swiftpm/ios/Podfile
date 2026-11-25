@@ -1,0 +1,3 @@
+# This app uses SwiftPM. Run `yarn spm` from apps/example-swiftpm.
+# The CLI-generated CocoaPods project was migrated with:
+# yarn react-native spm add --deintegrate
