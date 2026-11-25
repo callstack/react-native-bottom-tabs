@@ -26,6 +26,7 @@
 @property(nonatomic, copy) NSString *selectedPage;
 @property(nonatomic) BOOL hapticFeedbackEnabled;
 @property(nonatomic, copy) NSString *layoutDirection;
+@property(nonatomic, copy) NSString *tabBarColorScheme;
 @property(nonatomic, copy) NSString *scrollEdgeAppearance;
 @property(nonatomic, copy) NSString *minimizeBehavior;
 @property(nonatomic) BOOL translucent;

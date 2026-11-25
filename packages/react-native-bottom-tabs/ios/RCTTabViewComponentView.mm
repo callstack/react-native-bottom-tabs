@@ -203,6 +203,10 @@ typedef NSObject TabInfo;
     _tabViewProvider.layoutDirection = RCTNSStringFromStringNilIfEmpty(newViewProps.layoutDirection);
   }
 
+  if (oldViewProps.tabBarColorScheme != newViewProps.tabBarColorScheme) {
+    _tabViewProvider.tabBarColorScheme = RCTNSStringFromStringNilIfEmpty(newViewProps.tabBarColorScheme);
+  }
+
   if (oldViewProps.fontSize != newViewProps.fontSize) {
     _tabViewProvider.fontSize = [NSNumber numberWithInt:newViewProps.fontSize];
   }

@@ -61,6 +61,7 @@ export interface TabViewProps extends ViewProps {
   activeIndicatorColor?: ColorValue;
   hapticFeedbackEnabled?: boolean;
   layoutDirection?: string;
+  tabBarColorScheme?: string;
   minimizeBehavior?: string;
   fontFamily?: string;
   fontWeight?: string;

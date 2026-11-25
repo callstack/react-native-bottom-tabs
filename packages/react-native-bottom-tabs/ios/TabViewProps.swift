@@ -79,6 +79,7 @@ class TabViewProps: ObservableObject {
   @Published var disablePageAnimations: Bool = false
   @Published var hapticFeedbackEnabled: Bool = false
   @Published var layoutDirection: String?
+  @Published var tabBarColorScheme: String?
   @Published var fontSize: Int?
   @Published var fontFamily: String?
   @Published var fontWeight: String?

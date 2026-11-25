@@ -43,6 +43,7 @@ import NativeBottomTabsScreenLayout from './Examples/NativeBottomTabsScreenLayou
 import NativeBottomTabsLazy from './Examples/NativeBottomTabsLazy';
 import BottomAccessoryView from './Examples/BottomAccessoryView';
 import TabBarHidden from './Examples/TabBarHidden';
+import TabBarColorSchemeExample from './Examples/TabBarColorScheme';
 import CustomTabBar from './Examples/CustomTabBar';
 import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
 import OriginalIconColors from './Examples/OriginalIconColors';
@@ -98,6 +99,11 @@ const examples = [
   {
     component: ThreeTabs,
     name: 'Three Tabs',
+  },
+  {
+    component: TabBarColorSchemeExample,
+    name: 'Tab Bar Color Scheme',
+    platform: 'ios',
   },
   { component: FourTabs, name: 'Four Tabs' },
   { component: FiveTabs, name: 'Five Tabs' },

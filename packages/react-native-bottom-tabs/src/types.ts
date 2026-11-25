@@ -11,6 +11,8 @@ export type IconRenderingMode = 'automatic' | 'original';
 
 export type LayoutDirection = 'ltr' | 'rtl' | 'locale';
 
+export type TabBarColorScheme = 'inherit' | 'light' | 'dark';
+
 export type BaseRoute = {
   key: string;
   title?: string;

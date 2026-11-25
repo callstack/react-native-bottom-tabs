@@ -19,5 +19,6 @@ export type {
   AppleIcon,
   IconRenderingMode,
   LayoutDirection,
+  TabBarColorScheme,
   TabRole,
 } from './types';

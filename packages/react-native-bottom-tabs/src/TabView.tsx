@@ -28,6 +28,7 @@ import type {
   IconRenderingMode,
   LayoutDirection,
   NavigationState,
+  TabBarColorScheme,
   TabRole,
 } from './types';
 import DelayedFreeze from './DelayedFreeze';
@@ -231,6 +232,12 @@ interface Props<Route extends BaseRoute> {
    */
   layoutDirection?: LayoutDirection;
   /**
+   * The light or dark style of the tab bar. `inherit` follows the system.
+   * @default 'inherit'
+   * @platform ios
+   */
+  tabBarColorScheme?: TabBarColorScheme;
+  /**
    * Whether to hide the native tab bar.
    */
   tabBarHidden?: boolean;
@@ -276,6 +283,7 @@ const TabView = <Route extends BaseRoute>({
   tabLabelStyle,
   renderBottomAccessoryView,
   layoutDirection = 'locale',
+  tabBarColorScheme = 'inherit',
   experimental_bakedTintColors: experimentalBakedTintColors = false,
   ...props
 }: Props<Route>) => {
@@ -471,6 +479,7 @@ const TabView = <Route extends BaseRoute>({
         onNativeLayout={handleNativeLayout}
         hapticFeedbackEnabled={hapticFeedbackEnabled}
         layoutDirection={layoutDirection}
+        tabBarColorScheme={tabBarColorScheme}
         activeTintColor={activeTintColor}
         inactiveTintColor={inactiveTintColor}
         experimentalBakedTintColors={experimentalBakedTintColors}
