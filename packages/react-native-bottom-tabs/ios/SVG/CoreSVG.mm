@@ -1,3 +1,7 @@
+// The private CoreSVG code is compiled only when SVG support is enabled.
+// See ios/svg_configuration.rb and Package.swift.
+#if RN_BOTTOM_TABS_ENABLE_SVG
+
 #import "CoreSVG.h"
 #import <dlfcn.h>
 #import <objc/runtime.h>
@@ -175,3 +179,5 @@ static inline NSString *Base64DecodedString(NSString *base64String) {
 }
 
 @end
+
+#endif
