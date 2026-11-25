@@ -16,7 +16,7 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   lint:
@@ -139,50 +139,6 @@ jobs:
           yarn turbo run build:android --cache-dir="${{ env.TURBO_CACHE_DIR }}"
 
 
-  build-ios:
-    runs-on: macos-15
-    env:
-      TURBO_CACHE_DIR: .turbo/ios
-    steps:
-      - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Build package
-        run: yarn build
-
-      - name: Cache turborepo for iOS
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turborepo-ios-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-turborepo-ios-
-
-      - name: Check turborepo cache for iOS
-        run: |
-          TURBO_CACHE_STATUS=$(yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}" --dry=json | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).tasks.find(t => t.taskId === 'react-native-bottom-tabs-example#build:ios').cache.status")
-
-          if [[ $TURBO_CACHE_STATUS == "HIT" ]]; then
-            echo "turbo_cache_hit=1" >> $GITHUB_ENV
-          fi
-
-      - name: Install cocoapods and plugins
-        if: env.turbo_cache_hit != 1 && steps.cocoapods-cache.outputs.cache-hit != 'true'
-        run: |
-          gem install cocoapods-swift-modular-headers
-          cd apps/example
-          pod install --project-directory=ios
-        env:
-          RCT_NEW_ARCH_ENABLED: 1
-          NO_FLIPPER: 1
-
-      - name: Build example for iOS
-        run: |
-          yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
-
   build-ios-swiftpm:
     runs-on: macos-26
     timeout-minutes: 45
@@ -216,7 +172,7 @@ jobs:
     name: consumer-expo (${{ matrix.platform }})
     needs: build-library
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 60
+    timeout-minutes: 30
 
     strategy:
       fail-fast: false
@@ -300,8 +256,6 @@ jobs:
       - name: Build for Android
         if: matrix.platform == 'android'
         working-directory: ${{ env.APP_DIR }}/android
-        env:
-          JAVA_OPTS: '-XX:MaxHeapSize=6g'
         run: |
           ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon --console=plain
 
@@ -311,7 +265,7 @@ jobs:
     name: consumer-cli (${{ matrix.platform }})
     needs: build-library
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 60
+    timeout-minutes: 30
 
     strategy:
       fail-fast: false
@@ -394,20 +348,21 @@ jobs:
       # Inherits the Material 3 theme as the Quick Start tells CLI users to, and
       # turns on AGP 9's built-in Kotlin, which the template still opts out of
       # and AGP 10 makes mandatory. consumer-expo (AGP 8) covers the library
-      # applying kotlin-android itself.
+      # applying kotlin-android itself. Fails if the template drops these lines.
       - name: Configure Android app
         if: matrix.platform == 'android'
         working-directory: ${{ env.APP_DIR }}/android
         run: |
           sed -i 's/Theme.AppCompat.DayNight.NoActionBar/Theme.Material3.DayNight.NoActionBar/' app/src/main/res/values/styles.xml
           grep 'parent="Theme.Material3.DayNight.NoActionBar"' app/src/main/res/values/styles.xml
+          grep -q '^android.builtInKotlin=false' gradle.properties
+          grep -q '^android.newDsl=false' gradle.properties
           sed -i '/^android.builtInKotlin=false/d; /^android.newDsl=false/d' gradle.properties
+          grep -q 'apply plugin: "org.jetbrains.kotlin.android"' app/build.gradle
           sed -i '/apply plugin: "org.jetbrains.kotlin.android"/d' app/build.gradle
 
       - name: Build for Android
         if: matrix.platform == 'android'
         working-directory: ${{ env.APP_DIR }}/android
-        env:
-          JAVA_OPTS: '-XX:MaxHeapSize=6g'
         run: |
           ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon --console=plain
