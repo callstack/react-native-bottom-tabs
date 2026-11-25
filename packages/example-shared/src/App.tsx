@@ -46,6 +46,7 @@ import TabBarHidden from './Examples/TabBarHidden';
 import CustomTabBar from './Examples/CustomTabBar';
 import NativeBottomTabsTabBarHidden from './Examples/NativeBottomTabsTabBarHidden';
 import OriginalIconColors from './Examples/OriginalIconColors';
+import IconSizes from './Examples/IconSizes';
 import NativeBottomTabsOriginalIcons from './Examples/NativeBottomTabsOriginalIcons';
 import KeyboardAvoidingViewExample from './Examples/KeyboardAvoidingView';
 import { useLogger } from '@react-navigation/devtools';
@@ -127,6 +128,10 @@ const examples = [
   {
     component: OriginalIconColors,
     name: 'Original icon colors',
+  },
+  {
+    component: IconSizes,
+    name: 'Icon sizes',
   },
   {
     component: FourTabsRippleColor,

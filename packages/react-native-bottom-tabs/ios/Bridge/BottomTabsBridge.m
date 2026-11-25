@@ -17,6 +17,7 @@ NSObject *RNCCreateBottomAccessoryProvider(id<RNCBottomAccessoryProviderDelegate
                   sfSymbol:(NSString *)sfSymbol
            focusedSfSymbol:(NSString *)focusedSfSymbol
            activeTintColor:(UIColor *)activeTintColor
+                  iconSize:(NSNumber *)iconSize
          iconRenderingMode:(NSString *)iconRenderingMode
                     hidden:(BOOL)hidden
                     testID:(NSString *)testID
@@ -24,6 +25,7 @@ NSObject *RNCCreateBottomAccessoryProvider(id<RNCBottomAccessoryProviderDelegate
            preventsDefault:(BOOL)preventsDefault {
   return [[TabInfo alloc] initWithKey:key title:title badge:badge sfSymbol:sfSymbol
                     focusedSfSymbol:focusedSfSymbol activeTintColor:activeTintColor
+                           iconSize:iconSize
                   iconRenderingMode:iconRenderingMode hidden:hidden testID:testID
                                role:role preventsDefault:preventsDefault];
 }

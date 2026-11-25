@@ -147,6 +147,11 @@ interface Props<Route extends BaseRoute> {
   }) => ImageSource | AppleIcon | undefined | null;
 
   /**
+   * Get the size of the tab image icon, uses `route.iconSize` by default.
+   */
+  getIconSize?: (props: { route: Route }) => number | undefined;
+
+  /**
    * Get the rendering mode for the tab icon, uses `route.iconRenderingMode` by default.
    *
    * Use `original` to preserve multicolor image icons instead of applying the native tab tint.
@@ -262,6 +267,7 @@ const TabView = <Route extends BaseRoute>({
   getActiveTintColor = ({ route }: { route: Route }) => route.activeTintColor,
   getTestID = ({ route }: { route: Route }) => route.testID,
   getRole = ({ route }: { route: Route }) => route.role,
+  getIconSize = ({ route }: { route: Route }) => route.iconSize,
   getIconRenderingMode = ({ route }: { route: Route }) =>
     route.iconRenderingMode,
   getSceneStyle = ({ route }: { route: Route }) => route.style,
@@ -383,6 +389,11 @@ const TabView = <Route extends BaseRoute>({
     ]
   );
 
+  const iconSizes = React.useMemo(
+    () => trimmedRoutes.map((route) => getIconSize({ route }) ?? 0),
+    [getIconSize, trimmedRoutes]
+  );
+
   const resolvedIconAssets: ImageSource[] = React.useMemo(
     () =>
       // Pass empty object for icons that are not provided to avoid index mismatch on native side.
@@ -458,6 +469,7 @@ const TabView = <Route extends BaseRoute>({
         {...tabLabelStyle}
         style={styles.fullWidth}
         items={items}
+        iconSizes={iconSizes}
         // When rendering a custom tab bar, icons can be React elements, which will not be properly resolved.
         icons={renderCustomTabBar ? undefined : resolvedIconAssets}
         focusedIcons={

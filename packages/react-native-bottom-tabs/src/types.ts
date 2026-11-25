@@ -20,6 +20,7 @@ export type BaseRoute = {
   lazy?: boolean;
   focusedIcon?: ImageSourcePropType | AppleIcon;
   unfocusedIcon?: ImageSourcePropType | AppleIcon;
+  iconSize?: number;
   iconRenderingMode?: IconRenderingMode;
   activeTintColor?: string;
   hidden?: boolean;
