@@ -44,7 +44,7 @@ struct NewTabView: AnyTabView {
 
             Tab(value: tabData.key, role: tabData.role.flatMap { $0.convert() }) {
               RepresentableView(view: child.view)
-                .ignoresSafeArea(.container, edges: .all)
+                .modifier(TabContentLayoutModifier(onLayout: onLayout))
                 .tabAppear(using: context)
                 .hideTabBar(props.tabBarHidden)
             } label: {
@@ -66,10 +66,19 @@ struct NewTabView: AnyTabView {
       }
     }
     .environment(\.layoutDirection, effectiveLayoutDirection)
-    .measureView { size in
-      onLayout(size)
-    }
     .modifier(ConditionalBottomAccessoryModifier(props: props))
+  }
+}
+
+@available(iOS 18, macOS 15, visionOS 2, tvOS 18, *)
+private struct TabContentLayoutModifier: ViewModifier {
+  @Environment(\.tabBarPlacement) private var tabBarPlacement
+  var onLayout: (CGSize) -> Void
+
+  func body(content: Content) -> some View {
+    content
+      .ignoresSafeArea(.container, edges: tabBarPlacement == .sidebar ? .vertical : .all)
+      .measureView(onLayout: onLayout)
   }
 }
 
