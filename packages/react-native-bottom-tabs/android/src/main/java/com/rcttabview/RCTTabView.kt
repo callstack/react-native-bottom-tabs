@@ -40,13 +40,19 @@ import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.common.assets.ReactFontManager
 import com.facebook.react.modules.core.ReactChoreographer
 import com.facebook.react.views.text.ReactTypefaceUtils
+import com.facebook.react.uimanager.PointerEvents
+import com.facebook.react.uimanager.ReactPointerEventsView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_AUTO
 import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_LABELED
 import com.google.android.material.navigation.NavigationBarView.LABEL_VISIBILITY_UNLABELED
 import com.google.android.material.transition.platform.MaterialFadeThrough
 
-class ExtendedBottomNavigationView(context: Context) : BottomNavigationView(context) {
+class ExtendedBottomNavigationView(context: Context) :
+  BottomNavigationView(context), ReactPointerEventsView {
+  override val pointerEvents: PointerEvents
+    get() = if (visibility == GONE) PointerEvents.NONE else PointerEvents.AUTO
+
   init {
     // Material's BottomNavigationView adds the bottom system-window inset (which includes
     // the IME inset under edge-to-edge) to its own padding, so the bar rises above the
