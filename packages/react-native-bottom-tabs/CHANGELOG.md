@@ -1,5 +1,33 @@
 # react-native-bottom-tabs
 
+## 1.5.1
+
+### Patch Changes
+
+- [#623](https://github.com/callstack/react-native-bottom-tabs/pull/623) [`aa11d70`](https://github.com/callstack/react-native-bottom-tabs/commit/aa11d707a137ec33200519daa2be4718ac0cf7d1) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Fix 2 Android bugs with added tabs. A new tab at the end crashed the app. A new tab before the selected tab selected the wrong tab.
+
+- [#549](https://github.com/callstack/react-native-bottom-tabs/pull/549) [`c4b1f09`](https://github.com/callstackincubator/react-native-bottom-tabs/commit/c4b1f09) Thanks [@rayabelcode](https://github.com/rayabelcode)! - Fix the Android tab bar rising above the keyboard in edge-to-edge mode.
+
+- [#628](https://github.com/callstack/react-native-bottom-tabs/pull/628) [`0ef2215`](https://github.com/callstack/react-native-bottom-tabs/commit/0ef2215d5971c27781292685630b64cba1e42562) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Fix the Android tab bar not following `Appearance.setColorScheme()`.
+
+- [#614](https://github.com/callstack/react-native-bottom-tabs/pull/614) [`bfb99ff`](https://github.com/callstack/react-native-bottom-tabs/commit/bfb99ff8053322a43722ee04cde037d8823588aa) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Fix an iOS crash in debug builds when `renderBottomAccessoryView` is used.
+
+- [#612](https://github.com/callstack/react-native-bottom-tabs/pull/612) [`229e659`](https://github.com/callstack/react-native-bottom-tabs/commit/229e65939ba5863b5ab069fdfb8f34f8e51321ab) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Fix `scrollEdgeAppearance` on iOS 26 and newer.
+
+- [#610](https://github.com/callstack/react-native-bottom-tabs/pull/610) [`d9dbefb`](https://github.com/callstack/react-native-bottom-tabs/commit/d9dbefbcabc0629d79d8a1683015bf4712201004) Thanks [@LeleDallas](https://github.com/LeleDallas)! - fix(ios): respect `disablePageAnimations` when switching tabs on iOS.
+
+- [#616](https://github.com/callstack/react-native-bottom-tabs/pull/616) [`c9e41bb`](https://github.com/callstack/react-native-bottom-tabs/commit/c9e41bb2f4b758f962595fc8d105c2c189764594) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Restore the previously focused content after closing an adaptable sidebar on tvOS.
+
+- [#604](https://github.com/callstack/react-native-bottom-tabs/pull/604) [`89089e3`](https://github.com/callstack/react-native-bottom-tabs/commit/89089e3544334af60bc48d19334dfb31694c0aab) Thanks [@teddyxfire1992](https://github.com/teddyxfire1992)! - Fix toggling `tabBarHidden` on iOS rebuilding the tab content, which dismissed sheets presented from the tab and dropped text input focus
+
+- [#631](https://github.com/callstack/react-native-bottom-tabs/pull/631) [`eb34650`](https://github.com/callstack/react-native-bottom-tabs/commit/eb3465045db1de1305feb1d33e9fb92c6f2b313e) Thanks [@okwasniewski](https://github.com/okwasniewski)! - Fix 3 iOS bugs with tab bar buttons. On iOS 26 and newer a tab's `testID` was missing from its button, and a long press on a tab sent no `onTabLongPress` event. In a right-to-left layout a long press reported the wrong tab.
+
+- [#620](https://github.com/callstack/react-native-bottom-tabs/pull/620) [`c74581f`](https://github.com/callstack/react-native-bottom-tabs/commit/c74581f9bdb2439a9d4657f915545de6ebdad35c) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Keep the title and icon of the system "More" tab on iOS when there are more than 5 tabs.
+
+- [#558](https://github.com/callstack/react-native-bottom-tabs/pull/558) [`31b3a5a`](https://github.com/callstack/react-native-bottom-tabs/commit/31b3a5afe0f9e92a13cb5221609bc12daa5bdc92) Thanks [@JJalit](https://github.com/JJalit)! - Fix Android content not resizing when the tab bar visibility changes (`tabBarHidden`). The layout listener compared the container bounds, which stay the same when only the tab bar is hidden or shown, so the new `layoutHolder` size was never reported to JS and the content kept its stale height.
+
+- [#611](https://github.com/callstack/react-native-bottom-tabs/pull/611) [`fc9ab0b`](https://github.com/callstack/react-native-bottom-tabs/commit/fc9ab0bf2231e2d683f141e4d9e502ca8051ba28) Thanks [@oleksandrzavarzin-callstack](https://github.com/oleksandrzavarzin-callstack)! - Fix an iOS Fabric crash when selecting or long-pressing a tab whose key contains non-ASCII characters.
+
 ## 1.5.0
 
 ### Minor Changes
