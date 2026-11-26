@@ -114,6 +114,15 @@ class TabViewProps: ObservableObject {
     return inactiveTintColor
   }
 
+  /// A lazy tab that was never opened has an empty placeholder view until React mounts its screen.
+  func hasMountedContent(forKey key: String) -> Bool {
+    guard let index = items.firstIndex(where: { $0.key == key }),
+          let view = children[safe: index]?.view else {
+      return true
+    }
+    return !view.subviews.isEmpty
+  }
+
   var filteredItems: [TabInfo] {
     items.filter {
       !$0.hidden || $0.key == selectedPage
